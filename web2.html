@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .lfjka {
+        visibility: hidden;
+        height: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="lfjka">
+      <iframe src="http://127.0.0.1:5501/web3.html" frameborder="0"></iframe>
+    </div>
+    <script>
+      console.log("web2");
+      const bc = new BroadcastChannel("wtc");
+      bc.onmessage = (e) => {
+        console.log(e);
+        console.log("web2 sbc 接受wtc 信息");
+      };
+      setTimeout(() => {
+        bc.postMessage({ message: "bc send message from web2" });
+      }, 3000);
+      window.frames[0].window.postMessage({ message: "web2  frames 发送信息" });
+      window.postMessage("send from web2");
+      window.addEventListener("message", (e) => {
+        console.log("this is web2 message listener", e);
+      });
+    </script>
+  </body>
+</html>

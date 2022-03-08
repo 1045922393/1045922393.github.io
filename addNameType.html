@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function parse_url(url) {
+        const pattern = /(\w+)=(\w+)/gi;
+        const params = {};
+        //@ts-ignore
+        url.replace(pattern, (a, b, c) => {
+          params[b] = c;
+        });
+        return params;
+      }
+      const href = "https://cn.bing.com/search?flowName=&type=add";
+      console.log(
+        "🚀 ~ file: addNameType.html ~ line 22 ~ parse_url(href)",
+        parse_url(href),
+      );
+      function addNameType(target, option) {
+        const keys = Object.keys(option);
+        let [origin, search] = target.split("?");
+        const searchArr = search.split("&");
+        const kv = new Map();
+        searchArr.forEach((item) => {
+          const [key, value] = item.split("=");
+          kv.set(key, value);
+        });
+        keys.forEach((item) => {
+          kv.set(item, option[item]);
+        });
+        let newSearch = [];
+        kv.forEach((v, k) => {
+          newSearch.push(k + "=" + v);
+        });
+        return origin + "?" + newSearch.join("&");
+      }
+      const targetHref = addNameType(href, {
+        flowName: "",
+        type: "update",
+        newP: "xin",
+      });
+      console.log(
+        "🚀 ~ file: addNameType.html ~ line 35 ~ targetHref",
+        targetHref,
+      );
+    </script>
+  </body>
+</html>
