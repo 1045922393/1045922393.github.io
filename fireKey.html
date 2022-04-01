@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- 定义事件 -->
+    <button id="downBtn" onclick="onDown(this)">down</button>
+    <div style="height: 300vh">1</div>
+    <input id="input_username" />
+    <button onclick="onUp(this)">up</button>
+    <script type="text/javascript">
+      function fireKeyEvent(element, evtType, keyChar) {
+        element.focus();
+        var KeyboardEventInit = {
+          key: keyChar,
+          code: "",
+          location: 0,
+          repeat: false,
+          isComposing: false,
+        };
+        var evtObj = new KeyboardEvent(evtType, KeyboardEventInit);
+        element.dispatchEvent(evtObj);
+      }
+      function onDown(e) {
+        document.body.dispatchEvent(
+          new KeyboardEvent("keydown", {
+            key: "End",
+            code: "End",
+            location: 0,
+            keyCode: 35,
+            repeat: false,
+            isComposing: false,
+            isTrusted: true,
+          }),
+        );
+      }
+      function onUp(e) {
+        document.body.dispatchEvent(
+          new KeyboardEvent("keydown", {
+            key: "Home",
+            code: "Home",
+            keyCode: 36,
+            location: 0,
+            repeat: false,
+            isComposing: false,
+            isTrusted: true,
+          }),
+        );
+      }
+      var objInput = document.getElementById("input_username");
+      objInput.addEventListener(
+        "keydown",
+        function (e) {
+          objInput.value += e.key;
+        },
+        false,
+      );
+      document.body.addEventListener("keydown", (e) => {
+        console.log(e);
+      });
+      fireKeyEvent(objInput, "keydown", "a");
+      // targetElement.dispatchEvent(new KeyboardEvent('keypress'))
+      // Home 36 End 35
+    </script>
+  </body>
+</html>
