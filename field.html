@@ -15,7 +15,8 @@
         background: aliceblue;
       }
       field {
-        --中线: linear-gradient(#fff, #fff) center/2px 100% no-repeat;
+        /* <bg-size> 只能紧接着 <bg-position> 出现，以"/"分割，如： "center/80%". */
+        --中线: linear-gradient(#fff, #fff) center/2px 100% no-repeat;  /* bg-image bg-position/bg-size bg-repeat */
         --中圈: radial-gradient(
             closest-side circle,
             #fff 2px,
@@ -23,16 +24,16 @@
             #fff 0 100%,
             transparent 0
           )
-          center/20em 20em no-repeat;
+          center/20em 20em no-repeat; /* bg-image bg-position/bg-size bg-repeat */
         /* --大禁区: linear-gradient(#43A63C, #43A63C) left center/calc(18em - 2px) calc(44em - 4px) no-repeat, linear-gradient(#fff, #fff) left center/18em 44em no-repeat; */
         --大禁区: linear-gradient(
               to right,
               #43a63c calc(18em - 2px),
               transparent 0
             )
-            0 center/calc(100% - 18em + 2px) calc(44em - 4px) repeat-x,
-          linear-gradient(to right, #fff 18em, transparent 0) 0
-            center/calc(100% - 18em) 44em repeat-x;
+            0 center/calc(100% - 18em + 2px) calc(44em - 4px) repeat-x, /* bg-image bg-position/bg-size bg-repeat */
+          linear-gradient(to right, #fff 0 18em, transparent 18em 0) 
+          0 center/calc(100% - 18em) 44em repeat-x; /* bg-image bg-position/bg-size bg-repeat */
         /* --小禁区: linear-gradient(
               to right,
               #43a63c calc(9em - 2px),
@@ -92,7 +93,7 @@
         outline-offset: -5em;
         background: var(--草坪), var(--角球弧), var(--罚球点), var(--球门),
           var(--小禁区), var(--大禁区), var(--罚球弧), var(--中线), var(--中圈),
-          #43a63c;
+          #43a63c; /* 前面的会覆盖后面的 */
         background-blend-mode: soft-light, normal, normal, normal, normal,
           normal, normal, normal, normal, normal, normal, normal;
       }
