@@ -1,0 +1,1 @@
+import{o as r,h as e,i as s}from"./index.6be707e4.js";const a={setup(){return r(()=>{const t=document.querySelector("body"),o=t.style.transform.split(" ");t&&(t.style.transform=`${o[0]} rotate(0deg)`)}),e(()=>{s()}),{}}};export{a as v};
