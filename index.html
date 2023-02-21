@@ -18,19 +18,29 @@
       }
       #app {
         min-height: 100%;
-        background: url("./assets/desktop.jpeg") center / cover no-repeat;
+        /* background: url("./assets/desktop.jpeg") center / cover no-repeat; */
+        position: relative;
+      }
+      .image_bg {
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        filter: url(#displacement-wave-filter);
       }
       .home h1 {
         text-align: center;
         filter: contrast(30);
-        background-color: #000;
+        /* background-color: #000; */
         text-align: center;
       }
       .home h1 span {
         font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
           sans-serif;
         letter-spacing: -40px;
-        color: #fff;
+        color: #000;
         animation: move-letter 4s linear forwards;
       }
       @keyframes move-letter {
@@ -65,12 +75,30 @@
         color: rgb(68, 255, 0);
         text-decoration: none;
       }
+   
     </style>
   </head>
   <body>
     <div id="app" class="home">
+      <img src="./assets/desktop.jpeg" class="image_bg" alt="" srcset="">
       <h1><span>Welcome to my web</span></h1>
       <div class="menuList" id="menuList"></div>
+      <svg width="0" height="0">
+        <filter id="displacement-wave-filter">
+          <!--baseFrequency设置0.01 0.09两个值，代表x轴和y轴的噪声频率-->
+          <feTurbulence baseFrequency="0.01 0.09">
+            <!--这是svg动画的定义方式，通过动画不断改变baseFrequency的值，从而形成波动效果-->
+            <animate
+              attributeName="baseFrequency"
+              dur="20s"
+              keyTimes="0;0.5;1"
+              values="0.01 0.09;0.02 0.13;0.01 0.09"
+              repeatCount="indefinite"
+            ></animate>
+          </feTurbulence>
+          <feDisplacementMap in="SourceGraphic" scale="10" />
+        </filter>
+      </svg>
     </div>
   </body>
   <script src="./lib/vue.global.prod.js"></script>
