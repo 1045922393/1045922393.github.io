@@ -43,6 +43,7 @@
         color: #000;
         animation: move-letter 4s linear forwards;
       }
+
       @keyframes move-letter {
         0% {
           opacity: 0;
@@ -60,27 +61,50 @@
           filter: blur(1px);
         }
       }
+
+      .home .menuList {
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 8px;
+        padding: 12px;
+      }
+
       .home .menu-item {
+        position: relative;
         display: inline-block;
         height: 140px;
         width: 140px;
         line-height: 140px;
         text-align: center;
-        background-color: rgba(236, 222, 35, 0.468);
-        border-radius: 50% 10% 50% 10%;
+        background: linear-gradient(45deg, #4c298c, #7e2c6f);
+        border-radius: 50%;
+        font-size: 13px;
         backdrop-filter: blur(2px);
         margin: 8px;
       }
+      .home .menu-item::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 80%;
+        width: 80%;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+      }
       .home .menu-item a {
-        color: rgb(68, 255, 0);
+        color: #fff;
+        text-shadow: 2px 2px 5px #742a75;
+        font-weight: 800;
+        letter-spacing: 1px;
         text-decoration: none;
       }
-   
     </style>
   </head>
   <body>
     <div id="app" class="home">
-      <img src="./assets/desktop.jpeg" class="image_bg" alt="" srcset="">
+      <img src="./assets/desktop.jpeg" class="image_bg" alt="" srcset="" />
       <h1><span>Welcome to my web</span></h1>
       <div class="menuList" id="menuList"></div>
       <svg width="0" height="0">
