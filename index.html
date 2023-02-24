@@ -80,6 +80,10 @@
         font-size: 13px;
         backdrop-filter: blur(2px);
         margin: 8px;
+        transition: all 1.2s;
+      }
+      .menu-item:hover {
+        transform: scale(1.2);
       }
       .home .menu-item::before {
         content: "";
@@ -93,7 +97,7 @@
         transform: translate(-50%, -50%);
         z-index: -1;
       }
-      .home .menu-item a {
+      .home .menu-item span {
         color: #fff;
         text-shadow: 2px 2px 5px #742a75;
         font-weight: 800;
@@ -179,10 +183,10 @@
       },
     ];
     routers.forEach((item) => {
-      const links = document.createElement("p");
+      const links = document.createElement("a");
       links.classList.add("menu-item");
-      const link = document.createElement("a");
-      link.href = item.href;
+      const link = document.createElement("span");
+      links.href = item.href;
       link.innerText = item.name;
       links.appendChild(link);
       document.getElementById("menuList").appendChild(links);
