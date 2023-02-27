@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>天干地支年</title>
+  </head>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      background-color: #001f4f;
+      color: #ccc;
+    }
+    [v-cloak] {
+      display: none !important;
+    }
+    .result {
+      overflow-wrap: break-word;
+      padding-bottom: 0;
+      outline: none;
+      font-size: 40px;
+      line-height: 48px;
+      font: 400 28px "Microsoft YaHei", Arial, Helvetica, Sans-Serif;
+      border-collapse: collapse;
+      border-spacing: 0;
+      list-style: none;
+      text-shadow: 1px 1px 1px yellowgreen;
+    }
+    /*在谷歌下移除input[number]的上下箭头*/
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
+      margin: 0;
+    }
+    /*在firefox下移除input[number]的上下箭头*/
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    #app {
+      width: 50%;
+      min-height: 90vh;
+      margin: 0 auto;
+      /* background: url('./assets/xingzuo.png') center 60px / 100% auto no-repeat; */
+      text-align: center;
+    }
+    .input_number {
+      width: 200px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 24px;
+    }
+  </style>
+  <body>
+    <div id="app" v-cloak>
+      <input class="input_number" v-model="pickVal" type="date" />
+      <div class="result">{{result}}</div>
+      <div class="result">{{xingZuo}}</div>
+      <img src="./assets/xingzuo.png" alt="" style="width: 100%">
+    </div>
+  </body>
+  <script src="./lib/vue.global.prod.js"></script>
+  <script>
+    const xingMonth = [
+      {
+        month: 1,
+        include: "魔蝎,水瓶",
+        fontDay: "20",
+      },
+      {
+        month: 2,
+        include: "水瓶,双鱼",
+        fontDay: "19",
+      },
+      {
+        month: 3,
+        include: "双鱼,白羊",
+        fontDay: "20",
+      },
+      {
+        month: 4,
+        include: "白羊,金牛",
+        fontDay: "20",
+      },
+      {
+        month: 5,
+        include: "金牛,双子",
+        fontDay: "21",
+      },
+      {
+        month: 6,
+        include: "双子,巨蟹",
+        fontDay: "21",
+      },
+      {
+        month: 7,
+        include: "巨蟹,狮子",
+        fontDay: "22",
+      },
+      {
+        month: 8,
+        include: "狮子,处女",
+        fontDay: "23",
+      },
+      {
+        month: 9,
+        include: "处女,天秤",
+        fontDay: "23",
+      },
+      {
+        month: 10,
+        include: "天秤,天蝎",
+        fontDay: "23",
+      },
+      {
+        month: 11,
+        include: "天蝎,射手",
+        fontDay: "22",
+      },
+      {
+        month: 12,
+        include: "射手,魔蝎",
+        fontDay: "21",
+      },
+    ].map((item) => {
+      item.include = item.include.split(",");
+      return item;
+    });
+    // 辛 1 酉 1
+    const tian = str2Arr(`庚、辛、壬、癸、甲、乙、丙、丁、戊、己`);
+    const di = str2Arr(`申、酉、戌、亥、子、丑、寅、卯、辰、巳、午、未`);
+    const sheng = str2Arr(`猴、鸡、狗、猪、鼠、牛、虎、兔、龙、蛇、马、羊`);
+    // 尾数 偶为阳 奇为阴
+    const TaiJi = str2Arr(`阳、阴`);
+    function str2Arr(str) {
+      return str.split("、");
+    }
+
+    // 最后数字是天干
+    // 年份除以12取余是地
+    // 地也对应着生肖
+
+    function getTDS(str) {
+      const first = tian[str.substr(-1)];
+      const secondIndex = str % 12;
+      const second = di[secondIndex];
+      const third = sheng[secondIndex];
+      const forth = TaiJi[str.substr(-1) % 2];
+      return first + second + third + "年" + "属" + forth;
+    }
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          pickVal: "",
+        };
+      },
+      computed: {
+        inputYear() {
+          return this.pickVal.split("-")[0] || "" + "";
+        },
+        inputMonth() {
+          return this.pickVal.split("-")[1] || "" + "";
+        },
+        inputDay() {
+          return this.pickVal.split("-")[2] || "" + "";
+        },
+        result() {
+          if (!this.inputYear) return "";
+
+          const check = this.inputYear;
+
+          return getTDS(check);
+        },
+        xingZuo() {
+          if (!this.inputMonth || !this.inputDay) return "";
+          const localMonth = xingMonth.find(
+            (item) => this.inputMonth == item.month,
+          );
+          const xingIndex = this.inputDay <= localMonth.fontDay ? 0 : 1;
+          return localMonth.include[xingIndex];
+        },
+      },
+    }).mount("#app");
+  </script>
+</html>

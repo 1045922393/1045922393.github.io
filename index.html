@@ -63,9 +63,14 @@
       }
 
       .home .menuList {
+        width: 80%;
+        margin: 0 auto;
         background-color: rgba(0, 0, 0, 0.6);
         border-radius: 8px;
         padding: 12px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
       }
 
       .home .menu-item {
@@ -134,6 +139,50 @@
     const { createApp } = Vue;
     const routers = [
       {
+        name: "生日计算",
+        href: "/twelveYear.html",
+      },
+      {
+        name: "villiam",
+        href: "/villiam",
+      },
+      {
+        name: "yang",
+        href: "/yang",
+      },
+      {
+        name: "vue",
+        href: "/vue.html",
+      },
+      {
+        name: "足球场",
+        href: "field.html",
+      },
+      {
+        name: "正在输入效果",
+        href: "./cssDemo/typing.html",
+      },
+      {
+        name: "villiam",
+        href: "/villiam",
+      },
+      {
+        name: "yang",
+        href: "/yang",
+      },
+      {
+        name: "vue",
+        href: "/vue.html",
+      },
+      {
+        name: "足球场",
+        href: "field.html",
+      },
+      {
+        name: "正在输入效果",
+        href: "./cssDemo/typing.html",
+      },
+      {
         name: "addNameType",
         href: "/addNameType.html",
       },
@@ -160,26 +209,6 @@
       {
         name: "web2",
         href: "/web2.html",
-      },
-      {
-        name: "yang",
-        href: "/yang",
-      },
-      {
-        name: "villiam",
-        href: "/villiam",
-      },
-      {
-        name: "vue",
-        href: "/vue.html",
-      },
-      {
-        name: "足球场",
-        href: "field.html",
-      },
-      {
-        name: "正在输入效果",
-        href: "./cssDemo/typing.html",
       },
     ];
     routers.forEach((item) => {
