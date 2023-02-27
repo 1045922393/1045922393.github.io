@@ -4,9 +4,92 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Flow挂在上vm的方法</title>
+    <script src="./lib/tinymce/tinymce.min.js"></script>
+    <script>
+      tinymce.init({
+        selector: "#tinymce",
+        language: "zh-Hans",
+        plugins: `advlist autoresize code emoticons image link nonbreaking quickbars table visualchars anchor autosave codesample fullscreen importcss lists pagebreak save template wordcount autolink charmap directionality help insertdatetime media preview searchreplace visualblocks`,
+        skin: "tinymce-5",
+        content_css: "tinymce-5-dark",
+        toolbar:
+          "undo redo | styles bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+      });
+    </script>
   </head>
   <body>
+    <h2>Flow挂在上vm的方法</h2>
+    <textarea id="tinymce">
+      <pre>
+        const flow = {
+          getFlow(url, params) {
+            this(url, params);
+            console.log([1, 2, 3, 4, 5, 6, 7]);
+            return [1, 2, 3, 4, 5, 6, 7];
+          },
+          postFlow(params) {
+            console.log(this);
+            console.log(params);
+            return [...params];
+          },
+          delFlow(serve, params) {
+            return serve(params);
+          },
+        };
+        //  模拟request
+        const ajax = function (url, params) {
+          return new Promise((resolve) => {
+            console.log(url, params);
+            resolve("success");
+          });
+        };
+        // 模拟Vue构造函数
+        const Vue = function () {
+          this.name = "vue";
+        };
+        // 模拟组件的main.js
+        const install = function (vue, option) {
+          vue.prototype.$FC = {};
+          vue.prototype.$FC.baseUrl = option.baseUrl;
+          vue.prototype.$FC.serve = option.ajax;
+        };
+        // 模拟Vue.use(options)
+        install(Vue, {
+          baseUrl: "localhost",
+          ajax: ajax,
+        });
+        // 模拟组件FlowChat调用接口
+        const vm = new Vue();
+        // vm.$FC.serve(url, params);
+        class FN {
+          constructor(vm) {
+            this.$FC = vm.$FC;
+          }
+          getFlow() {
+            console.log(this);
+          }
+        }
+        const fn = new FN(vm);
+        console.log(fn);
+        const contactPath = function (...params) {
+          console.log(
+            "🚀 ~ file: callBindApply.html ~ line 62 ~ contactPath ~ params",
+            params,
+          );
+  
+          const url = params.join("/");
+          return url.replace(/\/+/g, "/");
+        };
+        console.log(
+          contactPath(
+            "/fdasf/fadsf/fadsf/",
+            "/qwewqe/wqeqwr/qw/rqwe/qwe/qwe/wqeqe/qwe/",
+            "eqwe/qweqw/eqw/r/qweq",
+          ),
+        );
+      </pre>
+    </textarea>
     <script>
       const flow = {
         getFlow(url, params) {

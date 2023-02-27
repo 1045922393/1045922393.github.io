@@ -4,9 +4,39 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>class继承</title>
+    <script src="./lib/tinymce/tinymce.min.js"></script>
+    <script>
+      tinymce.init({
+        selector: "#tinymce",
+        language: "zh-Hans",
+        plugins: `advlist autoresize code emoticons image link nonbreaking quickbars table visualchars anchor autosave codesample fullscreen importcss lists pagebreak save template wordcount autolink charmap directionality help insertdatetime media preview searchreplace visualblocks`,
+        skin: "tinymce-5",
+        content_css: "tinymce-5-dark",
+        toolbar:
+          "undo redo | styles bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+      });
+    </script>
   </head>
   <body>
+    <h2>class继承</h2>
+    <textarea id="tinymce">
+      <pre>
+        class a {
+          constructor() {
+            this.name = "a";
+            this.height = 180;
+          }
+        }
+        class b {
+          constructor() {
+            this.name = "b";
+            this.age = 11;
+          }
+        }
+        b.extends(a);
+      </pre>  
+    </textarea>
     <script>
       class a {
         constructor() {

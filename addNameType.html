@@ -4,9 +4,75 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>url入参</title>
+    <script src="./lib/tinymce/tinymce.min.js"></script>
+
+    <script>
+      tinymce.init({
+        selector: "#tinymce",
+        language: "zh-Hans",
+        plugins: `advlist autoresize code emoticons image link nonbreaking quickbars table visualchars anchor autosave codesample fullscreen importcss lists pagebreak save template wordcount autolink charmap directionality help insertdatetime media preview searchreplace visualblocks`,
+        // skin: 'oxide'
+        // skin: 'oxide-dark'
+        // skin: 'tinymce-5-dark'
+        skin: "tinymce-5",
+        // content_css: 'dark',
+        // content_css: 'writer',
+        // content_css: 'document',
+        content_css: "tinymce-5-dark",
+        toolbar:
+          "undo redo | styles bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+      });
+    </script>
   </head>
   <body>
+    <h2>URL入参</h2>
+    <textarea id="tinymce">
+      <pre class="code">
+        function parse_url(url) {
+          const pattern = /(\w+)=(\w+)/gi;
+          const params = {};
+          //@ts-ignore
+          url.replace(pattern, (a, b, c) => {
+            params[b] = c;
+          });
+          return params;
+        }
+        const href = "https://cn.bing.com/search?flowName=&type=add";
+        console.log(
+          "🚀 ~ file: addNameType.html ~ line 22 ~ parse_url(href)",
+          parse_url(href),
+        );
+        function addNameType(target, option) {
+          const keys = Object.keys(option);
+          let [origin, search] = target.split("?");
+          const searchArr = search.split("&");
+          const kv = new Map();
+          searchArr.forEach((item) => {
+            const [key, value] = item.split("=");
+            kv.set(key, value);
+          });
+          keys.forEach((item) => {
+            kv.set(item, option[item]);
+          });
+          let newSearch = [];
+          kv.forEach((v, k) => {
+            newSearch.push(k + "=" + v);
+          });
+          return origin + "?" + newSearch.join("&");
+        }
+        const targetHref = addNameType(href, {
+          flowName: "",
+          type: "update",
+          newP: "xin",
+        });
+        console.log(
+          "🚀 ~ file: addNameType.html ~ line 35 ~ targetHref",
+          targetHref,
+        );
+      </pre>
+    </textarea>
+
     <script>
       function parse_url(url) {
         const pattern = /(\w+)=(\w+)/gi;

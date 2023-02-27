@@ -20,7 +20,6 @@ export default {
       this.count,
       h(longList),
     ]);
-    console.log("Debugger ~ file: helloWorld.mjs:16 ~ render ~ div", div);
     return div;
   },
 };
