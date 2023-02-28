@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗盘时钟</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: linear-gradient(45deg,#2424de, #13c6ea,#0ecca9);
+        }
+        
+        #clock {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .label {
+            display: inline-block;
+            text-align: center;
+            padding: 5px 5px;
+            font-size: 20px;
+            font-family: 楷体;
+            transition: left 1s, top 1s, color 1s;
+            transform-origin: 0 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="clock"></div>
+
+</body>
+<script src="./luopan.js"></script>
+
+</html>
