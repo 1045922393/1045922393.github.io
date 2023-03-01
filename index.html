@@ -29,6 +29,7 @@
         width: 100%;
         height: 100%;
         filter: url(#displacement-wave-filter);
+        object-fit: cover;
       }
       .home h1 {
         text-align: center;
@@ -113,7 +114,8 @@
   </head>
   <body>
     <div id="app" class="home">
-      <img src="./assets/desktop.jpeg" class="image_bg" alt="" srcset="" />
+      <!-- <img src="./assets/desktop.jpeg" class="image_bg" alt="" srcset="" /> -->
+      <img src="http://api.btstu.cn/sjbz/?lx=meizi" class="image_bg" alt="" />
       <h1><span>Welcome to my web</span></h1>
       <div class="menuList" id="menuList"></div>
       <svg width="0" height="0">
@@ -138,6 +140,10 @@
   <script>
     const { createApp } = Vue;
     const routers = [
+      {
+        name: "内嵌",
+        href: "/iframe.html",
+      },
       {
         name: "美图欣赏",
         href: "/picture/index.html",
