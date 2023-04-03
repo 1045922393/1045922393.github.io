@@ -114,6 +114,7 @@
   </head>
   <body>
     <div id="app" class="home">
+      <audio autoplay="" loop=""><source src="/assets/bg.mp3" /></audio>
       <!-- <img src="./assets/desktop.jpeg" class="image_bg" alt="" srcset="" /> -->
       <img src="http://api.btstu.cn/sjbz/?lx=meizi" class="image_bg" alt="" />
       <h1><span>Welcome to my web</span></h1>
@@ -140,7 +141,11 @@
   <script>
     const { createApp } = Vue;
     const routers = [
-       {
+      {
+        name: "纪念日",
+        href: "/lxy/index.html",
+      },
+      {
         name: "hi react",
         href: "/picture",
       },
