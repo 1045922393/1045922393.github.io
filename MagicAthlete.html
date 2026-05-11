@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: url("/assets/desktop.jpeg");
+        padding-bottom: 40px;
+        color: #333;
+      }
       li {
         /* 去掉li前的点 */
         list-style: none;
@@ -52,7 +58,7 @@
         font-size: 18px;
         margin: 0 10px 10px;
         cursor: pointer;
-        background-color: greenyellow;
+        background-color: rgba(173, 255, 47, 0.5);
         align-items: center;
         padding: 10px;
         border-radius: 5px;
@@ -64,7 +70,12 @@
         width: 100%;
       }
       .hidden {
-        display: none;
+        visibility: hidden;
+        height: 0;
+        overflow: hidden;
+        padding: 0;
+        margin: 0;
+        width: 0;
       }
     </style>
   </head>
@@ -80,6 +91,21 @@
       <div class="skill_list"></div>
       <!-- 选择技能列表 -->
       <div class="skill-container"></div>
+
+      <!-- 天气 -->
+      <div class="weather_board">
+        <button class="btn weather_btn" onclick="showWeather()">
+          查看今天天气
+        </button>
+      </div>
+
+      <!-- 随机事件 -->
+      <div class="random_event_board">
+        <button class="btn random_event_btn" onclick="showRandomEvent()">
+          触发随机事件
+        </button>
+        <div class="random_event_history"></div>
+      </div>
     </div>
   </body>
 
@@ -96,171 +122,311 @@
       render();
       document.querySelector(".play_board").classList.remove("hidden");
     }
+    // 转为name为key的map，方便后续根据name获取技能描述和图标路径
     const skillMap = new Map([
-      [1, { name: "炼金术士", desc: "主要移动掷1/2，可改为移动4格" }],
-      [2, { name: "绊倒者", desc: "同格选手，直接绊倒（无法行动）" }],
-      [3, { name: "香蕉", desc: "其他选手经过我时,将被绊倒" }],
+      ["炼金术士", { name: "炼金术士", desc: "主要移动掷1/2，可改为移动4格" }],
+      ["绊倒者", { name: "绊倒者", desc: "同格选手，直接绊倒（无法行动）" }],
+      ["香蕉", { name: "香蕉", desc: "其他选手经过我时,将被绊倒" }],
       [
-        4,
+        "飞艇",
         {
           name: "飞艇",
           desc: "在15格子前开始回合,主要移动+3,在15和之后,主要移动-1",
         },
       ],
-      [5, { name: "半人马", desc: "从后方超越，把对手后移2格; " }],
+      ["半人马", { name: "半人马", desc: "从后方超越，把对手后移2格; " }],
       [
-        6,
+        "啦啦队长",
         {
           name: "啦啦队长",
           desc: "主要移动前,让最后的选手移动2格,我移动一格子",
         },
       ],
-      [7, { name: "教练", desc: "与我同格的选手(包括自己),主要移动+1" }],
-      [8, { name: "模范猫", desc: "与我同格的选手(包括自己),主要移动+1" }],
+      ["教练", { name: "教练", desc: "与我同格的选手(包括自己),主要移动+1" }],
       [
-        8,
+        "模范猫",
+        { name: "模范猫", desc: "与我同格的选手(包括自己),主要移动+1" },
+      ],
+      [
+        "骰贩子",
         {
           name: "骰贩子",
           desc: "每位选手每回合可以重投一次骰子,当他重投时,我移动一格",
         },
       ],
       [
-        9,
+        "决斗者",
         {
           name: "决斗者",
           desc: "有其他选手同格时,可以大喊一声决斗,各自投掷骰子,点数高的移动2格,一样时我获胜",
         },
       ],
-      [10, { name: "野兔", desc: "主要移动+2；独自领先则跳过回合" }],
+      ["野兔", { name: "野兔", desc: "主要移动+2；独自领先则跳过回合" }],
       [
-        11,
+        "蛋",
         {
           name: "蛋",
           desc: "比赛开始前, 选择3个技能, 选择一个作为本次比赛的技能",
         },
       ],
       [
-        12,
+        "人字拖",
         {
           name: "人字拖",
           desc: "选择不移动,与任意一位交换位置",
         },
       ],
       [
-        13,
+        "天才预言家",
         {
           name: "天才预言家",
           desc: "我可以预测自己主要移动时会掷出的点数。如果猜对了，我在本回合结束后，再进行一个额外回合",
         },
       ],
-      [14, { name: "黏翻怪", desc: "其他选手移动-1格" }],
-      [15, { name: "野兔", desc: "主要移动+2；独自领先则跳过回合" }],
+      ["黏翻怪", { name: "黏翻怪", desc: "其他选手移动-1格" }],
+      ["野兔", { name: "野兔", desc: "主要移动+2；独自领先则跳过回合" }],
       [
-        16,
+        "起哄者",
         {
           name: "起哄者",
           desc: "当一名角色在回合结束时，所在位置与回合开始时的位置相差不超过1格时，我移动2格",
         },
       ],
       [
-        17,
+        "巨婴",
         {
           name: "巨婴",
-          desc: "除起点外，没有人能和我同处一格。每当这种情况要发生时,改为将该选手放置在我身后的一格,要经过我时,需要2个移动点",
+          desc: "除起点外，没有人能和我同处一格。每当这种情况要发生时, 改为将该选手放置在我身后的一格, 要经过我时,需要2个移动点",
         },
       ],
       [
-        18,
+        "催眠师",
         {
           name: "催眠师",
           desc: "在我的主要移动前，我可以将1名参赛者扭曲传送至我的格子",
         },
       ],
-      [19, { name: "小蠕虫", desc: "他人掷1，他跳过移动，我移1格" }],
-      [20, { name: "随从", desc: "其他人主要移动掷到6时,我先移动2,他再移动" }],
-      [21, { name: "跳跳蛙", desc: "移动时跳过有选手的格子" }],
-      [22, { name: "大长腿", desc: "不掷骰，直接移5格" }],
+      ["小蠕虫", { name: "小蠕虫", desc: "他人掷1，他跳过移动，我移1格" }],
       [
-        23,
+        "随从",
+        { name: "随从", desc: "其他人主要移动掷到6时,我先移动2,他再移动" },
+      ],
+      ["跳跳蛙", { name: "跳跳蛙", desc: "移动时跳过有选手的格子" }],
+      ["大长腿", { name: "大长腿", desc: "不掷骰，直接移5格" }],
+      [
+        "可爱的失败者",
         {
           name: "可爱的失败者",
           desc: "如果我单独落后，在我的主要移动前，我获得1个分数筹码",
         },
       ],
-      [24, { name: "魔术师", desc: "最多两次重投骰子" }],
+      ["魔术师", { name: "魔术师", desc: "最多两次重投骰子" }],
       [
-        25,
+        "神机妙算",
         {
           name: "神机妙算",
           desc: "在我的第一回合开始，预测哪名选手获胜。猜对比赛即结束，我获第二名",
         },
       ],
-      [26, { name: "大嘴", desc: "当我停在的格子有其他人， 他们会被淘汰出局" }],
       [
-        27,
+        "大嘴",
+        {
+          name: "大嘴",
+          desc: "当我停在的格子有其他人， 他们会被淘汰出局; 以此方法淘汰的人过半时, 我就吃不下了",
+        },
+      ],
+      [
+        "派对动物",
         {
           name: "派对动物",
           desc: "在我的主要移动前，所有选手向我移动1格。与我同格的每一名其他选手，都使我的主要移动获得+1",
         },
       ],
       [
-        28,
+        "火箭科学家",
         {
           name: "火箭科学家",
           desc: "主要移动掷骰时，我可以移动掷出点数的2倍。如此，我会绊倒",
         },
       ],
       [
-        29,
+        "浪漫主义者",
         {
           name: "浪漫主义者",
           desc: "当任何人停留在恰好有另名选手的格子时，我移动2格风味",
         },
       ],
-      [30, { name: "蹭蹭怪", desc: "其他选手技能触发时，我移动1格" }],
+      ["蹭蹭怪", { name: "蹭蹭怪", desc: "其他选手技能触发时，我移动1格" }],
       [
-        31,
+        "模范猫",
         {
           name: "模范猫",
           desc: "我拥有当前领先选手的技能如果出现并列领先，我选择其中一个",
         },
       ],
       [
-        32,
+        "船长",
         {
           name: "船长",
           desc: "当任何人的主要移动掷出1点时，我在回合顺序中变为下一个行动者",
         },
       ],
       [
-        33,
+        "较真狂",
         {
           name: "较真狂",
           desc: "其他选手只能通过移动确切的格数来冲线。如果移动过量，就不会移动",
         },
       ],
       [
-        34,
+        "吸盘鱼",
         {
           name: "吸盘鱼",
           desc: "当与我同格的一名选手移动时，我可以移动到他的新格子",
         },
       ],
       [
-        35,
+        "第三者",
         {
           name: "第三者",
           desc: "在我的主要移动前，我可以传送至怡好有2名选手的格子,然后开始移动",
         },
       ],
       [
-        36,
+        "双胞胎",
         {
           name: "双胞胎",
           desc: "在我的回合开始前，我可以选择一名在上一场此赛中获胜的参赛者，使用他的技能进行比赛",
         },
       ],
     ]);
+
+    // 天气系统
+    const weatherMap = new Map([
+      ["大晴天", { name: "大晴天", desc: "所有选手主要移动+1" }],
+      ["雨天", { name: "雨天", desc: "所有选手主要移动-1" }],
+      ["晴天", { name: "晴天", desc: "比赛正常开始" }],
+      ["阴天", { name: "阴天", desc: "比赛正常开始" }],
+      ["多云", { name: "多云", desc: "比赛正常开始" }],
+      [
+        "大风天",
+        {
+          name: "大风天",
+          desc: "所有选手主要移动掷骰时，掷出1-3点时，移动点数翻倍；掷出4-6点时，移动点数减半（向下取整）",
+        },
+      ],
+      ["冰雹天", { name: "冰雹天", desc: "停留在7的倍数格子都触发绊倒" }],
+      [
+        "雪天",
+        {
+          name: "雪天",
+          desc: "所有选手主要移动掷骰时-1，所有选手结束位置与起始位置大于等于4格，则绊倒，停留在9的倍数的格子都触发绊倒",
+        },
+      ],
+    ]);
+    const showWeather = function () {
+      // 随机获取一个天气
+      const weather = Array.from(weatherMap.keys())[
+        Math.floor(Math.random() * weatherMap.size)
+      ];
+      const weatherDiv = document.createElement("div");
+      weatherDiv.className = "weather-status";
+      weatherDiv.innerHTML = `<h2>${weather}</h2><h3>${weatherMap.get(weather).desc}</h3>`;
+      document.querySelector(".weather_board").appendChild(weatherDiv);
+      const weather_btn = document.querySelector(".weather_btn");
+      weather_btn.classList.add("hidden");
+      alert(`今天天气是${weather}，效果是：${weatherMap.get(weather).desc}`);
+    };
+
+    // 随机事件系统
+    const randomEvents = new Map([
+      ["运动饮料", { name: "运动饮料", desc: "往前移动+2" }],
+      ["腿软", { name: "腿软", desc: "下回合主要移动-2" }],
+      [
+        "偷步",
+        {
+          name: "偷步",
+          desc: "再投一次骰子,但主动骰子-1",
+        },
+      ],
+      [
+        "焉知非福",
+        {
+          name: "焉知非福",
+          desc: "下回合骰子1-3乘以2.5,4-6点除以3,都是往下取整数",
+        },
+      ],
+      [
+        "陷人于不义",
+        {
+          name: "陷人于不义",
+          desc: "往一名选手扔香蕉,让他给绊倒",
+        },
+      ],
+      [
+        "等等我",
+        {
+          name: "等等我",
+          desc: "跟前面一名选手交换位置",
+        },
+      ],
+      [
+        "乾坤大挪移",
+        {
+          name: "乾坤大挪移",
+          desc: "将前面一位选手和后面一位选手交换位置",
+        },
+      ],
+      [
+        "哪里摔倒",
+        {
+          name: "哪里摔倒",
+          desc: "被绊倒了,哪里摔倒就在哪里站起来",
+        },
+      ],
+      [
+        "我命由我",
+        {
+          name: "我命由我",
+          desc: "下回合自己选择1-6点作为主要移动的点数",
+        },
+      ],
+      [
+        "自我保护",
+        {
+          name: "自我保护",
+          desc: "下回合免疫所有负面影响,包括天气和技能等",
+        },
+      ],
+      [
+        "回来吧你",
+        {
+          name: "回来吧你",
+          desc: "再你前面的所有选手往后退2格",
+        },
+      ],
+      [
+        "下黑手",
+        {
+          name: "下黑手",
+          desc: "将第一名选手传送到自己后面的一格",
+        },
+      ],
+    ]);
+
+    const showRandomEvent = function () {
+      const event = Array.from(randomEvents.keys())[
+        Math.floor(Math.random() * randomEvents.size)
+      ];
+      alert(`触发随机事件：${event}，效果是：${randomEvents.get(event).desc}`);
+      // 记录下来
+      const randomEventDiv = document.createElement("div");
+      randomEventDiv.className = "random-event";
+      randomEventDiv.innerHTML = `<p>${event}:${randomEvents.get(event).desc}</p>`;
+      document
+        .querySelector(".random_event_history")
+        .appendChild(randomEventDiv);
+    };
     // 渲染
     function render() {
       // 随机获取个技能
@@ -307,6 +473,18 @@
         `;
         skillContainer.appendChild(div);
       });
+
+      // 重置下天气
+      const weatherStatus = document.querySelector(".weather-status");
+      weatherStatus && weatherStatus.remove();
+      const weatherBtn = document.querySelector(".weather_btn");
+      weatherBtn && weatherBtn.classList.remove("hidden");
+
+      // 重置下随机事件
+      const randomEventHistory = document.querySelector(
+        ".random_event_history",
+      );
+      randomEventHistory && (randomEventHistory.innerHTML = "");
     }
     let skillReady = "";
     function delSkill(delListId, delLI) {
