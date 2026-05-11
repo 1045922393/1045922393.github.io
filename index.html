@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -38,8 +38,8 @@
         text-align: center;
       }
       .home h1 span {
-        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
-          sans-serif;
+        font-family:
+          "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
         letter-spacing: -40px;
         color: #000;
         animation: move-letter 4s linear forwards;
@@ -141,6 +141,10 @@
   <script>
     const { createApp } = Vue;
     const routers = [
+      {
+        name: "魔法运动员",
+        href: "/MagicAthlete.html",
+      },
       {
         name: "三国杀",
         href: "/sgsDist/index.html",

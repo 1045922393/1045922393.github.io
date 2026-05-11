@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="skill_list"></div>
+    <div class="skill-container">
+      <h2>A技能列表</h2>
+      <button onclick="addSkill('skill_List_a')">添加A技能</button>
+      <ul id="skill_List_a"></ul>
+      <h2>B技能列表</h2>
+      <button onclick="addSkill('skill_List_b')">添加B技能</button>
+      <ul id="skill_List_b"></ul>
+    </div>
+  </body>
+
+  <script>
+    const skillMap = new Map([
+      [1, { name: "炼金术士", desc: "主要移动掷1/2，可改为移动4格" }],
+      [2, { name: "绊倒者", desc: "同格选手，直接绊倒（无法行动）" }],
+      [3, { name: "香蕉", desc: "其他选手经过我时,将被绊倒" }],
+      [
+        4,
+        {
+          name: "小偷",
+          desc: "在15格子前开始回合,主要移动+3,在15和之后,主要移动-1",
+        },
+      ],
+      [5, { name: "半人马", desc: "从后方超越，把对手后移2格; " }],
+      [
+        6,
+        {
+          name: "啦啦队长",
+          desc: "主要移动前,让最后的选手移动2格,我移动一格子",
+        },
+      ],
+      [7, { name: "教练", desc: "与我同格的选手(包括自己),主要移动+1" }],
+      [
+        8,
+        {
+          name: "骰贩子",
+          desc: "每位选手每回合可以重投一次骰子,当他重投时,我移动一格",
+        },
+      ],
+      [
+        9,
+        {
+          name: "决斗",
+          desc: "有其他选手同格时,可以大喊一声决斗,各自投掷骰子,点数高的移动2格,一样时我获胜",
+        },
+      ],
+      [10, { name: "黑尔野兔", desc: "主要移动+2；独自领先则跳过回合" }],
+      [
+        11,
+        {
+          name: "蛋",
+          desc: "比赛开始前, 选择3个技能, 选择一个作为本次比赛的技能",
+        },
+      ],
+      [
+        12,
+        {
+          name: "人字拖",
+          desc: "选择不移动,与任意一位交换位置",
+        },
+      ],
+      [
+        13,
+        {
+          name: "天才预言家",
+          desc: "我可以预测自己主要移动时会掷出的点数。如果猜对了，我在本回合结束后，再进行一个额外回合",
+        },
+      ],
+      [14, { name: "黏翻怪", desc: "其他选手移动-1格" }],
+      [15, { name: "野兔", desc: "主要移动+2；独自领先则跳过回合" }],
+      [
+        16,
+        {
+          name: "起哄者",
+          desc: "当一名角色在回合结束时，所在位置与回合开始时的位置相差不超过1格时，我移动2格",
+        },
+      ],
+      [
+        17,
+        {
+          name: "巨婴",
+          desc: "除起点外，没有人能和我同处一格。每当这种情况要发生时,改为将该选手放置在我身后的一格,要经过我时,需要2个移动点",
+        },
+      ],
+      [
+        18,
+        {
+          name: "催眠师",
+          desc: "在我的主要移动前，我可以将1名参赛者扭曲传送至我的格子",
+        },
+      ],
+      [19, { name: "小蠕虫", desc: "他人掷1，他跳过移动，我移1格" }],
+      [20, { name: "随从", desc: "其他人主要移动掷到6时,我先移动2,他再移动" }],
+      [21, { name: "跳跳蛙", desc: "移动时跳过有选手的格子" }],
+      [22, { name: "Legs大长腿", desc: "不掷骰，直接移5格" }],
+      [
+        23,
+        {
+          name: "可爱的失败者",
+          desc: "如果我单独落后，在我的主要移动前，我获得1个分数筹码",
+        },
+      ],
+      [24, { name: "魔术师", desc: "最多两次重投骰子" }],
+      [
+        25,
+        {
+          name: "神机妙算",
+          desc: "在我的第一回合开始，预测哪名选手获胜。猜对比赛即结束，我获第二名",
+        },
+      ],
+      [26, { name: "大嘴", desc: "当我停在的格子有其他人， 他们会被淘汰出局" }],
+      [
+        27,
+        {
+          name: "派对动物",
+          desc: "在我的主要移动前，所有选手向我移动1格。与我同格的每一名其他选手，都使我的主要移动获得+1",
+        },
+      ],
+      [
+        28,
+        {
+          name: "火箭科学家",
+          desc: "主要移动掷骰时，我可以移动掷出点数的2倍。如此，我会绊倒",
+        },
+      ],
+      [
+        29,
+        {
+          name: "浪漫主义者",
+          desc: "当任何人停留在恰好有另名选手的格子时，我移动2格风味",
+        },
+      ],
+      [30, { name: "蹭蹭怪", desc: "其他选手技能触发时，我移动1格" }],
+      [
+        31,
+        {
+          name: "西西弗斯",
+          desc: "在我的回合开始前，我获得4个分数筹码。当我的主要移动掷出6时，我传送（非移动）回起点并失去1个分数筹码",
+        },
+      ],
+      [
+        32,
+        {
+          name: "船长",
+          desc: "当任何人的主要移动掷出1点时，我在回合顺序中变为下一个行动者",
+        },
+      ],
+      [
+        33,
+        {
+          name: "较真狂",
+          desc: "其他选手只能通过移动确切的格数来冲线。如果移动过量，就不会移动",
+        },
+      ],
+      [
+        34,
+        {
+          name: "吸盘鱼",
+          desc: "当与我同格的一名选手移动时，我可以移动到他的新格子",
+        },
+      ],
+      [
+        35,
+        {
+          name: "第三者",
+          desc: "在我的主要移动前，我可以传送至怡好有2名选手的格子,然后开始移动",
+        },
+      ],
+      [
+        36,
+        {
+          name: "双胞胎",
+          desc: "在我的回合开始前，我可以选择一名在上一场此赛中获胜的参赛者，使用他的技能进行比赛",
+        },
+      ],
+    ]);
+    // 随机获取十个技能
+    const randomSkills = Array.from(skillMap.keys())
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 10)
+      .map((key) => skillMap.get(key));
+
+    // 插入到页面中
+    const skill_list = document.querySelector(".skill_list");
+    randomSkills.forEach((skill) => {
+      const skillDiv = document.createElement("div");
+      skillDiv.innerHTML = `<div onclick="skillClicked('${skill.name}:${skill.desc}')"><strong >${skill.name}</strong>: ${skill.desc}</div>`;
+      skill_list.appendChild(skillDiv);
+    });
+    // 美化页面,每个技能之间增加间距
+    const skillDivs = document.querySelectorAll("div");
+    skillDivs.forEach((div) => {
+      div.style.marginBottom = "10px";
+    });
+    skill_list.style.fontFamily = "Arial, sans-serif";
+    skill_list.style.padding = "20px";
+
+    let skillReady = "";
+    function delSkill(delListId, delLI) {
+      return function () {
+        document.querySelector(delListId).removeChild(delLI);
+      };
+    }
+    function skillClicked(skill) {
+      if (!skillReady) {
+        return;
+      }
+      const addSkillList = document.querySelector("#" + skillReady);
+      addSkillList.children.length;
+      const li = document.createElement("li");
+      li.style.cursor = "pointer";
+      li.id = "skill_";
+      li.textContent = skill;
+      li.ondblclick = delSkill("#" + skillReady, li);
+      addSkillList.appendChild(li);
+    }
+    function addSkill(listId) {
+      skillReady = listId;
+    }
+  </script>
+</html>
