@@ -45,49 +45,53 @@
       .skill_list {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-around;
+        justify-content: flex-start;
       }
       .skill-item {
-        padding: 20px 0;
-        margin-bottom: 10px;
+        font-size: 24px;
+        width: 25%;
+        margin: 0 10px 10px;
         cursor: pointer;
         background-color: greenyellow;
-        flex: 0 0 30%;
         align-items: center;
         padding: 10px;
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s;
       }
+      .hidden {
+        display: none;
+      }
     </style>
   </head>
   <body>
-    <div class="skill_list"></div>
-    <div class="skill-container">
-      <h2>
-        A技能列表<button
-          class="btn margin_left_10px"
-          onclick="addSkill('skill_List_a')"
-        >
-          添加A技能
-        </button>
-      </h2>
-
-      <ul class="skill_list" id="skill_List_a"></ul>
-      <h2>
-        B技能列表<button
-          class="btn margin_left_10px"
-          onclick="addSkill('skill_List_b')"
-        >
-          添加B技能
-        </button>
-      </h2>
-
-      <ul class="skill_list" id="skill_List_b"></ul>
+    <h1>
+      输入游玩人数
+      <input type="number" id="play_number_id" />
+      <button class="btn" onclick="confirmPlayNumber()">confirm</button>
+    </h1>
+    <!-- 游戏面板 -->
+    <div class="play_board hidden">
+      <!-- 技能列表 -->
+      <div class="skill_list"></div>
+      <!-- 选择技能列表 -->
+      <div class="skill-container"></div>
     </div>
   </body>
 
   <script>
+    let play_number = 0;
+    function confirmPlayNumber() {
+      const input = document.getElementById("play_number_id");
+      const value = parseInt(input.value);
+      if (isNaN(value) || value < 2 || value > 10) {
+        alert("请输入一个介于2到10之间的数字");
+        return;
+      }
+      play_number = value;
+      render();
+      document.querySelector(".play_board").classList.remove("hidden");
+    }
     const skillMap = new Map([
       [1, { name: "炼金术士", desc: "主要移动掷1/2，可改为移动4格" }],
       [2, { name: "绊倒者", desc: "同格选手，直接绊倒（无法行动）" }],
@@ -252,31 +256,53 @@
         },
       ],
     ]);
-    // 随机获取十个技能
-    const randomSkills = Array.from(skillMap.keys())
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 10)
-      .map((key) => skillMap.get(key));
+    // 渲染
+    function render() {
+      // 随机获取个技能
+      const randomSkills = Array.from(skillMap.keys())
+        .sort(() => 0.5 - Math.random())
+        .slice(0, play_number * 2 + 6)
+        .map((key) => skillMap.get(key));
 
-    // 插入到页面中
-    const skill_list = document.querySelector(".skill_list");
-    randomSkills.forEach((skill) => {
-      const skillDiv = document.createElement("div");
-      skillDiv.onclick = function () {
-        skillClicked(`${skill.name}:${skill.desc}`);
-      };
-      skillDiv.innerHTML = `<div ><strong >${skill.name}</strong>: ${skill.desc}</div>`;
-      skillDiv.className = "skill-item";
-      skill_list.appendChild(skillDiv);
-    });
-    // 美化页面,每个技能之间增加间距
-    const skillDivs = document.querySelectorAll("div");
-    skillDivs.forEach((div) => {
-      div.style.marginBottom = "10px";
-    });
-    skill_list.style.fontFamily = "Arial, sans-serif";
-    skill_list.style.padding = "20px";
+      // 插入到页面中
+      const skill_list = document.querySelector(".skill_list");
+      skill_list.innerHTML = "";
+      randomSkills.forEach((skill) => {
+        const skillDiv = document.createElement("div");
+        skillDiv.onclick = function () {
+          skillClicked(`${skill.name}:${skill.desc}`);
+        };
+        skillDiv.innerHTML = `<div ><strong >${skill.name}</strong>: ${skill.desc}</div>`;
+        skillDiv.className = "skill-item";
+        skill_list.appendChild(skillDiv);
+      });
+      // 美化页面,每个技能之间增加间距
+      const skillDivs = document.querySelectorAll("div");
+      skillDivs.forEach((div) => {
+        div.style.marginBottom = "10px";
+      });
+      skill_list.style.fontFamily = "Arial, sans-serif";
+      skill_list.style.padding = "20px";
 
+      // 渲染角色的技能列表
+      document.querySelector(".skill-container").innerHTML = "";
+      Array.from({ length: play_number }, (_, i) => {
+        const skillContainer = document.querySelector(".skill-container");
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <h2>
+            ${String.fromCharCode(65 + i)}技能列表<button
+              class="btn margin_left_10px"
+              onclick="addSkill('skill_List_${String.fromCharCode(97 + i)}')"
+            >
+              添加${String.fromCharCode(65 + i)}技能
+            </button>
+          </h2>
+          <ul class="skill_list" id="skill_List_${String.fromCharCode(97 + i)}"></ul>
+        `;
+        skillContainer.appendChild(div);
+      });
+    }
     let skillReady = "";
     function delSkill(delListId, delLI) {
       return function () {
