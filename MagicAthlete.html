@@ -48,8 +48,8 @@
         justify-content: flex-start;
       }
       .skill-item {
+        width: 30%;
         font-size: 24px;
-        width: 25%;
         margin: 0 10px 10px;
         cursor: pointer;
         background-color: greenyellow;
@@ -58,6 +58,10 @@
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s;
+      }
+
+      .skill_img {
+        width: 100%;
       }
       .hidden {
         display: none;
@@ -99,7 +103,7 @@
       [
         4,
         {
-          name: "小偷",
+          name: "飞艇",
           desc: "在15格子前开始回合,主要移动+3,在15和之后,主要移动-1",
         },
       ],
@@ -112,6 +116,7 @@
         },
       ],
       [7, { name: "教练", desc: "与我同格的选手(包括自己),主要移动+1" }],
+      [8, { name: "模范猫", desc: "与我同格的选手(包括自己),主要移动+1" }],
       [
         8,
         {
@@ -122,11 +127,11 @@
       [
         9,
         {
-          name: "决斗",
+          name: "决斗者",
           desc: "有其他选手同格时,可以大喊一声决斗,各自投掷骰子,点数高的移动2格,一样时我获胜",
         },
       ],
-      [10, { name: "黑尔野兔", desc: "主要移动+2；独自领先则跳过回合" }],
+      [10, { name: "野兔", desc: "主要移动+2；独自领先则跳过回合" }],
       [
         11,
         {
@@ -174,7 +179,7 @@
       [19, { name: "小蠕虫", desc: "他人掷1，他跳过移动，我移1格" }],
       [20, { name: "随从", desc: "其他人主要移动掷到6时,我先移动2,他再移动" }],
       [21, { name: "跳跳蛙", desc: "移动时跳过有选手的格子" }],
-      [22, { name: "Legs大长腿", desc: "不掷骰，直接移5格" }],
+      [22, { name: "大长腿", desc: "不掷骰，直接移5格" }],
       [
         23,
         {
@@ -216,8 +221,8 @@
       [
         31,
         {
-          name: "西西弗斯",
-          desc: "在我的回合开始前，我获得4个分数筹码。当我的主要移动掷出6时，我传送（非移动）回起点并失去1个分数筹码",
+          name: "模范猫",
+          desc: "我拥有当前领先选手的技能如果出现并列领先，我选择其中一个",
         },
       ],
       [
@@ -270,9 +275,9 @@
       randomSkills.forEach((skill) => {
         const skillDiv = document.createElement("div");
         skillDiv.onclick = function () {
-          skillClicked(`${skill.name}:${skill.desc}`);
+          skillClicked(skill);
         };
-        skillDiv.innerHTML = `<div ><strong >${skill.name}</strong>: ${skill.desc}</div>`;
+        skillDiv.innerHTML = `<img class="skill_img" src="/assets/magicImg/${skill.name}.png"><div><strong >${skill.name}</strong>: ${skill.desc}</div>`;
         skillDiv.className = "skill-item";
         skill_list.appendChild(skillDiv);
       });
@@ -319,7 +324,7 @@
 
       li.id = "skill_";
       li.className = "skill-item";
-      li.textContent = skill;
+      li.innerHTML = `<img class="skill_img" src="/assets/magicImg/${skill.name}.png"><div><strong>${skill.name}</strong>: ${skill.desc}</div>`;
       li.ondblclick = delSkill("#" + skillReady, li);
       addSkillList.appendChild(li);
     }
