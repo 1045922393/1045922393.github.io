@@ -504,6 +504,7 @@
     };
     // 渲染
     function render() {
+      resetRender();
       // 随机获取个技能
       const randomSkills = Array.from(skillMap.keys())
         .sort(() => 0.5 - Math.random())
@@ -512,7 +513,6 @@
 
       // 插入到页面中
       const skill_list = document.querySelector(".skill_list");
-      skill_list.innerHTML = "";
       randomSkills.forEach((skill) => {
         const skillDiv = document.createElement("div");
         skillDiv.onclick = function () {
@@ -531,8 +531,28 @@
       skill_list.style.padding = "20px";
 
       // 渲染角色的技能列表
+      renderSkillContainer(play_number);
+    }
+    let skillReady = "";
+
+    // 重置页面
+    function resetRender() {
+      const skill_list = document.querySelector(".skill_list");
+      skill_list.innerHTML = "";
+      const weatherStatus = document.querySelector(".weather-status");
+      weatherStatus && weatherStatus.remove();
+      const weatherBtn = document.querySelector(".weather_btn");
+      weatherBtn && weatherBtn.classList.remove("hidden");
       document.querySelector(".skill-container").innerHTML = "";
-      Array.from({ length: play_number }, (_, i) => {
+      const randomEventHistory = document.querySelector(
+        ".random_event_history",
+      );
+      randomEventHistory && (randomEventHistory.innerHTML = "");
+    }
+
+    // 渲染角色技能列表
+    function renderSkillContainer(renderNumber) {
+      Array.from({ length: renderNumber }, (_, i) => {
         const skillContainer = document.querySelector(".skill-container");
         const div = document.createElement("div");
         div.innerHTML = `
@@ -548,20 +568,7 @@
         `;
         skillContainer.appendChild(div);
       });
-
-      // 重置下天气
-      const weatherStatus = document.querySelector(".weather-status");
-      weatherStatus && weatherStatus.remove();
-      const weatherBtn = document.querySelector(".weather_btn");
-      weatherBtn && weatherBtn.classList.remove("hidden");
-
-      // 重置下随机事件
-      const randomEventHistory = document.querySelector(
-        ".random_event_history",
-      );
-      randomEventHistory && (randomEventHistory.innerHTML = "");
     }
-    let skillReady = "";
     function delSkill(delListId, delLI) {
       return function () {
         document.querySelector(delListId).removeChild(delLI);
