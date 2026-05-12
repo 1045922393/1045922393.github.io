@@ -7,13 +7,31 @@
     <style>
       body {
         font-family: Arial, sans-serif;
-        background: url("/assets/desktop.jpeg");
+        background: url("/assets/desktop.jpeg") no-repeat center/cover fixed;
         padding-bottom: 40px;
         color: #333;
       }
       li {
         /* 去掉li前的点 */
         list-style: none;
+      }
+      /* 美化数字输入框,去掉上下箭头 */
+      .number_input {
+        width: 120px;
+        padding: 9px 0;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+        /* 去掉默认的上下箭头 */
+        -webkit-appearance: none !important;
+        margin: 0;
+        -moz-appearance: textfield;
+      }
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
       }
       .margin_left_10px {
         margin-left: 10px;
@@ -82,7 +100,7 @@
   <body>
     <h1>
       输入游玩人数
-      <input type="number" id="play_number_id" />
+      <input class="number_input" type="number" id="play_number_id" />
       <button class="btn" onclick="confirmPlayNumber()">confirm</button>
     </h1>
     <!-- 游戏面板 -->
@@ -303,44 +321,73 @@
 
     // 天气系统
     const weatherMap = new Map([
-      ["大晴天", { name: "大晴天", desc: "所有选手主要移动+1" }],
-      ["雨天", { name: "雨天", desc: "所有选手主要移动-1" }],
-      ["晴天", { name: "晴天", desc: "比赛正常开始" }],
-      ["阴天", { name: "阴天", desc: "比赛正常开始" }],
-      ["多云", { name: "多云", desc: "比赛正常开始" }],
+      [
+        "晴朗,但双数限行",
+        {
+          name: "晴朗,但双数限行🌞",
+          desc: "所有选手主要移动掷骰前需进行一次投掷骰子并需要单数方可移动",
+        },
+      ],
+      [
+        "晴朗,但单数限行",
+        {
+          name: "晴朗,但单数限行🌞",
+          desc: "所有选手主要移动掷骰前需进行一次投掷骰子并需要双数方可移动",
+        },
+      ],
+      ["大晴天", { name: "大晴天☀️", desc: "所有选手主要移动+1" }],
+      ["雨天", { name: "雨天🌧️", desc: "所有选手主要移动-1" }],
+      [
+        "晴天",
+        {
+          name: "晴天🌤️",
+          desc: "触发绊倒时候选手投掷骰子, 如果投掷5/6, 则绊倒不生效",
+        },
+      ],
+      ["阴天", { name: "阴天☁️", desc: "比赛正常开始" }],
+      ["多云", { name: "多云⛅", desc: "比赛正常开始" }],
       [
         "大风天",
         {
-          name: "大风天",
+          name: "大风天🌬️",
           desc: "所有选手主要移动掷骰时，掷出1-3点时，移动点数翻倍；掷出4-6点时，移动点数减半（向下取整）",
         },
       ],
-      ["冰雹天", { name: "冰雹天", desc: "停留在7的倍数格子都触发绊倒" }],
+      [
+        "冰雹天",
+        {
+          name: "冰雹天⛈️",
+          desc: "停留在7的倍数格子需要投掷骰子,除非投掷5/6,否则触发绊倒",
+        },
+      ],
       [
         "雪天",
         {
-          name: "雪天",
-          desc: "所有选手主要移动掷骰时-1，所有选手结束位置与起始位置大于等于4格，则绊倒，停留在9的倍数的格子都触发绊倒",
+          name: "雪天❄️",
+          desc: "所有选手主要移动掷骰时-1，所有选手结束位置与起始位置大于等于4格时，或者停留在9的倍数的格子时，需要投掷出6，否则触发绊倒",
         },
       ],
     ]);
+    // 随机数 5-25
+    const randomNumber = Math.floor(Math.random() * 21) + 5;
     const showWeather = function () {
       // 随机获取一个天气
       const weather = Array.from(weatherMap.keys())[
         Math.floor(Math.random() * weatherMap.size)
       ];
+      const weatherStatus = weatherMap.get(weather);
       const weatherDiv = document.createElement("div");
       weatherDiv.className = "weather-status";
-      weatherDiv.innerHTML = `<h2>${weather}</h2><h3>${weatherMap.get(weather).desc}</h3>`;
+      weatherDiv.innerHTML = `<h2>${weatherStatus.name}</h2><h3>${weatherStatus.desc}</h3><p>（今日随机事件格子在${randomNumber}）</p>`;
       document.querySelector(".weather_board").appendChild(weatherDiv);
       const weather_btn = document.querySelector(".weather_btn");
       weather_btn.classList.add("hidden");
-      alert(`今天天气是${weather}，效果是：${weatherMap.get(weather).desc}`);
+      alert(`今天天气是${weatherStatus.name}，${weatherStatus.desc}`);
     };
 
     // 随机事件系统
     const randomEvents = new Map([
-      ["运动饮料", { name: "运动饮料", desc: "往前移动+2" }],
+      ["加油打气", { name: "加油打气", desc: "收到鼓励, 往前移动+2" }],
       ["腿软", { name: "腿软", desc: "下回合主要移动-2" }],
       [
         "偷步",
@@ -371,10 +418,38 @@
         },
       ],
       [
+        "厚积薄发",
+        {
+          name: "厚积薄发",
+          desc: "最后一名选手往前移动5格",
+        },
+      ],
+      [
+        "临门一脚",
+        {
+          name: "临门一脚",
+          desc: "第一名选手往后移动5格",
+        },
+      ],
+      [
+        "单号限行",
+        {
+          name: "单号限行",
+          desc: "所有在单数格子上的选手依次投掷骰子,投掷为单数,往后移动一格子,投掷为双数,往前移动一格子",
+        },
+      ],
+      [
+        "双号限行",
+        {
+          name: "双号限行",
+          desc: "所有在双数格子上的选手依次投掷骰子,投掷为双数,往后移动一格子,投掷为单数,往前移动一格子",
+        },
+      ],
+      [
         "乾坤大挪移",
         {
           name: "乾坤大挪移",
-          desc: "将前面一位选手和后面一位选手交换位置",
+          desc: "将前面一位选手和后面一位选手(如果没有则选择距离自己最近的两名选手)交换位置",
         },
       ],
       [
@@ -418,11 +493,11 @@
       const event = Array.from(randomEvents.keys())[
         Math.floor(Math.random() * randomEvents.size)
       ];
-      alert(`触发随机事件：${event}，效果是：${randomEvents.get(event).desc}`);
+      alert(`触发随机事件：${event}，${randomEvents.get(event).desc}`);
       // 记录下来
       const randomEventDiv = document.createElement("div");
       randomEventDiv.className = "random-event";
-      randomEventDiv.innerHTML = `<p>${event}:${randomEvents.get(event).desc}</p>`;
+      randomEventDiv.innerHTML = `<p>${event}: ${randomEvents.get(event).desc}</p>`;
       document
         .querySelector(".random_event_history")
         .appendChild(randomEventDiv);
