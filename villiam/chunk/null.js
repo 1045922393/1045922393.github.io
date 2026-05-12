@@ -1,0 +1,1 @@
+import{d as e,b as _,e as n,_ as s}from"../entry/index.js";const t={class:"null"},o=e({__name:"null",setup(a){return(c,l)=>(_(),n("div",t,"\u656C\u8BF7\u671F\u5F85"))}});const p=s(o,[["__scopeId","data-v-031ea357"]]);export{p as default};
