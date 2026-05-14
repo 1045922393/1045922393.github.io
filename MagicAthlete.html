@@ -11,6 +11,9 @@
         padding-bottom: 40px;
         color: #333;
       }
+      img {
+        border-radius: 8px;
+      }
       li {
         /* 去掉li前的点 */
         list-style: none;
@@ -119,7 +122,23 @@
         font-size: 18px;
         margin: 0 10px 10px;
         cursor: pointer;
-        background-color: rgba(173, 255, 47, 0.5);
+        background:
+          linear-gradient(
+            217deg,
+            rgba(255, 143, 113, 0.8),
+            rgba(255, 0, 0, 0) 70.71%
+          ),
+          linear-gradient(
+            127deg,
+            rgba(255, 255, 136, 0.8),
+            rgba(0, 255, 0, 0) 70.71%
+          ),
+          linear-gradient(
+            336deg,
+            rgba(186, 244, 102, 0.8),
+            rgba(0, 0, 255, 0) 70.71%
+          );
+        color: rgb(90, 88, 88);
         align-items: center;
         padding: 10px;
         border-radius: 5px;
@@ -630,8 +649,10 @@
       // 渲染角色的技能列表
       renderSkillContainer(play_number || 1);
     }
-    if (window.location.hash) {
+    if (window.location.hash && window.confirm("是否加载原卡组?")) {
       getSkillCard(true);
+    } else {
+      window.location.hash = "";
     }
     let skillReady = "";
 
