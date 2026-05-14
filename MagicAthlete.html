@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>魔法运动员</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -14,6 +14,44 @@
       li {
         /* 去掉li前的点 */
         list-style: none;
+      }
+
+      .banner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+      }
+      .map_img {
+        position: absolute;
+        right: 50%;
+        top: 50%;
+        width: 200px;
+        transform: translateY(30px);
+      }
+      .check_map {
+        position: relative;
+        text-decoration: underline;
+        color: #3030ff;
+        cursor: pointer;
+        overflow: hidden;
+      }
+      .check_map .map_img {
+        visibility: hidden;
+        height: 0;
+        width: 0;
+      }
+      .check_map:active .map_img,
+      .check_map:hover .map_img {
+        visibility: visible;
+        height: auto;
+        width: 80vw;
+        max-width: 500px;
+      }
+      .check_map:active,
+      .check_map:hover {
+        color: #f63527;
+        overflow: visible;
       }
       /* 美化数字输入框,去掉上下箭头 */
       .number_input {
@@ -66,6 +104,11 @@
         /* 让文字不可被选中，避免误操作 */
         user-select: none;
       }
+      /* .selected_skill {
+      } */
+      .random_event_board {
+        margin-top: 10px;
+      }
       .skill_list {
         display: flex;
         flex-wrap: wrap;
@@ -82,8 +125,12 @@
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s;
+        box-sizing: border-box;
+        transition: all 0.3s linear;
       }
-
+      .border_highlight {
+        transform: scale(1.05);
+      }
       .skill_img {
         width: 100%;
       }
@@ -95,18 +142,47 @@
         margin: 0;
         width: 0;
       }
+      .mask {
+        position: fixed;
+        visibility: hidden;
+        overflow: hidden;
+        z-index: 20;
+      }
+      .mask.visible {
+        visibility: visible;
+        background-color: rgba(0, 0, 0, 0.6);
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+      .mask #preview_img {
+        border-radius: 8px;
+        border: 1px solid #333;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80vw;
+        max-width: 400px;
+      }
     </style>
   </head>
   <body>
-    <h1>
-      输入游玩人数
-      <input class="number_input" type="number" id="play_number_id" />
-      <button class="btn" onclick="confirmPlayNumber()">confirm</button>
-    </h1>
+    <div class="banner">
+      <h1>
+        输入游玩人数
+        <input class="number_input" type="number" id="play_number_id" />
+        <button class="btn" onclick="confirmPlayNumber()">confirm</button>
+      </h1>
+      <p class="check_map">
+        查看地图<img class="map_img" src="/assets/magicImg/map.jpg" alt="" />
+      </p>
+    </div>
     <!-- 游戏面板 -->
     <div class="play_board hidden">
       <!-- 技能列表 -->
-      <div class="skill_list"></div>
+      <div class="skill_list hold_list"></div>
       <!-- 选择技能列表 -->
       <div class="skill-container"></div>
 
@@ -125,10 +201,18 @@
         <div class="random_event_history"></div>
       </div>
     </div>
+    <div class="mask" onclick="cancelPreview()">
+      <img id="preview_img" src="#" alt="#" />
+    </div>
   </body>
 
   <script>
     let play_number = 0;
+
+    function getSkillCard() {
+      render(true);
+      document.querySelector(".play_board").classList.remove("hidden");
+    }
     function confirmPlayNumber() {
       const input = document.getElementById("play_number_id");
       const value = parseInt(input.value);
@@ -137,7 +221,7 @@
         return;
       }
       play_number = value;
-      render();
+      render(false);
       document.querySelector(".play_board").classList.remove("hidden");
     }
     // 转为name为key的map，方便后续根据name获取技能描述和图标路径
@@ -503,13 +587,26 @@
         .appendChild(randomEventDiv);
     };
     // 渲染
-    function render() {
+    function render(refresh = false) {
       resetRender();
-      // 随机获取个技能
-      const randomSkills = Array.from(skillMap.keys())
-        .sort(() => 0.5 - Math.random())
-        .slice(0, play_number * 2 + 6)
-        .map((key) => skillMap.get(key));
+      let randomSkillsArr = [];
+      if (refresh && window.location.hash) {
+        randomSkillsArr = window.location.hash
+          .replace("#", "")
+          .split("+")
+          .map((t) => decodeURIComponent(t));
+      } else {
+        // 随机获取个技能
+        randomSkillsArr = Array.from(skillMap.keys())
+          .sort(() => 0.5 - Math.random())
+          .slice(0, play_number * 2 + 6);
+
+        const selectList = randomSkillsArr.reduce((acc, cur) => {
+          return acc + (acc.length ? "+" : "") + cur;
+        }, []);
+        window.location.hash = selectList;
+      }
+      const randomSkills = randomSkillsArr.map((key) => skillMap.get(key));
 
       // 插入到页面中
       const skill_list = document.querySelector(".skill_list");
@@ -523,15 +620,18 @@
         skill_list.appendChild(skillDiv);
       });
       // 美化页面,每个技能之间增加间距
-      const skillDivs = document.querySelectorAll("div");
-      skillDivs.forEach((div) => {
-        div.style.marginBottom = "10px";
-      });
-      skill_list.style.fontFamily = "Arial, sans-serif";
-      skill_list.style.padding = "20px";
+      // const skillDivs = document.querySelectorAll("div");
+      // skillDivs.forEach((div) => {
+      //   div.style.marginBottom = "10px";
+      // });
+      // skill_list.style.fontFamily = "Arial, sans-serif";
+      // skill_list.style.padding = "20px";
 
       // 渲染角色的技能列表
-      renderSkillContainer(play_number);
+      renderSkillContainer(play_number || 1);
+    }
+    if (window.location.hash) {
+      getSkillCard(true);
     }
     let skillReady = "";
 
@@ -556,7 +656,7 @@
         const skillContainer = document.querySelector(".skill-container");
         const div = document.createElement("div");
         div.innerHTML = `
-          <h2>
+          <h2 class="selected_skill">
             ${String.fromCharCode(65 + i)}技能列表<button
               class="btn margin_left_10px"
               onclick="addSkill('skill_List_${String.fromCharCode(97 + i)}')"
@@ -574,21 +674,43 @@
         document.querySelector(delListId).removeChild(delLI);
       };
     }
+    function showCard(skill) {
+      const mask = document.querySelector(".mask");
+      mask.classList.add("visible");
+      const preImg = document.querySelector("#preview_img");
+      preImg.src = `/assets/magicImg/${skill.name}.png`;
+    }
+    function cancelPreview(clickElement) {
+      const mask = document.querySelector(".mask");
+      mask.classList.remove("visible");
+    }
     function skillClicked(skill) {
       if (!skillReady) {
+        showCard(skill);
         return;
       }
       const addSkillList = document.querySelector("#" + skillReady);
-      addSkillList.children.length;
+
       const li = document.createElement("li");
 
-      li.id = "skill_";
       li.className = "skill-item";
       li.innerHTML = `<img class="skill_img" src="/assets/magicImg/${skill.name}.png"><div><strong>${skill.name}</strong>: ${skill.desc}</div>`;
       li.ondblclick = delSkill("#" + skillReady, li);
       addSkillList.appendChild(li);
+      highlightSkillCard(false);
+      skillReady = "";
+    }
+
+    function highlightSkillCard(isHighLight = true) {
+      const readySKillsItem = document.querySelectorAll(
+        ".hold_list .skill-item",
+      );
+      readySKillsItem.forEach((item) => {
+        item.classList[isHighLight ? "add" : "remove"]("border_highlight");
+      });
     }
     function addSkill(listId) {
+      highlightSkillCard();
       skillReady = listId;
     }
   </script>
