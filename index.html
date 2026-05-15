@@ -1,247 +1,730 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/villiam/contactMe.png" />
-    <title>Villiam</title>
+    <title>VILLIAM | S P A C E</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Inter:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      * {
-        padding: 0;
+      :root {
+        --bg: #f7f5f0;
+        --bg-alt: #eae8e1;
+        --text: #1c1c1c;
+        --text-muted: #6a6a6a;
+        --accent: #a08c75;
+        --line: #d6d3cb;
+        --font-serif: "Noto Serif SC", "Georgia", serif;
+        --font-sans: "Inter", system-ui, sans-serif;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      *,
+      *::before,
+      *::after {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
       }
       body {
-        margin: 0;
-        height: 100vh;
-        background-color: #a8a8a1;
-      }
-      #app {
-        min-height: 100%;
-        /* background: url("./assets/desktop.jpeg") center / cover no-repeat; */
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-sans);
+        font-weight: 300;
+        line-height: 1.75;
+        overflow-x: hidden;
         position: relative;
       }
-      .image_bg {
-        position: absolute;
-        z-index: -1;
+
+      /* 纸张纹理叠加 */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: multiply;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: var(--font-serif);
+        font-weight: 400;
+        letter-spacing: -0.03em;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font: inherit;
+        color: inherit;
+      }
+
+      /* Header */
+      header {
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
-        filter: url(#displacement-wave-filter);
-        object-fit: cover;
-      }
-      .home h1 {
-        text-align: center;
-        filter: contrast(30);
-        /* background-color: #000; */
-        text-align: center;
-      }
-      .home h1 span {
-        font-family:
-          "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-        letter-spacing: -40px;
-        color: #000;
-        animation: move-letter 4s linear forwards;
-      }
-
-      @keyframes move-letter {
-        0% {
-          opacity: 0;
-          letter-spacing: -40px;
-          filter: blur(10px);
-        }
-        25% {
-          opacity: 1;
-        }
-        50% {
-          filter: blur(5px);
-        }
-        100% {
-          letter-spacing: 0px;
-          filter: blur(1px);
-        }
-      }
-
-      .home .menuList {
-        width: 80%;
-        margin: 0 auto;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 8px;
-        padding: 12px;
+        padding: 1.5rem 3rem;
         display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        transition: all 0.5s var(--ease);
+        background: transparent;
       }
-
-      .home .menu-item {
+      header.scrolled {
+        padding: 1rem 3rem;
+        background: rgba(247, 245, 240, 0.85);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        font-family: var(--font-serif);
+        font-size: 1.25rem;
+        letter-spacing: 0.08em;
+      }
+      nav ul {
+        display: flex;
+        gap: 2.5rem;
+        list-style: none;
+      }
+      nav a {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
         position: relative;
-        display: inline-block;
-        height: 140px;
-        width: 140px;
-        line-height: 140px;
-        text-align: center;
-        background: linear-gradient(45deg, #4c298c, #7e2c6f);
-        border-radius: 50%;
-        font-size: 13px;
-        backdrop-filter: blur(2px);
-        margin: 8px;
-        transition: all 1.2s;
       }
-      .menu-item:hover {
-        transform: scale(1.2);
-      }
-      .home .menu-item::before {
+      nav a::after {
         content: "";
         position: absolute;
-        top: 50%;
-        left: 50%;
-        height: 80%;
-        width: 80%;
-        background-color: rgba(0, 0, 0, 0.6);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        z-index: -1;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--accent);
+        transition: width 0.3s var(--ease);
       }
-      .home .menu-item span {
+      nav a:hover::after {
+        width: 100%;
+      }
+
+      .menu-toggle {
+        display: none;
+        font-size: 1.4rem;
+      }
+
+      /* Hero */
+      #hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 8rem 3rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-text {
+        max-width: 800px;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s var(--ease);
+      }
+      .hero-text.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #hero h1 {
+        font-size: clamp(3rem, 8vw, 6.5rem);
+        line-height: 1.05;
+        margin-bottom: 1.5rem;
+      }
+      #hero h1 span {
+        display: block;
+        font-style: italic;
+        color: var(--accent);
+      }
+      .hero-meta {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        max-width: 500px;
+        border-left: 1px solid var(--accent);
+        padding-left: 1rem;
+      }
+
+      /* Showcase Section */
+      #showcase {
+        padding: 8rem 3rem;
+      }
+      .section-title {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      .section-subtitle {
+        color: var(--text-muted);
+        margin-bottom: 3rem;
+        font-size: 0.95rem;
+      }
+      .filters {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 4rem;
+        flex-wrap: wrap;
+      }
+      .filter-btn {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid transparent;
+        transition: all 0.3s var(--ease);
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+      }
+      .filter-btn.active {
+        border-bottom-color: var(--accent);
+        color: var(--text);
+      }
+      .filter-btn:hover {
+        color: var(--accent);
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 2rem;
+        align-items: start;
+      }
+      .card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 2px;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s var(--ease);
+      }
+      .card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .card.hidden {
+        display: none;
+      }
+
+      .card img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.6s var(--ease);
+        filter: grayscale(20%);
+      }
+      .card:hover img {
+        transform: scale(1.03);
+        filter: grayscale(0%);
+      }
+
+      .card-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 2rem;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
         color: #fff;
-        text-shadow: 2px 2px 5px #742a75;
-        font-weight: 800;
-        letter-spacing: 1px;
-        text-decoration: none;
+        transform: translateY(10px);
+        opacity: 0;
+        transition: all 0.4s var(--ease);
+      }
+      .card:hover .card-info {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .card-title {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        margin-bottom: 0.3rem;
+      }
+      .card-tag {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.85;
+      }
+
+      .place-holder {
+        display: inline-block;
+        width: 100%;
+        padding-bottom: 100%;
+        background-color: rgba(156, 140, 120, 0.1);
+      }
+      :root {
+        --modulus: 5;
+      }
+
+      /* Grid Spans for Artistic Layout */
+      .card:nth-child(5n) {
+        grid-column: span 5;
+      }
+      .card:nth-child(5n + 1) {
+        grid-column: span 3;
+      }
+      .card:nth-child(5n + 2) {
+        grid-column: span 2;
+      }
+      .card:nth-child(5n + 3) {
+        grid-column: span 4;
+      }
+      .card:nth-child(5n + 4) {
+        grid-column: span 3;
+      }
+
+      /* About */
+      #about {
+        padding: 10rem 3rem;
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 5rem;
+        align-items: center;
+        border-top: 1px solid var(--line);
+      }
+      .about-img {
+        width: 100%;
+        aspect-ratio: 4/5;
+        object-fit: cover;
+        border-radius: 4px;
+        filter: contrast(0.95);
+      }
+      .about-content h2 {
+        font-size: 2.8rem;
+        margin-bottom: 1.5rem;
+      }
+      .about-content p {
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+        max-width: 600px;
+      }
+      .quote {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 1.3rem;
+        color: var(--accent);
+        margin-top: 2rem;
+        padding-left: 1.5rem;
+        border-left: 2px solid var(--accent);
+      }
+
+      /* Contact */
+      #contact {
+        padding: 8rem 3rem;
+        text-align: center;
+        background: var(--bg-alt);
+      }
+      .form-box {
+        max-width: 480px;
+        margin: 3rem auto 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .form-box input,
+      .form-box textarea {
+        width: 100%;
+        padding: 1rem;
+        background: transparent;
+        border: 1px solid var(--line);
+        font-family: var(--font-sans);
+        font-size: 0.95rem;
+        transition: border-color 0.3s var(--ease);
+      }
+      .form-box input:focus,
+      .form-box textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .form-box textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      .submit-btn {
+        background: var(--text);
+        color: var(--bg);
+        padding: 1rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        transition: all 0.3s var(--ease);
+      }
+      .submit-btn:hover {
+        background: var(--accent);
+      }
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      /* Footer */
+      footer {
+        padding: 3rem;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        letter-spacing: 0.1em;
+        border-top: 1px solid var(--line);
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .grid-container {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+        .card {
+          grid-column: span 1 !important;
+        }
+        #about {
+          grid-template-columns: 1fr;
+          gap: 3rem;
+        }
+        .about-img {
+          max-width: 400px;
+          margin: 0 auto;
+        }
+        :root {
+          --spacing-section: 6rem;
+        }
+      }
+      @media (max-width: 600px) {
+        header {
+          padding: 1.2rem 1.5rem;
+        }
+        nav ul {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background: var(--bg);
+          flex-direction: column;
+          padding: 1.5rem;
+          gap: 1rem;
+          border-bottom: 1px solid var(--line);
+        }
+        nav ul.open {
+          display: flex;
+        }
+        .menu-toggle {
+          display: block;
+        }
+        #hero {
+          padding: 6rem 1.5rem;
+        }
+        #hero h1 {
+          font-size: 2.8rem;
+        }
       }
     </style>
   </head>
   <body>
-    <div id="app" class="home">
-      <audio autoplay="" loop=""><source src="/assets/bg.mp3" /></audio>
-      <!-- <img src="./assets/desktop.jpeg" class="image_bg" alt="" srcset="" /> -->
-      <img src="http://api.btstu.cn/sjbz/?lx=meizi" class="image_bg" alt="" />
-      <h1><span>Welcome to my web</span></h1>
-      <div class="menuList" id="menuList"></div>
-      <svg width="0" height="0">
-        <filter id="displacement-wave-filter">
-          <!--baseFrequency设置0.01 0.09两个值，代表x轴和y轴的噪声频率-->
-          <feTurbulence baseFrequency="0.01 0.09">
-            <!--这是svg动画的定义方式，通过动画不断改变baseFrequency的值，从而形成波动效果-->
-            <animate
-              attributeName="baseFrequency"
-              dur="20s"
-              keyTimes="0;0.5;1"
-              values="0.01 0.09;0.02 0.13;0.01 0.09"
-              repeatCount="indefinite"
-            ></animate>
-          </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" scale="10" />
-        </filter>
-      </svg>
-    </div>
+    <header>
+      <div class="brand">V I L L I A M</div>
+      <button class="menu-toggle" aria-label="菜单">☰</button>
+      <nav>
+        <ul>
+          <li><a href="#hero">H O M E</a></li>
+          <li><a href="#showcase">P R O J E C T</a></li>
+          <li><a href="#about">A B O U T</a></li>
+          <li><a href="#contact">C O N T A C T</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="hero">
+        <div class="hero-text">
+          <h1>Y E S T E R D A Y<br /><span>TOMORROW</span></h1>
+          <div class="hero-meta">
+            This is my personal project exhibition hall. Continuous exploration
+            of recording creation and precipitation technology.
+          </div>
+        </div>
+      </section>
+
+      <section id="showcase">
+        <h2 class="section-title fade-up">P R O J E C T</h2>
+        <p class="section-subtitle fade-up">D I S P L A Y</p>
+
+        <div class="filters fade-up">
+          <button class="filter-btn active" data-filter="all">A L L</button>
+          <button class="filter-btn" data-filter="0">2 0 2 6</button>
+          <button class="filter-btn" data-filter="1">2 0 2 5</button>
+          <button class="filter-btn" data-filter="2">2 0 2 4</button>
+        </div>
+
+        <div class="grid-container"></div>
+      </section>
+
+      <section id="about">
+        <span class="place-holder"></span>
+        <div class="about-content fade-up">
+          <h2>N O T E B O O K</h2>
+          <p>
+            I always believe that good content is not a stack of information,
+            but a resonance of emotions.
+          </p>
+          <p>
+            Every project is a test of the "boundary": between practicality and
+            poetry, between restraint and expression, looking for the most
+            comfortable landing point.
+          </p>
+          <div class="quote">“SILENCE IS TEACHER”</div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <h2 class="section-title fade-up">C O N T A C T</h2>
+        <p class="section-subtitle fade-up">WELCOME MESSAGE</p>
+        <form class="form-box fade-up" id="contact-form">
+          <input type="text" placeholder="NAME" required />
+          <input type="email" placeholder="EMAIL" required />
+          <textarea placeholder="CONTENT..."></textarea>
+          <button type="submit" class="submit-btn">SEND</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>© 2026 Villiam | GOOD MORNING,GOOD LUCK AND GOOD NIGHT</footer>
+
+    <script src="./lib/vue.global.prod.js"></script>
+    <script>
+      const { createApp } = Vue;
+      const routers = [
+        {
+          name: "魔法运动员",
+          href: "/MagicAthlete.html",
+        },
+        {
+          name: "三国杀",
+          href: "/sgsHero/index.html",
+        },
+        {
+          name: "曾几何时",
+          href: "/lxy/index.html",
+        },
+        {
+          name: "hi react",
+          href: "/picture",
+        },
+        {
+          name: "内嵌",
+          href: "/iframe.html",
+        },
+        {
+          name: "美图欣赏",
+          href: "/picture/index.html",
+        },
+        {
+          name: "OPEN IT",
+          href: "/gift.html",
+        },
+        {
+          name: "罗盘时钟",
+          href: "/luopanClock/luopanClock.html",
+        },
+        {
+          name: "生日计算",
+          href: "/twelveYear.html",
+        },
+        {
+          name: "villiam",
+          href: "/villiam",
+        },
+        {
+          name: "yang",
+          href: "/yang",
+        },
+        {
+          name: "vue",
+          href: "/vue.html",
+        },
+        {
+          name: "足球场",
+          href: "field.html",
+        },
+        {
+          name: "正在输入效果",
+          href: "./cssDemo/typing.html",
+        },
+        {
+          name: "addNameType",
+          href: "/addNameType.html",
+        },
+        {
+          name: "callBindApply",
+          href: "/callBindApply.html",
+        },
+        {
+          name: "classExtends",
+          href: "/classExtends.html",
+        },
+        {
+          name: "fireKey",
+          href: "/fireKey.html",
+        },
+        {
+          name: "lodashTest",
+          href: "/lodashTest.html",
+        },
+        {
+          name: "web1",
+          href: "/web1.html",
+        },
+        {
+          name: "web2",
+          href: "/web2.html",
+        },
+      ];
+      const filterMap = ["2 0 2 6", "2 0 2 5", "2 0 2 4"];
+      routers.forEach((item, index) => {
+        const links = document.createElement("a");
+        links.href = item.href;
+        links.className = "fade-up card";
+        links.dataset.category = (index % 3) + "";
+        links.innerHTML = `
+            <span class="place-holder"></span>
+            <div class="card-info">
+              <div class="card-title">${item.name}</div>
+              <div class="card-tag">${filterMap[index % 3]}</div>
+            </div>
+          `;
+        document.querySelector(".grid-container").appendChild(links);
+      });
+      createApp({
+        data() {
+          return {};
+        },
+      }).mount("#app");
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // 1. 导航平滑滚动 & 移动端菜单收起
+        const navLinks = document.querySelectorAll("nav a");
+        const navUl = document.querySelector("nav ul");
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute("href");
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: "smooth" });
+              if (navUl.classList.contains("open")) {
+                navUl.classList.remove("open");
+              }
+            }
+          });
+        });
+
+        // 2. 移动端菜单切换
+        const menuToggle = document.querySelector(".menu-toggle");
+        if (menuToggle) {
+          menuToggle.addEventListener("click", () => {
+            navUl.classList.toggle("open");
+          });
+        }
+
+        // 3. 滚动触发动画 (IntersectionObserver)
+        const fadeElements = document.querySelectorAll(".fade-up");
+        const heroText = document.querySelector(".hero-text");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: "0px 0px -30px 0px" },
+        );
+
+        fadeElements.forEach((el) => observer.observe(el));
+        if (heroText) {
+          setTimeout(() => heroText.classList.add("visible"), 300);
+        }
+
+        // 4. Header 滚动效果
+        const header = document.querySelector("header");
+        window.addEventListener("scroll", () => {
+          if (window.scrollY > 60) {
+            header.classList.add("scrolled");
+          } else {
+            header.classList.remove("scrolled");
+          }
+        });
+
+        // 5. 内容筛选逻辑
+        const filterBtns = document.querySelectorAll(".filter-btn");
+        const cards = document.querySelectorAll(".card");
+
+        filterBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            filterBtns.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            const filterValue = btn.dataset.filter;
+
+            cards.forEach((card) => {
+              const category = card.dataset.category;
+              if (filterValue === "all" || category === filterValue) {
+                card.classList.remove("hidden");
+                card.style.display = "block";
+                // 重新触发动画
+                setTimeout(() => card.classList.add("visible"), 50);
+              } else {
+                card.classList.remove("visible");
+                card.classList.add("hidden");
+              }
+            });
+          });
+        });
+
+        // 6. 表单提交模拟
+        const contactForm = document.getElementById("contact-form");
+        if (contactForm) {
+          contactForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const submitBtn = contactForm.querySelector(".submit-btn");
+            const originalText = submitBtn.textContent;
+
+            submitBtn.textContent = "SENDING...";
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+              submitBtn.textContent = "TANKS YOUR MESSAGE";
+              setTimeout(() => {
+                contactForm.reset();
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+              }, 2500);
+            }, 1000);
+          });
+        }
+      });
+    </script>
   </body>
-  <script src="./lib/vue.global.prod.js"></script>
-  <script>
-    const { createApp } = Vue;
-    const routers = [
-      {
-        name: "魔法运动员",
-        href: "/MagicAthlete.html",
-      },
-      {
-        name: "三国杀",
-        href: "/sgsHero/index.html",
-      },
-      {
-        name: "曾几何时",
-        href: "/lxy/index.html",
-      },
-      {
-        name: "hi react",
-        href: "/picture",
-      },
-      {
-        name: "内嵌",
-        href: "/iframe.html",
-      },
-      {
-        name: "美图欣赏",
-        href: "/picture/index.html",
-      },
-      {
-        name: "OPEN IT",
-        href: "/gift.html",
-      },
-      {
-        name: "罗盘时钟",
-        href: "/luopanClock/luopanClock.html",
-      },
-      {
-        name: "生日计算",
-        href: "/twelveYear.html",
-      },
-      {
-        name: "villiam",
-        href: "/villiam",
-      },
-      {
-        name: "yang",
-        href: "/yang",
-      },
-      {
-        name: "vue",
-        href: "/vue.html",
-      },
-      {
-        name: "足球场",
-        href: "field.html",
-      },
-      {
-        name: "正在输入效果",
-        href: "./cssDemo/typing.html",
-      },
-      {
-        name: "addNameType",
-        href: "/addNameType.html",
-      },
-      {
-        name: "callBindApply",
-        href: "/callBindApply.html",
-      },
-      {
-        name: "classExtends",
-        href: "/classExtends.html",
-      },
-      {
-        name: "fireKey",
-        href: "/fireKey.html",
-      },
-      {
-        name: "lodashTest",
-        href: "/lodashTest.html",
-      },
-      {
-        name: "web1",
-        href: "/web1.html",
-      },
-      {
-        name: "web2",
-        href: "/web2.html",
-      },
-    ];
-    routers.forEach((item) => {
-      const links = document.createElement("a");
-      links.classList.add("menu-item");
-      const link = document.createElement("span");
-      links.href = item.href;
-      link.innerText = item.name;
-      links.appendChild(link);
-      document.getElementById("menuList").appendChild(links);
-    });
-    createApp({
-      data() {
-        return {};
-      },
-    }).mount("#app");
-  </script>
-  <!-- <script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script> -->
-  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
-  <script src="./js/fashion.js"></script>
 </html>
