@@ -266,7 +266,7 @@
       .place-holder {
         display: inline-block;
         width: 100%;
-        padding-bottom: 100%;
+        height: 100%;
         background-color: rgba(156, 140, 120, 0.1);
       }
       :root {
@@ -477,7 +477,7 @@
       </section>
 
       <section id="about">
-        <span class="place-holder"></span>
+        <img class="place-holder" src="/assets/desktop.jpeg" />
         <div class="about-content fade-up">
           <h2>N O T E B O O K</h2>
           <p>
@@ -603,7 +603,7 @@
         links.className = "fade-up card";
         links.dataset.category = (index % 3) + "";
         links.innerHTML = `
-            <span class="place-holder"></span>
+            <img referrerpolicy="no-referrer" src="/assets/placeholder/0${(index % 6) + 1}.png" class="place-holder" />
             <div class="card-info">
               <div class="card-title">${item.name}</div>
               <div class="card-tag">${filterMap[index % 3]}</div>
