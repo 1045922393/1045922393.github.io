@@ -652,6 +652,9 @@
       // skill_list.style.padding = "20px";
 
       // 渲染角色的技能列表
+      if (!play_number) {
+        play_number = Math.ceil((randomSkills.length - 6) / 2);
+      }
       renderSkillContainer(play_number || 1);
     }
     if (window.location.hash && window.confirm("是否加载原卡组?")) {
