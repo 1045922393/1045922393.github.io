@@ -1,0 +1,1339 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visible — 3D粒子手势交互系统</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        overflow: hidden;
+        background: #000;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #fff;
+      }
+
+      #loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse at center, #1a1a2e 0%, #000 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+      }
+      #loading-overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .loader {
+        width: 60px;
+        height: 60px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top-color: #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading-text {
+        margin-top: 20px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .server-hint {
+        margin-top: 30px;
+        font-size: 12px;
+        color: #888;
+        text-align: center;
+        line-height: 1.8;
+      }
+      .server-hint code {
+        background: #333;
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: #aaa;
+      }
+
+      #error-toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(255, 68, 68, 0.9);
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 13px;
+        z-index: 10000;
+        transition: transform 0.3s ease;
+        white-space: pre-line;
+        max-width: 90vw;
+        text-align: center;
+      }
+      #error-toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+      #success-toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(68, 255, 68, 0.9);
+        color: #000;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 13px;
+        z-index: 10000;
+        transition: transform 0.3s ease;
+        white-space: pre-line;
+      }
+      #success-toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      #canvas-container {
+        width: 100vw;
+        height: 100vh;
+      }
+
+      #control-panel {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 260px;
+        background: rgba(15, 15, 30, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px;
+        z-index: 100;
+      }
+      .panel-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+      }
+      .control-group {
+        margin-bottom: 20px;
+      }
+      .control-label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      #model-select {
+        width: 100%;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: #fff;
+        font-size: 13px;
+        outline: none;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+      }
+      #model-select option {
+        background: #1a1a2e;
+        color: #fff;
+      }
+      .color-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+      #color-picker {
+        flex: 1;
+        height: 36px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: transparent;
+        padding: 0;
+      }
+      #color-picker::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+      #color-picker::-webkit-color-swatch {
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      input[type="range"] {
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        outline: none;
+        -webkit-appearance: none;
+        margin-bottom: 8px;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #667eea;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .btn {
+        flex: 1;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: #fff;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      .btn.active {
+        background: rgba(102, 126, 234, 0.3);
+        border-color: rgba(102, 126, 234, 0.5);
+        color: #aabbff;
+      }
+
+      #camera-preview {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 200px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid rgba(102, 126, 234, 0.5);
+        background: #111;
+        display: none;
+        z-index: 100;
+      }
+      #camera-preview.active {
+        display: block;
+      }
+      #webcam-video {
+        width: 100%;
+        display: block;
+        transform: scaleX(-1);
+      }
+      #camera-preview-error {
+        padding: 20px;
+        font-size: 11px;
+        color: #ff6666;
+        text-align: center;
+        line-height: 1.6;
+      }
+
+      #gesture-indicator {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(15, 15, 30, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 11px;
+        z-index: 100;
+        min-width: 180px;
+      }
+      .gi-status {
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .gi-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 4px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .gi-row span:last-child {
+        color: #44ff88;
+        font-variant-numeric: tabular-nums;
+      }
+
+      #control-mode-badge {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 8px 14px;
+        background: rgba(15, 15, 30, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        font-size: 11px;
+        z-index: 100;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .mode-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #888;
+      }
+      .mode-dot.gesture {
+        background: #44ff88;
+        box-shadow: 0 0 8px #44ff88;
+      }
+      .mode-dot.mouse {
+        background: #667eea;
+        box-shadow: 0 0 8px #667eea;
+      }
+      .slider-value {
+        float: right;
+        font-variant-numeric: tabular-nums;
+        color: rgba(255, 255, 255, 0.5);
+      }
+    </style>
+
+    <!-- importmap：解决 CDN 路径问题 -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="loading-overlay">
+      <div class="loader"></div>
+      <div class="loading-text">初始化粒子系统...</div>
+      <div class="server-hint">
+        💡 手势控制需要通过服务器打开<br />
+        命令: <code>python3 -m http.server 8080</code><br />
+        然后访问: <b>http://localhost:8080/Visible.html</b>
+      </div>
+    </div>
+
+    <div id="error-toast"></div>
+    <div id="success-toast"></div>
+    <div id="canvas-container"></div>
+
+    <div id="control-mode-badge">
+      <div class="mode-dot mouse" id="mode-dot"></div>
+      <span id="mode-label">鼠标控制</span>
+    </div>
+
+    <div id="control-panel">
+      <div class="panel-title">粒子系统控制</div>
+      <div class="control-group">
+        <label class="control-label">粒子模型</label>
+        <select id="model-select">
+          <option value="heart">❤️ 爱心</option>
+          <option value="flower">🌸 花朵</option>
+          <option value="saturn">🪐 土星</option>
+          <option value="firework">🎆 烟花</option>
+          <option value="earth">🌍 地球</option>
+          <option value="landscape">🏔️ 千里江山</option>
+          <option value="epiphyllum">🌺 昙花</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label class="control-label">基础颜色</label>
+        <div class="color-row">
+          <input type="color" id="color-picker" value="#ff6b9d" />
+        </div>
+        <label class="control-label"
+          >色相偏移<span class="slider-value" id="hue-value">0°</span></label
+        >
+        <input type="range" id="hue-slider" min="0" max="360" value="0" />
+        <label class="control-label"
+          >辉光强度<span class="slider-value" id="bloom-value">1.5</span></label
+        >
+        <input
+          type="range"
+          id="bloom-slider"
+          min="0"
+          max="3"
+          step="0.1"
+          value="1.5"
+        />
+      </div>
+      <div class="control-group">
+        <label class="control-label"
+          >扩散半径<span class="slider-value" id="spread-value"
+            >1.0×</span
+          ></label
+        >
+        <input
+          type="range"
+          id="spread-slider"
+          min="0.3"
+          max="3"
+          step="0.05"
+          value="1.0"
+        />
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="camera-toggle">📷 手势模式</button>
+        <button class="btn" id="speed-toggle">⚡ 极速模式</button>
+      </div>
+      <div class="btn-row" style="margin-top: 8px">
+        <button class="btn" id="fullscreen-btn">⛶ 全屏</button>
+      </div>
+
+      <div class="control-group" style="margin-top: 16px">
+        <label class="control-label"
+          >旋转灵敏度
+          <span class="slider-value" id="sensitivity-value">1.0</span></label
+        >
+        <input
+          type="range"
+          id="sensitivity-slider"
+          min="0.3"
+          max="3.0"
+          step="0.05"
+          value="1.0"
+        />
+      </div>
+    </div>
+
+    <div id="camera-preview">
+      <video id="webcam-video" autoplay playsinline muted></video>
+    </div>
+
+    <div id="gesture-indicator">
+      <div class="gi-status" style="color: #888">🖱️ 鼠标模式</div>
+      <div class="gi-row"><span>拖动水平</span><span>→ 旋转</span></div>
+      <div class="gi-row"><span>滚轮</span><span>→ 缩放</span></div>
+      <div class="gi-row"><span>Ctrl+拖动</span><span>→ 扩散</span></div>
+    </div>
+
+    <!-- MediaPipe 用传统 script 加载（非 ESM） -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- 主程序：ES Module -->
+    <script type="module">
+      import * as THREE from "three";
+      import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+      import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+      import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+
+      // ================================================================
+      // GLSL Shaders
+      // ================================================================
+      const vertexShader = `
+uniform float uTime;
+uniform float uScale;
+attribute float aSeed;
+attribute vec3 aColor;
+varying vec3 vColor;
+
+void main() {
+    vColor = aColor;
+    float pulse = sin(uTime * 2.0 + aSeed * 6.28318) * 0.5 + 0.5;
+    float size = (0.02 + 0.03 * pulse) * uScale;
+    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+    gl_PointSize = size * (300.0 / -mvPosition.z);
+    gl_Position = projectionMatrix * mvPosition;
+}`;
+
+      const fragmentShader = `
+varying vec3 vColor;
+void main() {
+    vec2 c = gl_PointCoord - vec2(0.5);
+    float d = length(c);
+    if(d > 0.5) discard;
+    float g = pow(1.0 - smoothstep(0.0, 0.5, d), 1.5);
+    gl_FragColor = vec4(vColor * g, g * 0.9);
+}`;
+
+      // ================================================================
+      // 配置
+      // ================================================================
+      const PARTICLE_COUNT = 11000;
+      const EMA_SMOOTH = 0.3,
+        EMA_FAST = 0.85;
+
+      let scene, camera, renderer, composer, bloomPass;
+      let particles, particleMaterial, particleGeometry;
+      let stars = [];
+      let baseColor = new THREE.Color("#ff6b9d");
+      let hueOffset = 0;
+      let currentShape = "heart";
+      let currentPositions = [],
+        targetPositions = [],
+        basePositions = [];
+      let animationProgress = 1.0;
+
+      // 控制状态
+      let controlMode = "mouse";
+      let responseMode = "smooth";
+      let hands = null,
+        cameraInstance = null,
+        webcamStream = null,
+        isCameraActive = false;
+      let emaFingerX = 0.5,
+        emaFingerZ = 0.0,
+        emaPalmOpen = 0.5;
+      let emaPitch = 0.0,
+        emaRoll = 0.0;
+      let targetScale = 1.0,
+        currentScale = 1.0;
+      let targetSpread = 1.0,
+        currentSpread = 1.0;
+      let targetRotation = 0.0,
+        currentRotation = 0.0;
+      let targetPitch = 0.0,
+        currentPitch = 0.0,
+        targetRoll = 0.0,
+        currentRoll = 0.0;
+      let rotSensitivity = 1.0;
+      let targetCameraZ = 5.0,
+        currentCameraZ = 5.0;
+      let manualRotationY = 0,
+        manualCameraZ = 5.0,
+        manualSpread = 1.0;
+      let mouseDown = false,
+        lastMouseX = 0,
+        lastMouseY = 0,
+        ctrlPressed = false;
+
+      // ================================================================
+      // 初始化
+      // ================================================================
+      function init() {
+        scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x000000, 0.0008);
+
+        camera = new THREE.PerspectiveCamera(
+          60,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000,
+        );
+        camera.position.z = 5;
+
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        renderer.toneMappingExposure = 1.5;
+        document
+          .getElementById("canvas-container")
+          .appendChild(renderer.domElement);
+
+        // 后处理
+        composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+        bloomPass = new UnrealBloomPass(
+          new THREE.Vector2(window.innerWidth, window.innerHeight),
+          1.5,
+          0.4,
+          0.85,
+        );
+        composer.addPass(bloomPass);
+
+        createParticles();
+        createStarfield();
+        setupUI();
+        checkProtocol();
+
+        setTimeout(
+          () =>
+            document.getElementById("loading-overlay").classList.add("hidden"),
+          800,
+        );
+        animate();
+      }
+
+      // ================================================================
+      // 协议检查
+      // ================================================================
+      function checkProtocol() {
+        const isSecure =
+          location.protocol === "https:" ||
+          location.hostname === "localhost" ||
+          location.hostname === "127.0.0.1";
+        if (!isSecure)
+          showToast(
+            "💡 推荐通过服务器打开以获得手势控制\npython3 -m http.server 8080",
+          );
+      }
+
+      // ================================================================
+      // 粒子系统（GPU Shader）
+      // ================================================================
+      function createParticles() {
+        particleGeometry = new THREE.BufferGeometry();
+
+        const positions = new Float32Array(PARTICLE_COUNT * 3);
+        const colors = new Float32Array(PARTICLE_COUNT * 3);
+        const seeds = new Float32Array(PARTICLE_COUNT);
+
+        const shapePositions = generateShape("heart", PARTICLE_COUNT);
+        basePositions = shapePositions;
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          positions[i * 3] = shapePositions[i].x;
+          positions[i * 3 + 1] = shapePositions[i].y;
+          positions[i * 3 + 2] = shapePositions[i].z;
+          currentPositions[i] = new THREE.Vector3(
+            shapePositions[i].x,
+            shapePositions[i].y,
+            shapePositions[i].z,
+          );
+          targetPositions[i] = currentPositions[i].clone();
+
+          const c = baseColor.clone();
+          c.offsetHSL(Math.random() * 0.1 - 0.05, 0, Math.random() * 0.2 - 0.1);
+          colors[i * 3] = c.r;
+          colors[i * 3 + 1] = c.g;
+          colors[i * 3 + 2] = c.b;
+          seeds[i] = Math.random();
+        }
+
+        particleGeometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(positions, 3),
+        );
+        particleGeometry.setAttribute(
+          "aColor",
+          new THREE.BufferAttribute(colors, 3),
+        );
+        particleGeometry.setAttribute(
+          "aSeed",
+          new THREE.BufferAttribute(seeds, 1),
+        );
+
+        particleMaterial = new THREE.ShaderMaterial({
+          uniforms: { uTime: { value: 0 }, uScale: { value: 1.0 } },
+          vertexShader,
+          fragmentShader,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        });
+
+        particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
+      }
+
+      // ================================================================
+      // 形状生成
+      // ================================================================
+      function generateShape(name, count) {
+        switch (name) {
+          case "heart":
+            return genHeart(count);
+          case "flower":
+            return genFlower(count);
+          case "saturn":
+            return genSaturn(count);
+          case "firework":
+            return genFirework(count);
+          case "earth":
+            return genEarth(count);
+          case "landscape":
+            return genLandscape(count);
+          case "epiphyllum":
+            return genEpiphyllum(count);
+          default:
+            return genHeart(count);
+        }
+      }
+
+      function genHeart(n) {
+        const p = [];
+        for (let i = 0; i < n; i++) {
+          const t = (i / n) * Math.PI * 2;
+          p.push(
+            new THREE.Vector3(
+              (0.8 * 16 * Math.pow(Math.sin(t), 3)) / 17,
+              (-0.8 *
+                (13 * Math.cos(t) -
+                  5 * Math.cos(2 * t) -
+                  2 * Math.cos(3 * t) -
+                  Math.cos(4 * t))) /
+                17,
+              (Math.random() - 0.5) * 0.5,
+            ),
+          );
+        }
+        return p;
+      }
+
+      function genFlower(n) {
+        const p = [];
+        const k = 5;
+        for (let i = 0; i < n; i++) {
+          const theta = (i / n) * Math.PI * 2 * 10;
+          const r = Math.cos(k * theta) * 0.8;
+          const layer = Math.floor(i / (n / 3)) % 3;
+          const rad = r * (0.6 + layer * 0.2);
+          p.push(
+            new THREE.Vector3(
+              rad * Math.cos(theta),
+              rad * Math.sin(theta),
+              (Math.random() - 0.5) * 0.3,
+            ),
+          );
+        }
+        return p;
+      }
+
+      function genSaturn(n) {
+        const p = [];
+        const pc = Math.floor(n * 0.6);
+        const rc = n - pc;
+        for (let i = 0; i < pc; i++) {
+          const phi = Math.acos((2 * i) / pc - 1),
+            theta = Math.sqrt(pc * Math.PI) * phi;
+          p.push(
+            new THREE.Vector3(
+              0.6 * Math.cos(theta) * Math.sin(phi),
+              0.6 * Math.sin(theta) * Math.sin(phi),
+              0.6 * Math.cos(phi),
+            ),
+          );
+        }
+        for (let i = 0; i < rc; i++) {
+          const theta = (i / rc) * Math.PI * 2,
+            r = 1 + Math.random() * 0.4;
+          p.push(
+            new THREE.Vector3(
+              r * Math.cos(theta),
+              (Math.random() - 0.5) * 0.05,
+              r * Math.sin(theta),
+            ),
+          );
+        }
+        return p;
+      }
+
+      function genFirework(n) {
+        const p = [];
+        const rays = 30;
+        for (let ray = 0; ray < rays && p.length < n; ray++) {
+          const theta = (ray / rays) * Math.PI * 2,
+            phi = Math.random() * Math.PI * 0.5;
+          const dx = Math.sin(phi) * Math.cos(theta),
+            dy = Math.cos(phi),
+            dz = Math.sin(phi) * Math.sin(theta);
+          const pp = Math.ceil((n - p.length) / (rays - ray));
+          for (let i = 0; i < pp && p.length < n; i++) {
+            const t = i / pp,
+              s = Math.random() * 0.2;
+            p.push(
+              new THREE.Vector3(
+                dx * t * 2 + (Math.random() - 0.5) * s,
+                dy * t * 2 + (Math.random() - 0.5) * s,
+                dz * t * 2 + (Math.random() - 0.5) * s,
+              ),
+            );
+          }
+        }
+        // 补齐到 n 个
+        while (p.length < n) {
+          const e = p[p.length % Math.max(1, p.length)];
+          p.push(
+            new THREE.Vector3(
+              e.x + (Math.random() - 0.5) * 0.1,
+              e.y + (Math.random() - 0.5) * 0.1,
+              e.z + (Math.random() - 0.5) * 0.1,
+            ),
+          );
+        }
+        return p;
+      }
+
+      function genEarth(n) {
+        const p = [];
+        const phi = (1 + Math.sqrt(5)) / 2;
+        for (let i = 0; i < n; i++) {
+          const theta = (2 * Math.PI * i) / phi,
+            ph = Math.acos(1 - (2 * (i + 0.5)) / n);
+          p.push(
+            new THREE.Vector3(
+              0.8 * Math.cos(theta) * Math.sin(ph),
+              0.8 * Math.sin(theta) * Math.sin(ph),
+              0.8 * Math.cos(ph),
+            ),
+          );
+        }
+        return p;
+      }
+
+      function genLandscape(n) {
+        const p = [];
+        for (let i = 0; i < n; i++) {
+          const t = (i / n) * Math.PI * 4;
+          let y =
+            Math.sin(t * 2) * 0.3 +
+            Math.sin(t * 3 + 1) * 0.2 +
+            Math.sin(t * 5 + 2) * 0.1 +
+            Math.sin(t * 7 + 3) * 0.05;
+          p.push(
+            new THREE.Vector3(
+              (t / (Math.PI * 4)) * 4 - 2,
+              y * 0.5,
+              (Math.random() - 0.5) * 0.5,
+            ),
+          );
+        }
+        return p;
+      }
+
+      function genEpiphyllum(n) {
+        const p = [];
+        const petals = 8,
+          pp = Math.floor(n / petals);
+        for (let petal = 0; petal < petals; petal++) {
+          const angle = (petal / petals) * Math.PI * 2;
+          for (let i = 0; i < pp; i++) {
+            const t = i / pp,
+              curve = Math.sin(t * Math.PI) * 0.3,
+              len = t * 1.5;
+            p.push(
+              new THREE.Vector3(
+                len * Math.cos(angle) + curve * Math.cos(angle + Math.PI / 2),
+                len * Math.sin(angle) + curve * Math.sin(angle + Math.PI / 2),
+                (Math.random() - 0.5) * 0.2,
+              ),
+            );
+          }
+        }
+        return p;
+      }
+
+      // ================================================================
+      // 形状切换
+      // ================================================================
+      function switchShape(name) {
+        currentShape = name;
+        const sp = generateShape(name, PARTICLE_COUNT);
+        basePositions = sp;
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          targetPositions[i].set(
+            sp[i].x * currentSpread,
+            sp[i].y * currentSpread,
+            sp[i].z * currentSpread,
+          );
+        }
+        animationProgress = 0;
+      }
+
+      // ================================================================
+      // 星空
+      // ================================================================
+      function createStarfield() {
+        const geo = new THREE.BufferGeometry();
+        const pos = new Float32Array(2000 * 3);
+        for (let i = 0; i < 2000; i++) {
+          const theta = Math.random() * Math.PI * 2,
+            phi = Math.acos(2 * Math.random() - 1),
+            r = 50 + Math.random() * 50;
+          pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+          pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+          pos[i * 3 + 2] = r * Math.cos(phi);
+        }
+        geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        const mat = new THREE.PointsMaterial({
+          color: 0xffffff,
+          size: 0.1,
+          transparent: true,
+          opacity: 0.8,
+        });
+        const sf = new THREE.Points(geo, mat);
+        scene.add(sf);
+        stars.push(sf);
+      }
+
+      // ================================================================
+      // MediaPipe（容灾）
+      // ================================================================
+      async function initMediaPipe() {
+        const timeoutP = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("加载超时")), 5000),
+        );
+        const loadP = new Promise((resolve, reject) => {
+          if (typeof Hands === "undefined") {
+            reject(new Error("Hands未加载"));
+            return;
+          }
+          try {
+            hands = new Hands({
+              locateFile: (f) =>
+                `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`,
+            });
+            hands.setOptions({
+              maxNumHands: 1,
+              modelComplexity: 1,
+              minDetectionConfidence: 0.6,
+              minTrackingConfidence: 0.5,
+            });
+            hands.onResults(onHandResults);
+            resolve(true);
+          } catch (e) {
+            reject(e);
+          }
+        });
+        try {
+          await Promise.race([loadP, timeoutP]);
+          showSuccess("🖐️ 手势检测已就绪！张开手掌控制扩散，合拢控制聚合");
+          return true;
+        } catch (e) {
+          console.error("MediaPipe失败:", e);
+          showToast("⚠️ 手势加载失败，已切换到鼠标控制");
+          switchToMouseMode();
+          return false;
+        }
+      }
+
+      // ================================================================
+      // 手势结果（仅食指+EMA滤波）
+      // ================================================================
+      function onHandResults(results) {
+        if (!results.multiHandLandmarks || !results.multiHandLandmarks.length) {
+          updateGestureUI(null);
+          return;
+        }
+        const lm = results.multiHandLandmarks[0];
+        const indexTip = lm[8],
+          wrist = lm[0];
+
+        // EMA滤波
+        const _a = responseMode === "fast" ? EMA_FAST : EMA_SMOOTH;
+        emaFingerX = _a * indexTip.x + (1 - _a) * emaFingerX;
+        emaFingerZ = _a * indexTip.z + (1 - _a) * emaFingerZ;
+        const palmDist = Math.sqrt(
+          Math.pow(indexTip.x - wrist.x, 2) + Math.pow(indexTip.y - wrist.y, 2),
+        );
+        emaPalmOpen = _a * palmDist + (1 - _a) * emaPalmOpen;
+        // 三轴旋转计算
+        const palmLM = [0, 1, 5, 9, 13, 17];
+        const avgPalmZ =
+          palmLM.reduce((s, i) => s + lm[i].z, 0) / palmLM.length;
+        const pitchRaw = -avgPalmZ * 2.0 * rotSensitivity;
+        const rollRaw =
+          Math.atan2(lm[17].y - lm[5].y, lm[17].x - lm[5].x) *
+          0.5 *
+          rotSensitivity;
+        emaPitch =
+          (responseMode === "fast" ? 0.85 : 0.3) * pitchRaw +
+          (1 - (responseMode === "fast" ? 0.85 : 0.3)) * emaPitch;
+        emaRoll =
+          (responseMode === "fast" ? 0.85 : 0.3) * rollRaw +
+          (1 - (responseMode === "fast" ? 0.85 : 0.3)) * emaRoll;
+        targetPitch = Math.max(
+          -Math.PI * 0.4,
+          Math.min(Math.PI * 0.4, emaPitch),
+        );
+        targetRoll = emaRoll;
+
+        targetRotation = (emaFingerX - 0.5) * Math.PI * 2 * rotSensitivity;
+        targetCameraZ = 3 + (emaFingerZ + 0.3) * 8;
+        targetCameraZ = Math.max(2, Math.min(10, targetCameraZ));
+        targetSpread = emaPalmOpen * 3.0;
+        targetSpread = Math.max(0.3, Math.min(3, targetSpread));
+
+        updateGestureUI(lm, palmDist);
+      }
+
+      function toDeg(r) {
+        return ((((r * 180) / Math.PI) % 360) + 360) % 360;
+      }
+      function updateGestureUI(lm) {
+        const el = document.getElementById("gesture-indicator");
+        if (!lm) {
+          el.innerHTML =
+            '<div class="gi-status" style="color:#888">🖐️ 等待手势...</div>';
+          return;
+        }
+        el.innerHTML =
+          `<div class="gi-status" style="color:#44ff88">🖐️ 手势检测中</div>` +
+          `<div class="gi-row"><span style="color:#ff6b6b">X轴俯仰</span><span>${toDeg(currentPitch).toFixed(0)}°</span></div>` +
+          `<div class="gi-row"><span style="color:#44ff88">Y轴偏航</span><span>${toDeg(currentRotation).toFixed(0)}°</span></div>` +
+          `<div class="gi-row"><span style="color:#667eea">Z轴翻滚</span><span>${toDeg(currentRoll).toFixed(0)}°</span></div>` +
+          `<div class="gi-row"><span>扩散半径</span><span>${currentSpread.toFixed(2)}×</span></div>`;
+      }
+
+      // ================================================================
+      // 摄像头
+      // ================================================================
+      function isSecureContext() {
+        return (
+          location.protocol === "https:" ||
+          location.hostname === "localhost" ||
+          location.hostname === "127.0.0.1"
+        );
+      }
+
+      async function toggleCamera() {
+        isCameraActive ? stopCamera() : await startCamera();
+      }
+
+      async function startCamera() {
+        if (!isSecureContext()) {
+          showToast(
+            "⚠️ 请通过服务器打开！\npython3 -m http.server 8080\n然后访问 http://localhost:8080/Visible.html",
+          );
+          document.getElementById("camera-preview").innerHTML =
+            '<div id="camera-preview-error">⚠️ file:// 协议禁止摄像头<br><br>请用本地服务器：<br><b>python3 -m http.server 8080</b><br>访问 <b>http://localhost:8080</b></div>';
+          document.getElementById("camera-preview").classList.add("active");
+          return;
+        }
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          showToast("摄像头API不可用");
+          switchToMouseMode();
+          return;
+        }
+
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { width: 640, height: 480, facingMode: "user" },
+          });
+          webcamStream = stream;
+          document.getElementById("webcam-video").srcObject = stream;
+          document.getElementById("camera-preview").classList.add("active");
+
+          const ready = await initMediaPipe();
+          if (!ready) return;
+
+          cameraInstance = new Camera(document.getElementById("webcam-video"), {
+            onFrame: async () => {
+              if (hands)
+                await hands.send({
+                  image: document.getElementById("webcam-video"),
+                });
+            },
+            width: 640,
+            height: 480,
+          });
+          cameraInstance.start();
+          isCameraActive = true;
+          switchToGestureMode();
+          document.getElementById("camera-toggle").classList.add("active");
+          document.getElementById("camera-toggle").textContent = "📷 已开启";
+        } catch (e) {
+          console.error(e);
+          if (e.name === "NotAllowedError")
+            showToast("摄像头权限被拒绝，已切换鼠标控制");
+          else if (e.name === "NotFoundError")
+            showToast("未检测到摄像头，已切换鼠标控制");
+          else showToast("摄像头启动失败:" + e.message);
+          switchToMouseMode();
+        }
+      }
+
+      function stopCamera() {
+        if (webcamStream) {
+          webcamStream.getTracks().forEach((t) => t.stop());
+          webcamStream = null;
+        }
+        if (cameraInstance) {
+          cameraInstance.stop();
+          cameraInstance = null;
+        }
+        document.getElementById("camera-preview").classList.remove("active");
+        isCameraActive = false;
+        document.getElementById("camera-toggle").classList.remove("active");
+        document.getElementById("camera-toggle").textContent = "📷 手势模式";
+        switchToMouseMode();
+      }
+
+      // ================================================================
+      // 模式切换
+      // ================================================================
+      function switchToGestureMode() {
+        controlMode = "gesture";
+        const dot = document.getElementById("mode-dot");
+        dot.className =
+          "mode-dot " + (responseMode === "fast" ? "fast" : "gesture");
+        document.getElementById("mode-label").textContent =
+          responseMode === "fast" ? "极速手势" : "手势控制";
+        showToast(
+          responseMode === "fast"
+            ? "\u26A1 极速手势模式 \u00B7 EMA \u03B1=0.85, 延迟<30ms"
+            : "🖐\uFE0F 手势控制已开启 \u00B7 张开/合拢控制扩散",
+        );
+        document.getElementById("gesture-indicator").innerHTML =
+          '<div class="gi-status" style="color:#44ff88">🖐️ 手势模式</div><div class="gi-row"><span>张开手掌</span><span>→ 扩散</span></div><div class="gi-row"><span>食指左右</span><span>→ 旋转</span></div><div class="gi-row"><span>食指前后</span><span>→ 缩放</span></div>';
+      }
+      function switchToMouseMode() {
+        controlMode = "mouse";
+        document.getElementById("mode-dot").className = "mode-dot mouse";
+        document.getElementById("mode-label").textContent = "鼠标控制";
+        document.getElementById("gesture-indicator").innerHTML =
+          '<div class="gi-status" style="color:#888">🖱️ 鼠标模式</div><div class="gi-row"><span>拖动水平</span><span>→ 旋转</span></div><div class="gi-row"><span>滚轮</span><span>→ 缩放</span></div><div class="gi-row"><span>Ctrl+拖动</span><span>→ 扩散</span></div>';
+      }
+
+      // ================================================================
+      // 极速模式切换
+      // ================================================================
+      function toggleSpeedMode() {
+        responseMode = responseMode === "fast" ? "smooth" : "fast";
+        const btn = document.getElementById("speed-toggle");
+        if (responseMode === "fast") {
+          btn.classList.add("active");
+          btn.textContent = "🐢 平滑模式";
+        } else {
+          btn.classList.remove("active");
+          btn.textContent = "\u26A1\uFE0F 极速模式";
+        }
+        if (controlMode === "gesture") {
+          const dot = document.getElementById("mode-dot");
+          dot.className =
+            "mode-dot " + (responseMode === "fast" ? "fast" : "gesture");
+          document.getElementById("mode-label").textContent =
+            responseMode === "fast" ? "极速手势" : "手势控制";
+        }
+        showToast(
+          responseMode === "fast"
+            ? "\u26A1 极速模式：EMA \u03B1=0.85, 无渲染插值, 延迟<30ms"
+            : "🐢 平滑模式：EMA \u03B1=0.3, 渲染插值, 延迟~100ms",
+        );
+      }
+
+      // ================================================================
+      // UI事件
+      // ================================================================
+      function setupUI() {
+        document
+          .getElementById("model-select")
+          .addEventListener("change", (e) => switchShape(e.target.value));
+
+        document
+          .getElementById("color-picker")
+          .addEventListener("input", (e) => {
+            baseColor = new THREE.Color(e.target.value);
+            updateParticleColors();
+          });
+
+        document.getElementById("hue-slider").addEventListener("input", (e) => {
+          hueOffset = parseInt(e.target.value);
+          document.getElementById("hue-value").textContent = hueOffset + "°";
+          updateParticleColors();
+        });
+
+        document
+          .getElementById("bloom-slider")
+          .addEventListener("input", (e) => {
+            const v = parseFloat(e.target.value);
+            document.getElementById("bloom-value").textContent = v.toFixed(1);
+            if (bloomPass) bloomPass.strength = v;
+          });
+
+        document
+          .getElementById("spread-slider")
+          .addEventListener("input", (e) => {
+            const v = parseFloat(e.target.value);
+            document.getElementById("spread-value").textContent =
+              v.toFixed(2) + "×";
+            targetSpread = v;
+          });
+
+        document
+          .getElementById("camera-toggle")
+          .addEventListener("click", toggleCamera);
+        document
+          .getElementById("fullscreen-btn")
+          .addEventListener("click", () => {
+            !document.fullscreenElement
+              ? document.documentElement.requestFullscreen()
+              : document.exitFullscreen();
+          });
+        document
+          .getElementById("speed-toggle")
+          .addEventListener("click", toggleSpeedMode);
+        document
+          .getElementById("sensitivity-slider")
+          .addEventListener("input", (e) => {
+            rotSensitivity = parseFloat(e.target.value);
+            document.getElementById("sensitivity-value").textContent =
+              rotSensitivity.toFixed(2);
+          });
+
+        // 鼠标控制
+        const canvas = renderer.domElement;
+        canvas.addEventListener("mousedown", (e) => {
+          mouseDown = true;
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
+        });
+        window.addEventListener("mouseup", () => {
+          mouseDown = false;
+        });
+        window.addEventListener("mousemove", (e) => {
+          if (!mouseDown || controlMode !== "mouse") return;
+          const dx = e.clientX - lastMouseX,
+            dy = e.clientY - lastMouseY;
+          lastMouseX = e.clientX;
+          lastMouseY = e.clientY;
+          if (ctrlPressed) {
+            manualSpread -= dy * 0.005;
+            manualSpread = Math.max(0.3, Math.min(3, manualSpread));
+            targetSpread = manualSpread;
+            document.getElementById("spread-slider").value = manualSpread;
+            document.getElementById("spread-value").textContent =
+              manualSpread.toFixed(2) + "×";
+          } else {
+            manualRotationY += dx * 0.01;
+          }
+        });
+        canvas.addEventListener(
+          "wheel",
+          (e) => {
+            if (controlMode !== "mouse") return;
+            e.preventDefault();
+            manualCameraZ += e.deltaY * 0.005;
+            manualCameraZ = Math.max(2, Math.min(10, manualCameraZ));
+            targetCameraZ = manualCameraZ;
+          },
+          { passive: false },
+        );
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "Control") ctrlPressed = true;
+        });
+        window.addEventListener("keyup", (e) => {
+          if (e.key === "Control") ctrlPressed = false;
+        });
+
+        window.addEventListener("resize", onWindowResize);
+      }
+
+      function updateParticleColors() {
+        const colors = particleGeometry.attributes.aColor.array;
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const c = baseColor.clone();
+          c.offsetHSL(
+            hueOffset / 360 + Math.random() * 0.1 - 0.05,
+            0,
+            Math.random() * 0.2 - 0.1,
+          );
+          colors[i * 3] = c.r;
+          colors[i * 3 + 1] = c.g;
+          colors[i * 3 + 2] = c.b;
+        }
+        particleGeometry.attributes.aColor.needsUpdate = true;
+      }
+
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+      // ================================================================
+      // 动画循环
+      // ================================================================
+      function animate() {
+        requestAnimationFrame(animate);
+        const time = performance.now() * 0.001;
+
+        // 插值（极速模式直接赋值）
+        const lf =
+          controlMode === "gesture" && responseMode === "fast" ? 1.0 : 0.3;
+        if (controlMode === "gesture") {
+          currentRotation += (targetRotation - currentRotation) * lf;
+          currentPitch += (targetPitch - currentPitch) * lf;
+          currentRoll += (targetRoll - currentRoll) * lf;
+        } else {
+          currentRotation = manualRotationY;
+        }
+        currentCameraZ += (targetCameraZ - currentCameraZ) * 0.08;
+        currentSpread += (targetSpread - currentSpread) * 0.08;
+        currentScale += (targetScale - currentScale) * 0.08;
+
+        particles.rotation.x = currentPitch;
+        particles.rotation.y = currentRotation;
+        particles.rotation.z = currentRoll;
+        camera.position.z = currentCameraZ;
+
+        // 扩散半径应用
+        const pos = particleGeometry.attributes.position.array;
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          if (animationProgress < 1) {
+            pos[i * 3] += (targetPositions[i].x - pos[i * 3]) * 0.08;
+            pos[i * 3 + 1] += (targetPositions[i].y - pos[i * 3 + 1]) * 0.08;
+            pos[i * 3 + 2] += (targetPositions[i].z - pos[i * 3 + 2]) * 0.08;
+          } else {
+            const bp = basePositions[i],
+              sf = currentSpread;
+            pos[i * 3] = bp.x * sf;
+            pos[i * 3 + 1] = bp.y * sf;
+            pos[i * 3 + 2] = bp.z * sf;
+          }
+        }
+        particleGeometry.attributes.position.needsUpdate = true;
+
+        if (animationProgress < 1)
+          animationProgress = Math.min(1, animationProgress + 0.05);
+
+        particleMaterial.uniforms.uTime.value = time;
+        particleMaterial.uniforms.uScale.value = currentScale;
+        stars.forEach((s) => {
+          s.rotation.y += 0.0002;
+        });
+        composer.render();
+      }
+
+      // ================================================================
+      // 提示
+      // ================================================================
+      function showToast(msg) {
+        const t = document.getElementById("error-toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 4000);
+      }
+      function showSuccess(msg) {
+        const t = document.getElementById("success-toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      // 启动
+      init();
+    </script>
+  </body>
+</html>
