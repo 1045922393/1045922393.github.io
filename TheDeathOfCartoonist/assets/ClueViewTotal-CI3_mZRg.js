@@ -1,4 +1,4 @@
-import{E as e,T as t,_ as n,b as r,c as i,f as a,h as o,l as s,m as c,o as l,p as u,u as d,y as f}from"./index-X2eOxE_d.js";var p=`
+import{D as e,E as t,O as n,S as r,_ as i,c as a,d as o,f as s,g as c,h as l,k as u,m as d,o as f,p,r as m,u as h,x as g,y as _}from"./index-CpfV-dD3.js";var v={TheDeathOfCartoonist:`
 线索：
 一级线索
 二级线索
@@ -58,5 +58,33 @@ import{E as e,T as t,_ as n,b as r,c as i,f as a,h as o,l as s,m as c,o as l,p a
 3.林教授的钱包里一直放着前女友阿莎的照片，从未更改过。照片的背面写着 wishes。4.林教授的银行账户里有大数目的存款和大笔的转账，其中有一半是转给白饶的。
 5.林教授的书桌底下有一个暗格，里面有多个文件夹用了不同的英文单词标注。其中一个标注的是 Ghost，里面有很多人的档案，其中有企业家杜跃的名字。
 6.林教授的手机里有一条前天的短信，是白饶发来的，很简短：你们的秘密是我的武器。7.林教授的钱包里有白饶家的钥匙。
-`,m={class:`clue-page`},h={class:`clue-content`},g={class:`card-title`},_={class:`card-icon`},v={class:`card-count`},y={class:`card-body`},b={class:`clue-text`},x={class:`clue-num`},S={key:0,class:`clue-deep`},C=l(n({__name:`ClueViewTotal`,setup(n){let l=[{marker:`漫画家公寓`,title:`漫画家公寓`,icon:`🏠`,color:`#8d6e63`},{marker:`尸体`,title:`尸体信息`,icon:`💀`,color:`#ff7043`},{marker:`阿海`,title:`助手阿海`,icon:`👦`,color:`#4a9eff`},{marker:`老板娘`,title:`老板娘阿莎`,icon:`👩`,color:`#e056a0`},{marker:`老刘`,title:`编辑老刘`,icon:`👨`,color:`#f5a623`},{marker:`小杜`,title:`助手小杜`,icon:`👧`,color:`#9b59b6`},{marker:`林教授`,title:`林教授`,icon:`👨‍🏫`,color:`#7ed321`}],C=s(()=>{if(!p)return[];let e=[],t=p.trim();for(let n of l){let r=n.marker+`：`,i=t.indexOf(r);if(i===-1)continue;let a=i+r.length,o=t.slice(a),s=o.length;for(let e of l){let t=`
-`+e.marker+`：`,n=o.indexOf(t);n!==-1&&n<s&&(s=n)}let c=w(o.slice(0,s).trim());c.length>0&&e.push({id:n.marker,title:n.title,icon:n.icon,color:n.color,clueItems:c}),t=o.slice(s)}return e});function w(e){let t=[],n=e.split(/(?=\d+\.)/);for(let e of n){let n=e.trim();if(!n)continue;let r=n.match(/^(\d+)\.\s*/);if(!r||!r[1])continue;let i=r[1],a=n.slice(r[0].length),o=a,s=null,c=a.match(/[（(]深入.*?[）)](?:[（(]#[^#]*#[^)]*[）)])?/);if(c){let e=a.indexOf(c[0]);o=a.slice(0,e).trim(),s=c[0].replace(/[（(]/,``).replace(/[）)]$/,``).replace(/[）)]/g,``)}o=o.replace(/[，,。；;]\s*$/,``),t.push({number:i,mainText:o,deepText:s})}return t}return(n,s)=>(f(),u(`div`,m,[s[2]||=c(`<header class="clue-header" data-v-ab7ae23f><h1 class="clue-title" data-v-ab7ae23f>🔍 线索手册</h1><p class="clue-subtitle" data-v-ab7ae23f>《漫画家之死》· 调查线索总览</p></header><div class="clue-tags" data-v-ab7ae23f><span class="clue-tag clue-tag--l1" data-v-ab7ae23f>一级线索</span><span class="clue-tag clue-tag--l2" data-v-ab7ae23f>二级线索</span><span class="clue-tag clue-tag--deep" data-v-ab7ae23f>可深入调查</span></div>`,2),d(`main`,h,[(f(!0),u(i,null,r(C.value,n=>(f(),u(`section`,{key:n.id,class:`clue-card`,style:t({"--accent-color":n.color})},[d(`h2`,g,[d(`span`,_,e(n.icon),1),o(` `+e(n.title)+` `,1),d(`span`,v,e(n.clueItems.length)+` 条线索`,1)]),d(`div`,y,[(f(!0),u(i,null,r(n.clueItems,t=>(f(),u(`div`,{key:t.number,class:`clue-item`},[d(`p`,b,[d(`span`,x,e(t.number)+`.`,1),o(` `+e(t.mainText),1)]),t.deepText?(f(),u(`blockquote`,S,[s[0]||=d(`span`,{class:`clue-deep-label`},`深入调查`,-1),o(` `+e(t.deepText),1)])):a(``,!0)]))),128))])],4))),128)),s[1]||=d(`aside`,{class:`clue-disclaimer`},` ⚠️ 本游戏内容纯属虚构，如有雷同，纯属巧合。 `,-1)])]))}}),[[`__scopeId`,`data-v-ab7ae23f`]]);export{C as default};
+`,ScarePremiere:`
+【惊魂首映】案件解析
+
+
+\xA0\xA0\xA0\xA0凶手为严歌手。
+\xA0\xA0\xA0\xA0
+
+\xA0\xA0\xA0\xA0锁定凶手的逻辑是，毒药在定妆喷雾中，购买定妆喷雾的小票在厕所中，所以凶手排除掉白经纪。从线索中推倒，甜记者的杀机并不成立，排除甜记者。有安眠药的水从矿泉水瓶中倒出，进入厕所的魏学霸是下安眠药的人，如果她下了一触即死的毒，下安眠药没有意义，所以排除魏学霸。而导演偷取孕检报告，说明他并不希望这件事情影响电影，自然不会干出在今天杀人的蠢事。所以锁定唯一的凶手，就是严歌手。
+\xA0\xA0\xA0\xA0
+\xA0\xA0\xA0\xA0以下还原4/19的关键时间线:
+
+\xA0\xA0\xA0\xA013:30，严歌手在屈x氏买了定妆喷雾
+
+\xA0\xA0\xA0\xA014:00，魏学霸在矿泉水下安眠药
+
+\xA0\xA0\xA0\xA014:25-14:27魏学霸到化妆室，听见程导演进来的声音躲进衣橱。
+
+\xA0\xA0\xA0\xA014:30程导演拿走确诊单离开化妆室遇到严歌手。魏学霸正想出来，又听见严歌手进来的声音，严歌手放了毒药喷雾后离开了。魏学霸听见严歌手离开，出来把矿泉水倒进去和恐吓信。
+
+\xA0\xA0\xA0\xA0而此时，甄演员和白经纪于后台接受甜记者采访。
+
+\xA0\xA0\xA0\xA016:30，甄演员因喝了矿泉水开始出现昏睡状态。
+
+\xA0\xA0\xA0\xA017:05，甄演员因忍不了困意所以由白经纪扶至化妆室趴着休息。
+
+\xA0\xA0\xA0\xA018:45，甄演员起来了，想补妆后再去会场大合照，于是使用了化妆品和定妆喷雾。
+
+\xA0\xA0\xA0\xA0\xA0所以死亡时间就是18:45。
+`},y={class:`clue-page`},b={class:`clue-content`},x={class:`card-title`},S={class:`card-icon`},C={class:`card-count`},w={class:`card-body`},T={class:`clue-text`},E={class:`clue-num`},D={key:0,class:`clue-deep`},O=a(_({__name:`ClueViewTotalTheDeathOfCartoonist`,setup(e){let t=v[f().params?.dramaKey],a=[{marker:`漫画家公寓`,title:`漫画家公寓`,icon:`🏠`,color:`#8d6e63`},{marker:`尸体`,title:`尸体信息`,icon:`💀`,color:`#ff7043`},{marker:`阿海`,title:`助手阿海`,icon:`👦`,color:`#4a9eff`},{marker:`老板娘`,title:`老板娘阿莎`,icon:`👩`,color:`#e056a0`},{marker:`老刘`,title:`编辑老刘`,icon:`👨`,color:`#f5a623`},{marker:`小杜`,title:`助手小杜`,icon:`👧`,color:`#9b59b6`},{marker:`林教授`,title:`林教授`,icon:`👨‍🏫`,color:`#7ed321`}],p=o(()=>{if(!t)return[];let e=[],n=t.trim();for(let t of a){let r=t.marker+`：`,i=n.indexOf(r);if(i===-1)continue;let o=i+r.length,s=n.slice(o),c=s.length;for(let e of a){let t=`
+`+e.marker+`：`,n=s.indexOf(t);n!==-1&&n<c&&(c=n)}let l=m(s.slice(0,c).trim());console.log(`Debugger ~ clueItems:`,l),l.length>0&&e.push({id:t.marker,title:t.title,icon:t.icon,color:t.color,clueItems:l}),n=s.slice(c)}return e});function m(e){let t=[],n=e.split(/(?=\d+\.)/);for(let e of n){let n=e.trim();if(!n)continue;let r=n.match(/^(\d+)\.\s*/);if(!r||!r[1])continue;let i=r[1],a=n.slice(r[0].length),o=a,s=null,c=a.match(/[（(]深入.*?[）)](?:[（(]#[^#]*#[^)]*[）)])?/);if(c){let e=a.indexOf(c[0]);o=a.slice(0,e).trim(),s=c[0].replace(/[（(]/,``).replace(/[）)]$/,``).replace(/[）)]/g,``)}o=o.replace(/[，,。；;]\s*$/,``),t.push({number:i,mainText:o,deepText:s})}return t}return(e,t)=>(g(),l(`div`,y,[t[2]||=c(`<header class="clue-header" data-v-2954c316><h1 class="clue-title" data-v-2954c316>🔍 线索手册</h1><p class="clue-subtitle" data-v-2954c316>《漫画家之死》· 调查线索总览</p></header><div class="clue-tags" data-v-2954c316><span class="clue-tag clue-tag--l1" data-v-2954c316>一级线索</span><span class="clue-tag clue-tag--l2" data-v-2954c316>二级线索</span><span class="clue-tag clue-tag--deep" data-v-2954c316>可深入调查</span></div>`,2),s(`main`,b,[(g(!0),l(h,null,r(p.value,e=>(g(),l(`section`,{key:e.id,class:`clue-card`,style:n({"--accent-color":e.color})},[s(`h2`,x,[s(`span`,S,u(e.icon),1),i(` `+u(e.title)+` `,1),s(`span`,C,u(e.clueItems.length)+` 条线索`,1)]),s(`div`,w,[(g(!0),l(h,null,r(e.clueItems,e=>(g(),l(`div`,{key:e.number,class:`clue-item`},[s(`p`,T,[s(`span`,E,u(e.number)+`.`,1),i(` `+u(e.mainText),1)]),e.deepText?(g(),l(`blockquote`,D,[t[0]||=s(`span`,{class:`clue-deep-label`},`深入调查`,-1),i(` `+u(e.deepText),1)])):d(``,!0)]))),128))])],4))),128)),t[1]||=s(`aside`,{class:`clue-disclaimer`},`⚠️ 本游戏内容纯属虚构，如有雷同，纯属巧合。`,-1)])]))}}),[[`__scopeId`,`data-v-2954c316`]]),k={key:1,class:`clue-page`},A={class:`clue-header`},j={class:`clue-subtitle`},M={class:`clue-content`},N={class:`clue-card`,style:{"--accent-color":`#8d6e63`}},P={class:`card-body`},F=a(_({__name:`ClueViewTotal`,setup(n){let i=f().params?.dramaKey,a=v[i].split(/\r?\n/).filter(e=>e.trim()!==``);return(n,o)=>(g(),l(`div`,null,[t(i)===`TheDeathOfCartoonist`?(g(),p(O,{key:0})):(g(),l(`div`,k,[s(`header`,A,[o[0]||=s(`h1`,{class:`clue-title`},`🔍 线索手册`,-1),s(`p`,j,`《`+u(t(m)(t(i)).name)+`》· 调查线索总览`,1)]),o[3]||=s(`div`,{class:`clue-tags`},[s(`span`,{class:`clue-tag clue-tag--l1`},`线索`)],-1),s(`main`,M,[s(`section`,N,[o[1]||=s(`h2`,{class:`card-title`},null,-1),s(`div`,P,[(g(!0),l(h,null,r(t(a),(t,n)=>(g(),l(`div`,{class:`clue-item`,key:n},[s(`p`,{class:e([`clue-text`,{"is-subContent":n%2==0}])},u(t),3)]))),128))])]),o[2]||=s(`aside`,{class:`clue-disclaimer`},`⚠️ 本游戏内容纯属虚构，如有雷同，纯属巧合。`,-1)])]))]))}}),[[`__scopeId`,`data-v-68a112fc`]]);export{F as default};
