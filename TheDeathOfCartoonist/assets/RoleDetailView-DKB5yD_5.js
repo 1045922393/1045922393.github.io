@@ -1,4 +1,27 @@
-import{C as e,D as t,E as n,O as r,S as i,T as a,_ as o,c as s,d as c,f as l,h as u,k as d,m as f,o as p,p as m,t as h,u as g,x as _,y as v}from"./index-CpfV-dD3.js";import{t as y}from"./_rolldown_dynamic_import_helper-CIAwlR2T.js";var b={编辑老刘:`
+import {
+  C as e,
+  D as t,
+  E as n,
+  O as r,
+  S as i,
+  T as a,
+  _ as o,
+  c as s,
+  d as c,
+  f as l,
+  h as u,
+  k as d,
+  m as f,
+  o as p,
+  p as m,
+  t as h,
+  u as g,
+  x as _,
+  y as v,
+} from "./index-CpfV-dD3.js";
+import { t as y } from "./rolldown_dynamic_import_helper-CIAwlR2T.js";
+var b = {
+    编辑老刘: `
 个人简介
 编辑老刘：32 岁，《漫画 GO》杂志的编辑，亦是漫画家白饶的责任编辑。
 -----------------内页-----------------
@@ -41,7 +64,8 @@ import{C as e,D as t,E as n,O as r,S as i,T as a,_ as o,c as s,d as c,f as l,h a
 你的目标：
 找到白饶最后的漫画原稿。（完成得分：4 分）
 不能让别人发现你曾经意图杀害白饶。（完成得分：3 分）
-凶手是谁，手法&动机（完成得分：2 分）`,老板娘阿莎:`
+凶手是谁，手法&动机（完成得分：2 分）`,
+    老板娘阿莎: `
 个人简介
 老板娘阿莎：25 岁，女仆咖啡厅的美艳老板娘，白饶的女朋友。
 -----------------内页-----------------
@@ -88,7 +112,8 @@ import{C as e,D as t,E as n,O as r,S as i,T as a,_ as o,c as s,d as c,f as l,h a
 自证清白，不要被逮捕（完成得分：4 分）
 不能让大家知道你企图偷白饶的银行卡（完成得分：3 分）
 搞清楚今天还有谁去过白饶的公寓，为什么去的（完成得分：2 分）
-`,林教授:`
+`,
+    林教授: `
 个人简介
 林教授：31 岁，杭江大学文学系副教授，白饶的老朋友。
 -----------------内页-----------------
@@ -134,7 +159,8 @@ import{C as e,D as t,E as n,O as r,S as i,T as a,_ as o,c as s,d as c,f as l,h a
 进了这组漫画原稿里（完成得分：4 分）
 凶手是谁，手法&动机（完成得分：3 分）
 弄明白阿海最近发生了什么，今天又发生了什么（完成得分：2 分）
-`,侦探:`
+`,
+    侦探: `
 游戏流程（详细流程请参看说明书）
 1.融入角色 → 2.自我介绍→ 3.第一轮个人调查 → 4.第一轮圆桌讨论→ 5.私聊时间 → 6.第二轮个人调查 → 7.第二轮圆桌讨论→ 8.侦探一对一 → 9.最后的发言 → 10.投票阶段
 → 11.公布真相
@@ -164,7 +190,8 @@ import{C as e,D as t,E as n,O as r,S as i,T as a,_ as o,c as s,d as c,f as l,h a
 1.你知道所有的尸体信息（不用透露给其他人）
 （1）尸体腹部有被锐器多次捅刺的痕迹，除此以外没有其他伤痕。（2）死者的尸检报告显示：死亡时间是在下午 4：00 至 4：30 之间。（3）死者胃里检测出有安眠药残留。
 2.私聊时间，你可以强制嫌疑人立即和你进行私聊，对方不可拒绝。
-`,助手阿海:`
+`,
+    助手阿海: `
 个人简介
 助手阿海：21 岁，杭江大学建筑系大三学生，漫画家白饶的弟弟兼助手，与白饶住在一起。
 -----------------内页-----------------
@@ -216,7 +243,8 @@ import{C as e,D as t,E as n,O as r,S as i,T as a,_ as o,c as s,d as c,f as l,h a
 搞清楚最近白饶和林教授之间究竟发生了什么（完成得分：3 分）
 搞清楚今天在你们的公寓里究竟发生了什么，有哪些人来过，目的又是什么（完成得分：
 2 分）
-`,助手小杜:`
+`,
+    助手小杜: `
 个人简介
 助手小杜：19 岁，杭江大学建筑系的大一学生，《银狐》的忠实读者。通
 过阿海认识白饶后，担任助手。
@@ -264,9 +292,450 @@ import{C as e,D as t,E as n,O as r,S as i,T as a,_ as o,c as s,d as c,f as l,h a
 4.白饶想把《银狐》换到其他杂志上连载，老刘为此经常来找他。
 你的目的：
 不能让别人发现你是凶手。
-`},x={class:`role-page`},S={class:`role-header`},C={class:`role-avatar`},w={class:`role-name`},T={key:0,class:`role-brief`},E={class:`role-content`},D={class:`card-title`},O={class:`card-icon`},k={class:`card-body`},A={key:0,class:`common-info`},j={class:`card-title card-title--sub`},M={class:`card-icon`},N={class:`card-body`},P=s(v({__name:`RoleDetailViewTheDeathOfCartoonist`,setup(e){let n=p().params.roleId,a=[{marker:`个人简介`,title:`角色身份`,icon:`🎭`,color:`#f5a623`,headingLevel:`h2`},{marker:`游戏流程`,title:`游戏流程`,icon:`📋`,color:`#4a9eff`,headingLevel:`h2`},{marker:`故事导览`,title:`故事导览`,icon:`📖`,color:`#7ed321`,headingLevel:`h2`},{marker:`关于地点`,title:`关于地点`,icon:`📍`,color:`#00bcd4`,headingLevel:`h3`},{marker:`关于死者`,title:`关于死者`,icon:`💀`,color:`#ff7043`,headingLevel:`h3`},{marker:`关于漫画家的公寓`,title:`公寓描述`,icon:`🏠`,color:`#8d6e63`,headingLevel:`h3`},{marker:`你的故事`,title:`你的故事`,icon:`📜`,color:`#e056a0`,headingLevel:`h2`},{marker:`关于其他人`,title:`人物关系`,icon:`👥`,color:`#9b59b6`,headingLevel:`h2`},{marker:`你的关键线索`,title:`关键线索`,icon:`🔑`,color:`#e74c3c`,headingLevel:`h2`},{marker:`你的目标`,title:`你的目标`,icon:`🎯`,color:`#f5d76e`,headingLevel:`h2`},{marker:`你的目的`,title:`你的目标`,icon:`🎯`,color:`#f5d76e`,headingLevel:`h2`},{marker:`你的特权`,title:`侦探特权`,icon:`👑`,color:`#1abc9c`,headingLevel:`h2`}],s=c(()=>{let e=b[n];if(!e)return[];let t=[],r=e.trim();for(let e of a){let n=r.indexOf(e.marker);if(n===-1)continue;let i=n+e.marker.length,o=r.slice(i),s=o.length;for(let e of a){let t=o.indexOf(`
-`+e.marker);t!==-1&&t<s&&(s=t+1)}let c=o.slice(0,s).trim();c&&t.push({title:e.title,icon:e.icon,content:c,color:e.color}),r=o.slice(s)}return t});function m(e){return/^[-—─]+$/.test(e.trim())}function h(e){return e.trim().split(`
-`).filter(e=>e.trim()!==``)}let v=c(()=>{let e=b[n];if(!e)return n;let t=e.indexOf(`个人简介`);if(t===-1)return n;let r=e.slice(t+4).trim().split(`
-`)[0]||``,i=r.indexOf(`：`);return i===-1?n:r.slice(0,i).trim()}),y=c(()=>{let e=b[n];if(!e)return``;let t=e.indexOf(`个人简介`);return t===-1?``:e.slice(t+4).trim().split(`
-`)[1]?.trim()??``}),P=[`游戏流程`,`故事导览`,`关于地点`,`关于死者`,`公寓描述`],F=e=>P.includes(e),I=c(()=>s.value.filter(e=>!F(e.title))),L=c(()=>s.value.filter(e=>F(e.title)));return(e,n)=>(_(),u(`div`,x,[l(`header`,S,[l(`div`,C,d(v.value.charAt(0)),1),l(`h1`,w,d(v.value),1),y.value?(_(),u(`p`,T,d(y.value),1)):f(``,!0)]),l(`main`,E,[(_(!0),u(g,null,i(I.value,(e,n)=>(_(),u(`section`,{key:`a`+n,class:`role-card`,style:r({"--accent-color":e.color})},[l(`h2`,D,[l(`span`,O,d(e.icon),1),o(` `+d(e.title),1)]),l(`div`,k,[(_(!0),u(g,null,i(h(e.content),(e,n)=>(_(),u(`p`,{key:n,class:t([`card-line`,{"is-heading":/^\d+[\.\、\）\)]/.test(e)||/^[*●•]/.test(e),"is-separator":m(e)}])},d(e),3))),128))])],4))),128)),L.value.length>0?(_(),u(`details`,A,[n[0]||=l(`summary`,{class:`common-summary`},[l(`span`,null,`📚 公共信息（所有玩家均知）`)],-1),(_(!0),u(g,null,i(L.value,(e,n)=>(_(),u(`section`,{key:`b`+n,class:`role-card role-card--sub`,style:r({"--accent-color":e.color})},[l(`h3`,j,[l(`span`,M,d(e.icon),1),o(` `+d(e.title),1)]),l(`div`,N,[(_(!0),u(g,null,i(h(e.content),(e,n)=>(_(),u(`p`,{key:n,class:t([`card-line`,{"is-heading":/^\d+[\.\、\）\)]/.test(e)||/^[*●•]/.test(e),"is-highlight":/^\*/.test(e)}])},d(e),3))),128))])],4))),128))])):f(``,!0),n[1]||=l(`aside`,{class:`role-disclaimer`},`⚠️ 本游戏内容纯属虚构，如有雷同，纯属巧合。`,-1)])]))}}),[[`__scopeId`,`data-v-14e1d755`]]),F={key:1,class:`role-page`},I={class:`role-header`},L={class:`role-avatar`},R={class:`role-name`},z={class:`role-content`},B={class:`card-body`},V=s(v({__name:`RoleDetailView`,setup(o){let s=p(),f=s.params.roleId,v=s.params?.dramaKey,b=a({});e(async()=>{let e=await y(Object.assign({"../content/ScarePremiere/Roles.ts":()=>h(()=>import(`./Roles-C-pU5NHw.js`),[],import.meta.url),"../content/TheDeathOfCartoonist/Roles.ts":()=>h(()=>import(`./Roles-C6aeO_lf.js`).then(e=>e.t),[],import.meta.url)}),`../content/${v}/Roles.ts`,4);console.log(`Debugger ~ mod:`,e),b.value=e.roleContent});let x=c(()=>b.value[f]||(console.warn(`未找到角色数据，roleId: ${f}`),``));function S(e){return/^[-—─]+$/.test(e.trim())}function C(e){return e.trim().split(`
-`).filter(e=>e.trim()!==``)}function w(e){return`hsl(${Array.from(e).reduce((e,t)=>e+t.charCodeAt(0),0)%360}, 70%, 60%)`}return(e,a)=>(_(),u(`div`,null,[n(v)===`TheDeathOfCartoonist`?(_(),m(P,{key:0})):(_(),u(`div`,F,[l(`header`,I,[l(`div`,L,d(n(f).charAt(0)),1),l(`h1`,R,d(n(f)),1)]),l(`main`,z,[l(`section`,{class:`role-card`,style:r({"--accent-color":w(n(f))})},[a[0]||=l(`h2`,{class:`card-title`},`剧本`,-1),l(`div`,B,[(_(!0),u(g,null,i(C(x.value),(e,n)=>(_(),u(`p`,{key:n,class:t([`card-line`,{"is-heading":/^\d+[\.\、\）\)]/.test(e)||/^[*●•]/.test(e),"is-separator":S(e),"is-subContent":n%2==0}])},d(e),3))),128))])],4),a[1]||=l(`aside`,{class:`role-disclaimer`},`⚠️ 本游戏内容纯属虚构，如有雷同，纯属巧合。`,-1)])]))]))}}),[[`__scopeId`,`data-v-f9a7c2df`]]);export{V as default};
+`,
+  },
+  x = { class: `role-page` },
+  S = { class: `role-header` },
+  C = { class: `role-avatar` },
+  w = { class: `role-name` },
+  T = { key: 0, class: `role-brief` },
+  E = { class: `role-content` },
+  D = { class: `card-title` },
+  O = { class: `card-icon` },
+  k = { class: `card-body` },
+  A = { key: 0, class: `common-info` },
+  j = { class: `card-title card-title--sub` },
+  M = { class: `card-icon` },
+  N = { class: `card-body` },
+  P = s(
+    v({
+      __name: `RoleDetailViewTheDeathOfCartoonist`,
+      setup(e) {
+        let n = p().params.roleId,
+          a = [
+            {
+              marker: `个人简介`,
+              title: `角色身份`,
+              icon: `🎭`,
+              color: `#f5a623`,
+              headingLevel: `h2`,
+            },
+            {
+              marker: `游戏流程`,
+              title: `游戏流程`,
+              icon: `📋`,
+              color: `#4a9eff`,
+              headingLevel: `h2`,
+            },
+            {
+              marker: `故事导览`,
+              title: `故事导览`,
+              icon: `📖`,
+              color: `#7ed321`,
+              headingLevel: `h2`,
+            },
+            {
+              marker: `关于地点`,
+              title: `关于地点`,
+              icon: `📍`,
+              color: `#00bcd4`,
+              headingLevel: `h3`,
+            },
+            {
+              marker: `关于死者`,
+              title: `关于死者`,
+              icon: `💀`,
+              color: `#ff7043`,
+              headingLevel: `h3`,
+            },
+            {
+              marker: `关于漫画家的公寓`,
+              title: `公寓描述`,
+              icon: `🏠`,
+              color: `#8d6e63`,
+              headingLevel: `h3`,
+            },
+            {
+              marker: `你的故事`,
+              title: `你的故事`,
+              icon: `📜`,
+              color: `#e056a0`,
+              headingLevel: `h2`,
+            },
+            {
+              marker: `关于其他人`,
+              title: `人物关系`,
+              icon: `👥`,
+              color: `#9b59b6`,
+              headingLevel: `h2`,
+            },
+            {
+              marker: `你的关键线索`,
+              title: `关键线索`,
+              icon: `🔑`,
+              color: `#e74c3c`,
+              headingLevel: `h2`,
+            },
+            {
+              marker: `你的目标`,
+              title: `你的目标`,
+              icon: `🎯`,
+              color: `#f5d76e`,
+              headingLevel: `h2`,
+            },
+            {
+              marker: `你的目的`,
+              title: `你的目标`,
+              icon: `🎯`,
+              color: `#f5d76e`,
+              headingLevel: `h2`,
+            },
+            {
+              marker: `你的特权`,
+              title: `侦探特权`,
+              icon: `👑`,
+              color: `#1abc9c`,
+              headingLevel: `h2`,
+            },
+          ],
+          s = c(() => {
+            let e = b[n];
+            if (!e) return [];
+            let t = [],
+              r = e.trim();
+            for (let e of a) {
+              let n = r.indexOf(e.marker);
+              if (n === -1) continue;
+              let i = n + e.marker.length,
+                o = r.slice(i),
+                s = o.length;
+              for (let e of a) {
+                let t = o.indexOf(
+                  `
+` + e.marker,
+                );
+                t !== -1 && t < s && (s = t + 1);
+              }
+              let c = o.slice(0, s).trim();
+              (c &&
+                t.push({
+                  title: e.title,
+                  icon: e.icon,
+                  content: c,
+                  color: e.color,
+                }),
+                (r = o.slice(s)));
+            }
+            return t;
+          });
+        function m(e) {
+          return /^[-—─]+$/.test(e.trim());
+        }
+        function h(e) {
+          return e
+            .trim()
+            .split(
+              `
+`,
+            )
+            .filter((e) => e.trim() !== ``);
+        }
+        let v = c(() => {
+            let e = b[n];
+            if (!e) return n;
+            let t = e.indexOf(`个人简介`);
+            if (t === -1) return n;
+            let r =
+                e.slice(t + 4).trim().split(`
+`)[0] || ``,
+              i = r.indexOf(`：`);
+            return i === -1 ? n : r.slice(0, i).trim();
+          }),
+          y = c(() => {
+            let e = b[n];
+            if (!e) return ``;
+            let t = e.indexOf(`个人简介`);
+            return t === -1
+              ? ``
+              : (e
+                  .slice(t + 4)
+                  .trim()
+                  .split(
+                    `
+`,
+                  )[1]
+                  ?.trim() ?? ``);
+          }),
+          P = [`游戏流程`, `故事导览`, `关于地点`, `关于死者`, `公寓描述`],
+          F = (e) => P.includes(e),
+          I = c(() => s.value.filter((e) => !F(e.title))),
+          L = c(() => s.value.filter((e) => F(e.title)));
+        return (e, n) => (
+          _(),
+          u(`div`, x, [
+            l(`header`, S, [
+              l(`div`, C, d(v.value.charAt(0)), 1),
+              l(`h1`, w, d(v.value), 1),
+              y.value ? (_(), u(`p`, T, d(y.value), 1)) : f(``, !0),
+            ]),
+            l(`main`, E, [
+              (_(!0),
+              u(
+                g,
+                null,
+                i(
+                  I.value,
+                  (e, n) => (
+                    _(),
+                    u(
+                      `section`,
+                      {
+                        key: `a` + n,
+                        class: `role-card`,
+                        style: r({ "--accent-color": e.color }),
+                      },
+                      [
+                        l(`h2`, D, [
+                          l(`span`, O, d(e.icon), 1),
+                          o(` ` + d(e.title), 1),
+                        ]),
+                        l(`div`, k, [
+                          (_(!0),
+                          u(
+                            g,
+                            null,
+                            i(
+                              h(e.content),
+                              (e, n) => (
+                                _(),
+                                u(
+                                  `p`,
+                                  {
+                                    key: n,
+                                    class: t([
+                                      `card-line`,
+                                      {
+                                        "is-heading":
+                                          /^\d+[\.\、\）\)]/.test(e) ||
+                                          /^[*●•]/.test(e),
+                                        "is-separator": m(e),
+                                      },
+                                    ]),
+                                  },
+                                  d(e),
+                                  3,
+                                )
+                              ),
+                            ),
+                            128,
+                          )),
+                        ]),
+                      ],
+                      4,
+                    )
+                  ),
+                ),
+                128,
+              )),
+              L.value.length > 0
+                ? (_(),
+                  u(`details`, A, [
+                    (n[0] ||= l(
+                      `summary`,
+                      { class: `common-summary` },
+                      [l(`span`, null, `📚 公共信息（所有玩家均知）`)],
+                      -1,
+                    )),
+                    (_(!0),
+                    u(
+                      g,
+                      null,
+                      i(
+                        L.value,
+                        (e, n) => (
+                          _(),
+                          u(
+                            `section`,
+                            {
+                              key: `b` + n,
+                              class: `role-card role-card--sub`,
+                              style: r({ "--accent-color": e.color }),
+                            },
+                            [
+                              l(`h3`, j, [
+                                l(`span`, M, d(e.icon), 1),
+                                o(` ` + d(e.title), 1),
+                              ]),
+                              l(`div`, N, [
+                                (_(!0),
+                                u(
+                                  g,
+                                  null,
+                                  i(
+                                    h(e.content),
+                                    (e, n) => (
+                                      _(),
+                                      u(
+                                        `p`,
+                                        {
+                                          key: n,
+                                          class: t([
+                                            `card-line`,
+                                            {
+                                              "is-heading":
+                                                /^\d+[\.\、\）\)]/.test(e) ||
+                                                /^[*●•]/.test(e),
+                                              "is-highlight": /^\*/.test(e),
+                                            },
+                                          ]),
+                                        },
+                                        d(e),
+                                        3,
+                                      )
+                                    ),
+                                  ),
+                                  128,
+                                )),
+                              ]),
+                            ],
+                            4,
+                          )
+                        ),
+                      ),
+                      128,
+                    )),
+                  ]))
+                : f(``, !0),
+              (n[1] ||= l(
+                `aside`,
+                { class: `role-disclaimer` },
+                `⚠️ 本游戏内容纯属虚构，如有雷同，纯属巧合。`,
+                -1,
+              )),
+            ]),
+          ])
+        );
+      },
+    }),
+    [[`__scopeId`, `data-v-14e1d755`]],
+  ),
+  F = { key: 1, class: `role-page` },
+  I = { class: `role-header` },
+  L = { class: `role-avatar` },
+  R = { class: `role-name` },
+  z = { class: `role-content` },
+  B = { class: `card-body` },
+  V = s(
+    v({
+      __name: `RoleDetailView`,
+      setup(o) {
+        let s = p(),
+          f = s.params.roleId,
+          v = s.params?.dramaKey,
+          b = a({});
+        e(async () => {
+          let e = await y(
+            Object.assign({
+              "../content/ScarePremiere/Roles.ts": () =>
+                h(() => import(`./Roles-C-pU5NHw.js`), [], import.meta.url),
+              "../content/TheDeathOfCartoonist/Roles.ts": () =>
+                h(
+                  () => import(`./Roles-C6aeO_lf.js`).then((e) => e.t),
+                  [],
+                  import.meta.url,
+                ),
+            }),
+            `../content/${v}/Roles.ts`,
+            4,
+          );
+          (console.log(`Debugger ~ mod:`, e), (b.value = e.roleContent));
+        });
+        let x = c(
+          () =>
+            b.value[f] || (console.warn(`未找到角色数据，roleId: ${f}`), ``),
+        );
+        function S(e) {
+          return /^[-—─]+$/.test(e.trim());
+        }
+        function C(e) {
+          return e
+            .trim()
+            .split(
+              `
+`,
+            )
+            .filter((e) => e.trim() !== ``);
+        }
+        function w(e) {
+          return `hsl(${Array.from(e).reduce((e, t) => e + t.charCodeAt(0), 0) % 360}, 70%, 60%)`;
+        }
+        return (e, a) => (
+          _(),
+          u(`div`, null, [
+            n(v) === `TheDeathOfCartoonist`
+              ? (_(), m(P, { key: 0 }))
+              : (_(),
+                u(`div`, F, [
+                  l(`header`, I, [
+                    l(`div`, L, d(n(f).charAt(0)), 1),
+                    l(`h1`, R, d(n(f)), 1),
+                  ]),
+                  l(`main`, z, [
+                    l(
+                      `section`,
+                      {
+                        class: `role-card`,
+                        style: r({ "--accent-color": w(n(f)) }),
+                      },
+                      [
+                        (a[0] ||= l(`h2`, { class: `card-title` }, `剧本`, -1)),
+                        l(`div`, B, [
+                          (_(!0),
+                          u(
+                            g,
+                            null,
+                            i(
+                              C(x.value),
+                              (e, n) => (
+                                _(),
+                                u(
+                                  `p`,
+                                  {
+                                    key: n,
+                                    class: t([
+                                      `card-line`,
+                                      {
+                                        "is-heading":
+                                          /^\d+[\.\、\）\)]/.test(e) ||
+                                          /^[*●•]/.test(e),
+                                        "is-separator": S(e),
+                                        "is-subContent": n % 2 == 0,
+                                      },
+                                    ]),
+                                  },
+                                  d(e),
+                                  3,
+                                )
+                              ),
+                            ),
+                            128,
+                          )),
+                        ]),
+                      ],
+                      4,
+                    ),
+                    (a[1] ||= l(
+                      `aside`,
+                      { class: `role-disclaimer` },
+                      `⚠️ 本游戏内容纯属虚构，如有雷同，纯属巧合。`,
+                      -1,
+                    )),
+                  ]),
+                ])),
+          ])
+        );
+      },
+    }),
+    [[`__scopeId`, `data-v-f9a7c2df`]],
+  );
+export { V as default };

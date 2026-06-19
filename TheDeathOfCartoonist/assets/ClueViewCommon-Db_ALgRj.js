@@ -1,2 +1,945 @@
-import{C as e,D as t,E as n,O as r,S as i,T as a,_ as o,b as ee,c as s,d as c,f as l,g as u,h as d,k as f,l as p,m,o as h,p as g,r as _,t as v,u as y,x as b,y as x}from"./index-CpfV-dD3.js";import{t as S}from"./_rolldown_dynamic_import_helper-CIAwlR2T.js";var C={class:`clue-page`},w={key:0,class:`setup-screen`},T={key:1,class:`game-screen`},E={class:`game-bar`},D={class:`bar-item round`},O={class:`bar-value highlight`},te={class:`bar-item player`},ne={class:`bar-value highlight`},re={class:`bar-item chances`},ie={class:`bar-item timer`},ae=[`disabled`],oe={class:`round-tip`},se={key:0},ce={key:1},le={key:0,class:`viewed-panel`},ue={class:`viewed-list`},de={class:`v-num`},fe={class:`v-role`},pe={class:`v-content`},me={class:`grid-wrapper`},he={class:`grid-head`},ge={class:`gr-num`},_e=[`onClick`],ve={class:`cc-role`},ye={class:`cc-level`},be={class:`cc-status`},xe={key:0,class:`cc-badge`},Se={key:1,class:`empty-slot`},Ce={class:`modal-card`},k={class:`modal-title`},A={class:`modal-num`},we={class:`modal-body`},Te={key:0,class:`modal-deep`},Ee={class:`deep-text`},j={key:0,class:`deep-remark`},De={class:`modal-actions`},Oe=[`disabled`],ke={key:2,class:`game-over-overlay`},M=2,N=s(x({__name:`ClueViewTheDeathOfCartoonist`,setup(e){let n=[`漫画家公寓`,`尸体信息`,`弟弟阿海`,`老板娘阿莎`,`编辑老刘`,`助手小杜`,`林教授`],s={漫画家公寓:`#e67e22`,尸体信息:`#e74c3c`,弟弟阿海:`#3498db`,老板娘阿莎:`#e91e63`,编辑老刘:`#e67e22`,助手小杜:`#9b59b6`,林教授:`#2ecc71`},h={1:{漫画家公寓:`电脑浏览器的历史记录显示他常去一个音乐交流网站Q4sing，隐蔽处有一个链接，点开后需要输入密码。(可深入调查A)`,尸体信息:`尸体腹部有被锐器多次捅刺的痕迹，除此以外没有其他伤痕。`,弟弟阿海:`当天早上有人听到阿海和他哥哥激烈争吵后，摔门而出。这样的争吵最近越来越频繁了。`,老板娘阿莎:`咖啡馆当班的女仆说，老板娘下午3：10左右离开了店里，4：30的时候才回来，一副忧心忡忡的样子。`,编辑老刘:`电脑里有白饶和编辑老刘的聊天记录，他们似乎对《银狐》未来的剧情发展有了不小的分歧。`,助手小杜:`今天下午，小杜的课是排满的，一直到5点，而且都有签到记录。(可深入调查D)`,林教授:`电脑浏览器的历史记录显示林教授常去一个音乐交流网站Q4sing，隐蔽处有一个链接，点开后需要输入密码。(可深入调查E)`},2:{漫画家公寓:`在卧室书桌的抽屉发现一小瓶安眠药，只剩没几片了。`,尸体信息:`死者的尸检报告显示：死亡时间是在下午4：00至4：30之间。`,弟弟阿海:`阿海的书桌抽屉里有一封未寄出的情书，是写给小杜的。`,老板娘阿莎:`最近有人听到老板娘和男友吵架，似乎是因为老板娘的男朋友不愿意帮她还债。`,编辑老刘:`据杂志社同事说，老刘喝醉酒曾大骂白饶就是个白眼狼。`,助手小杜:`抽屉里有小杜的失眠症诊断书和配来的一小瓶安眠药。`,林教授:`林教授今天下午的课一直到5点才结束。`},3:{漫画家公寓:`卧室的书桌上除了电脑，还有一大叠空的原稿纸和一个马克杯，里面的咖啡没喝完，还剩半杯。`,尸体信息:`死者胃里检测出有安眠药残留。`,弟弟阿海:`据阿海死党说，阿海最近三个月一直闷闷不乐，心事重重，甚至还问他如果亲人是坏人他会怎么做。`,老板娘阿莎:`老板娘电脑的相册里有她和林教授的合影，两人曾经是男女朋友。`,编辑老刘:`老刘的工作日志上写了：下午2：30和白饶面谈，做最后的努力。`,助手小杜:`据小杜的好朋友说，实际上这三个月来一直是小杜担任主要助手，阿海已经很久没帮忙了。`,林教授:`林教授的银行账户里有大数目的存款和大笔的转账，其中有一半是转给白饶的。`},4:{漫画家公寓:`电脑上的聊天记录显示：白饶已经答应了另一家漫画杂志社，把《银狐》转到那家杂志上继续连载。`,弟弟阿海:`据阿海的死党说，阿海和他哥哥是异母兄弟。`,老板娘阿莎:`咖啡馆领班说，老板娘的男朋友对老板娘真的很好，连装修咖啡馆的钱都是他出的。似乎老板娘也是因为这个甩了前男友。`,编辑老刘:`老刘已经和老婆打了半年的离婚官司，争夺女儿的抚养权。如果老刘失去了工作，他争夺孩子抚养权的可能性几乎为0。`,助手小杜:`小杜的书架上有全部目前已出的《银狐》单行本，每本都被撕掉了几页。`,林教授:`林教授的钱包里有白饶家的钥匙。`},5:{漫画家公寓:`在卧室的垃圾桶里发现一把尖利的水果刀，上面沾满了血迹。(可深入调查B)`},6:{漫画家公寓:`客厅抽屉里发现有几张存折和银行卡，加起来有近300万的存款。另外还有两本房产证，以及两张30万的支票，是林教授写给他的。`}},g={5:{弟弟阿海:`阿海在自己的笔记本里写到：我无论如何无法相信我哥哥竟然是这样的人，但如果他真是，我绝不能坐视不管。`,老板娘阿莎:`老板娘卧室的抽屉里有一份500万的人生意外险，保险人是白饶，受益人是阿莎。`,编辑老刘:`有别的杂志社开出了更高的稿酬想把《银狐》挖走。如果保不住这个热门连载，老刘很可能会被开除。`,助手小杜:`小杜的抽屉里有一张剪报，是著名企业家杜跃在一年多前被杀手Ghost杀死的新闻。在杜跃的名字旁，小杜写着：爸爸，我好想你。`,林教授:`林教授的钱包里一直放着前女友阿莎的照片，从未更改过。照片的背面写着wishes。`},6:{弟弟阿海:`公寓楼下的垃圾桶里有一件沾血的雨衣。这件雨衣是阿海的，平时都挂在卧室里。(可深入调查C)`,老板娘阿莎:`咖啡厅的账本显示店里的生意欠佳，而且已欠供货商、房租等合计50万元。老板娘的账本里还记着一个高利贷的借款电话。`,编辑老刘:`根据进出记录，老刘下午1：30离开杂志社后就没有再回来过。`,助手小杜:`在白饶的手机里发现他曾在5.14上午给小杜发过短信，叫她来帮忙画漫画，但小杜以下午有课为由拒绝了。`,林教授:`林教授的书桌底下有一个暗格，里面有多个文件夹用了不同的英文单词标注。其中一个标注的是Ghost，里面有很多人的档案，其中有企业家杜跃的名字。`},7:{漫画家公寓:`卧室的垃圾桶里发现一个纸团，展开来是一张画了一半的漫画原稿，有一行字潦草地覆盖在上面，是白饶的笔迹：我必须离开那里！回头是岸！`,弟弟阿海:`阿海今天早上10点半有一堂课，下午有一堂课到3：30，都有签到记录。`,老板娘阿莎:`老板娘办公室的抽屉里有一小瓶安眠药，用掉的药片不多。`,编辑老刘:`在老刘电脑的网购记录里发现一把水果刀，老刘还问卖家"刀够锋利吗？"`,助手小杜:`小杜的笔记本里记录了杀手Ghost的历次犯案，每次犯案都对应有几张漫画。这几张漫画是从《银狐》单行本里撕下来的。`,林教授:`林教授的手机里有一条前天的短信，是白饶发来的，很简短：你们的秘密是我的武器。`},8:{漫画家公寓:`书架上有一本厚厚的字典，看起来有点不寻常。拉动这本字典后，书架整个向右移动了，露出了一条暗格，里面藏有一把造型特殊的匕首。暗格里还有一份文件夹，里面是很多人的档案，其中有企业家杜跃的名字。`},9:{漫画家公寓:`厨房的水槽里有少量的咖啡渍。厨房的垃圾桶里发现了女仆咖啡厅的外带纸杯和速溶咖啡包装袋。`},10:{漫画家公寓:`客厅的杂志堆里夹着一份ems快递，是10天前寄来的。里面有一本童话书，其中一页被撕了下来，却依旧夹在里面。这页上画着一只小鸟被关在巨大的鸟笼里，配有文字：鸟儿再飞一次，就可以自由了。`},11:{漫画家公寓:`床头柜上有一本便签，最上面一页有浅浅的笔画痕迹，仔细辨认后写的是"IOEZBL"。`}},_={A:{content:`你以"Ghost"的用户名登录了一个邮箱。里面有很多Ghost和"双木"的往来邮件，多是关于暗杀任务的通知，最近一个月Ghost似乎频繁地表达了想要结束杀手生涯，从组织里退役的愿望。`,remark:`782301`},B:{content:`水果刀的刀柄上有老刘和白饶两人的指纹。指纹上有被覆盖过的痕迹。`},C:{content:`垃圾桶里还有一些漫画原稿的碎片，看上去似乎快画完了。`},D:{content:`小杜下午的课是她拜托朋友代替她签到的。`},E:{content:`你以"双木"的用户名登陆了一个邮箱，管理员昨天刚给他发了一条信息：鸟儿不能飞了。`,remark:`947437`}};function v(e){let t=e.match(/\(可深入调查([A-E])\)/);if(t&&t[1]){let n=t[1];return{cleanContent:e.replace(/\(可深入调查[A-E]\)/,``).trim(),deepLink:n}}return{cleanContent:e,deepLink:null}}let x=[];for(let[e,t]of Object.entries(h)){let r=parseInt(e);for(let e of n){let n=t[e];if(n&&n.trim()!==``){let{cleanContent:t,deepLink:i}=v(n);x.push({id:`primary-${r}-${e}`,number:r,role:e,content:t,level:`primary`,deepLink:i})}}}for(let[e,t]of Object.entries(g)){let r=parseInt(e);for(let e of n){let n=t[e];if(n&&n.trim()!==``){let{cleanContent:t,deepLink:i}=v(n);x.push({id:`secondary-${r}-${e}`,number:r,role:e,content:t,level:`secondary`,deepLink:i})}}}function S(e){return x.filter(t=>t.level===e)}function N(e,t){let n=L.value===1?`primary`:void 0;return n?x.find(r=>r.number===e&&r.role===t&&r.level===n):x.find(n=>n.number===e&&n.role===t)}function P(e){return x.find(t=>t.id===e)}let F=a(1),I=a(!1),L=a(1),R=a(0),z=a(4),B=a(new Set),V=a(new Set),H=a({}),U=a(300),W=null,G=a(!1),K=a(!1),q=a(null),J=a(null),Ae=c(()=>`玩家 ${R.value+1}`),je=c(()=>{let e=Math.floor(U.value/60),t=U.value%60;return`${e.toString().padStart(2,`0`)}:${t.toString().padStart(2,`0`)}`}),Me=c(()=>{let e=L.value===1?`primary`:void 0,t=e?S(e):x,n=new Set;return t.forEach(e=>n.add(e.number)),Array.from(n).sort((e,t)=>e-t)});function Y(e){return V.value.has(e)}function Ne(){F.value<1||(I.value=!0,L.value=1,R.value=0,V.value=new Set,X(),Z())}function X(){z.value=4,B.value=new Set,H.value={},U.value=300,$()}function Z(){W&&clearInterval(W),W=window.setInterval(()=>{U.value--,U.value<=0&&(clearInterval(W),W=null,Q())},1e3)}function Q(){G.value||(W&&=(clearInterval(W),null),R.value>=F.value-1?L.value<M?(L.value++,R.value=0,X(),Z()):G.value=!0:(R.value++,X(),Z()))}function Pe(e){if(!G.value){if(L.value===1&&e.level!==`primary`){alert(`第一轮只能查看一级线索！`);return}if(z.value<=0){alert(`机会已用完！`);return}if(V.value.has(e.id)){alert(`这张线索卡已经查看过了。`);return}if((H.value[e.role]||0)>=2){alert(`你已查看过"${e.role}"的线索 2 次，不能再查看该角色的线索。`);return}z.value--,B.value.add(e.id),V.value.add(e.id),H.value[e.role]=(H.value[e.role]||0)+1,q.value=e,J.value=null,K.value=!0}}function Fe(){if(!q.value||!q.value.deepLink)return;if(z.value<2){alert(`剩余机会不足（需要2次），无法深入调查！`);return}z.value-=2;let e=_[q.value.deepLink];x.push({id:q.value.deepLink+``,number:-1,role:`深入调查`,content:e?.content,level:`deepLink`,deepLink:null}),B.value.add(q.value.deepLink),V.value.add(q.value.deepLink),e?J.value=e:alert(`深入调查数据缺失！`)}function $(){K.value=!1,q.value=null,J.value=null}function Ie(){I.value=!1,G.value=!1,W&&=(clearInterval(W),null),L.value=1,R.value=0,V.value=new Set,X()}return ee(()=>{W&&clearInterval(W)}),(e,a)=>(b(),d(`div`,C,[I.value?(b(),d(`div`,T,[l(`header`,E,[l(`div`,D,[a[4]||=l(`span`,{class:`bar-icon`},`🔄`,-1),a[5]||=l(`span`,{class:`bar-label`},`轮次`,-1),l(`span`,O,f(L.value)+` / `+f(M),1)]),l(`div`,te,[a[6]||=l(`span`,{class:`bar-icon`},`👤`,-1),a[7]||=l(`span`,{class:`bar-label`},`玩家`,-1),l(`span`,ne,f(Ae.value),1)]),l(`div`,re,[a[8]||=l(`span`,{class:`bar-icon`},`🎫`,-1),a[9]||=l(`span`,{class:`bar-label`},`机会`,-1),l(`span`,{class:t([`bar-value`,{low:z.value<=1}])},f(z.value),3)]),l(`div`,ie,[a[10]||=l(`span`,{class:`bar-icon`},`⏱️`,-1),a[11]||=l(`span`,{class:`bar-label`},`时间`,-1),l(`span`,{class:t([`bar-value timer-val`,{warning:U.value<=10}])},f(je.value),3)]),l(`button`,{class:`end-btn`,onClick:Q,disabled:G.value},`结束轮次`,8,ae)]),l(`div`,oe,[L.value===1?(b(),d(`span`,se,[...a[12]||=[o(`🔵 第1轮：仅可查看`,-1),l(`span`,{class:`tag primary`},`一级线索`,-1),o(`（编号 1-6）`,-1)]])):(b(),d(`span`,ce,[...a[13]||=[o(`🟢 第2轮：可查看`,-1),l(`span`,{class:`tag primary`},`一级`,-1),o(` + `,-1),l(`span`,{class:`tag secondary`},`二级线索`,-1),o(`（全部编号）`,-1)]]))]),V.value.size?(b(),d(`div`,le,[a[14]||=l(`h3`,{class:`viewed-title`},`📋 已查看线索`,-1),l(`ul`,ue,[(b(!0),d(y,null,i(V.value,e=>(b(),d(`li`,{key:e,class:`viewed-item`},[l(`span`,de,f(P(e)?.number),1),l(`span`,{class:t([`v-tag`,P(e)?.level])},f(P(e)?.level===`primary`?`一级`:`二级`),3),l(`span`,fe,f(P(e)?.role),1),l(`span`,pe,f(P(e)?.content),1)]))),128))])])):m(``,!0),l(`div`,me,[l(`div`,he,[a[15]||=l(`div`,{class:`gh-cell gh-num`},`编号`,-1),(b(),d(y,null,i(n,e=>l(`div`,{class:`gh-cell`,key:e},f(e),1)),64))]),(b(!0),d(y,null,i(Me.value,e=>(b(),d(`div`,{key:e,class:`grid-row`},[l(`div`,ge,f(e),1),(b(),d(y,null,i(n,n=>l(`div`,{class:`gr-cell`,key:`${e}-${n}`},[N(e,n)?(b(),d(`div`,{key:0,class:t([`clue-card`,{viewed:Y(N(e,n).id),"can-deep":N(e,n).deepLink,secondary:N(e,n).level===`secondary`}]),style:r({"--card-accent":s[n]||`#4a9eff`}),onClick:t=>Pe(N(e,n))},[l(`div`,ve,f(n),1),l(`div`,ye,f(N(e,n).level===`primary`?`一级`:`二级`),1),l(`div`,be,f(Y(N(e,n).id)?`✓ 已查看`:`点击查看`),1),N(e,n).deepLink?(b(),d(`div`,xe,`🔍`)):m(``,!0)],14,_e)):(b(),d(`div`,Se))])),64))]))),128))]),a[23]||=u(`<div class="legend" data-v-ae2b1359><span class="legend-item" data-v-ae2b1359><span class="dot primary" data-v-ae2b1359></span> 一级线索</span><span class="legend-item" data-v-ae2b1359><span class="dot secondary" data-v-ae2b1359></span> 二级线索</span><span class="legend-item" data-v-ae2b1359><span class="dot deep" data-v-ae2b1359></span> 可深入调查</span><span class="legend-item" data-v-ae2b1359><span class="dot seen" data-v-ae2b1359></span> 已查看</span></div>`,1),K.value?(b(),d(`div`,{key:1,class:`modal-overlay`,onClick:p($,[`self`])},[l(`div`,Ce,[a[19]||=l(`div`,{class:`modal-stripe`},null,-1),l(`h2`,k,[l(`span`,A,f(q.value?.number),1),o(` `+f(q.value?.role)+` `,1),l(`span`,{class:t([`modal-tag`,q.value?.level])},f(q.value?.level===`primary`?`一级线索`:`二级线索`),3)]),l(`div`,we,f(q.value?.content),1),J.value?(b(),d(`div`,Te,[a[17]||=l(`div`,{class:`deep-divider`},null,-1),a[18]||=l(`h3`,{class:`deep-title`},`🔍 深入调查结果`,-1),l(`p`,Ee,f(J.value.content),1),J.value.remark?(b(),d(`p`,j,[a[16]||=l(`strong`,null,`备注：`,-1),o(f(J.value.remark),1)])):m(``,!0)])):m(``,!0),l(`div`,De,[q.value?.deepLink&&!J.value?(b(),d(`button`,{key:0,class:`action-deep`,onClick:Fe,disabled:z.value<2},` 深入调查 (消耗2次) `,8,Oe)):m(``,!0),l(`button`,{class:`action-close`,onClick:$},`关闭`)])])])):m(``,!0),G.value?(b(),d(`div`,ke,[l(`div`,{class:`game-over-card`},[a[20]||=l(`div`,{class:`go-icon`},`🎉`,-1),a[21]||=l(`h2`,null,`两轮调查全部结束！`,-1),a[22]||=l(`p`,null,`现在进入讨论阶段，揭晓真相`,-1),l(`button`,{class:`restart-btn`,onClick:Ie},`重新开始`)])])):m(``,!0)])):(b(),d(`div`,w,[l(`div`,{class:`setup-card`},[a[0]||=l(`div`,{class:`setup-icon`},`🔍`,-1),a[1]||=l(`h1`,{class:`setup-title`},`线索调查游戏`,-1),a[2]||=l(`p`,{class:`setup-subtitle`},`《漫画家之死》· 双轮交互式调查`,-1),l(`div`,{class:`setup-form`},[l(`button`,{class:`start-btn`,onClick:Ne},`开始游戏`)]),a[3]||=l(`p`,{class:`setup-hint`},`🕹️ 共 2 轮 · 第1轮仅一级线索 · 第2轮揭晓全部线索`,-1)])]))]))}}),[[`__scopeId`,`data-v-ae2b1359`]]),P={key:1,class:`clue-turn-page`},F={class:`clue-turn-header`},I={class:`clue-turn-subtitle`},L={class:`clue-turn-list`},R={class:`turn-head`},z={class:`turn-badge`},B={class:`turn-count`},V={class:`turn-body`},H={key:0,class:`turn-line-icon`},U={key:0,class:`turn-actions`},W={key:1,class:`turn-all-done`},G=s(x({__name:`ClueViewCommon`,setup(ee){let s=h().params?.dramaKey,u=c(()=>{let e=_(s);return e||console.warn(`未找到剧本数据，dramaKey: ${s}`),e?.name}),p=a([]),x=a(1);e(async()=>{p.value=(await S(Object.assign({"../content/ScarePremiere/ClueTurn.ts":()=>v(()=>import(`./ClueTurn-BuElZikM.js`),[],import.meta.url)}),`../content/${s}/ClueTurn.ts`,4)).ClueTurn,x.value=1});let C=c(()=>p.value.slice(0,x.value)),w=c(()=>x.value<p.value.length);function T(){w.value&&x.value++}function E(e){return e.trim().split(`
-`).filter(e=>e.trim()!==``)}let D=[`#f5a623`,`#4a9eff`,`#7ed321`,`#e056a0`];function O(e){return/^[^：:]+[：:]/.test(e.trim())}return(e,a)=>(b(),d(`div`,null,[n(s)===`TheDeathOfCartoonist`?(b(),g(N,{key:0})):(b(),d(`div`,P,[l(`header`,F,[a[0]||=l(`h1`,{class:`clue-turn-title`},`🔍 线索轮次`,-1),l(`p`,I,`《`+f(u.value)+`》· 按调查轮次发放线索`,1)]),l(`main`,L,[(b(!0),d(y,null,i(C.value,(e,n)=>(b(),d(`section`,{key:n,class:`turn-card`,style:r({"--turn-color":D[n%D.length]})},[a[1]||=l(`div`,{class:`turn-stripe`},null,-1),l(`div`,R,[l(`span`,z,`第 `+f(n+1)+` 轮`,1),l(`span`,B,f(E(e).length)+` 条线索`,1)]),l(`div`,V,[(b(!0),d(y,null,i(E(e),(e,n)=>(b(),d(`p`,{key:n,class:t([`turn-line`,{"is-heading":O(e)}])},[O(e)?(b(),d(`span`,H,`📍`)):m(``,!0),o(` `+f(e),1)],2))),128))])],4))),128))]),w.value?(b(),d(`div`,U,[l(`button`,{class:`turn-next-btn`,onClick:T},[...a[2]||=[l(`span`,{class:`turn-next-text`},`进入下一轮次`,-1),l(`span`,{class:`turn-next-arrow`},`→`,-1)]])])):p.value.length>0?(b(),d(`div`,W,[...a[3]||=[l(`span`,null,`✅ 全部轮次已展示`,-1)]])):m(``,!0),a[4]||=l(`aside`,{class:`clue-turn-disclaimer`},`⚠️ 请按轮次顺序依次发放线索，不要一次性全部公开`,-1)]))]))}}),[[`__scopeId`,`data-v-a9de694f`]]);export{G as default};
+import {
+  C as e,
+  D as t,
+  E as n,
+  O as r,
+  S as i,
+  T as a,
+  _ as o,
+  b as ee,
+  c as s,
+  d as c,
+  f as l,
+  g as u,
+  h as d,
+  k as f,
+  l as p,
+  m,
+  o as h,
+  p as g,
+  r as _,
+  t as v,
+  u as y,
+  x as b,
+  y as x,
+} from "./index-CpfV-dD3.js";
+import { t as S } from "./rolldown_dynamic_import_helper-CIAwlR2T.js";
+var C = { class: `clue-page` },
+  w = { key: 0, class: `setup-screen` },
+  T = { key: 1, class: `game-screen` },
+  E = { class: `game-bar` },
+  D = { class: `bar-item round` },
+  O = { class: `bar-value highlight` },
+  te = { class: `bar-item player` },
+  ne = { class: `bar-value highlight` },
+  re = { class: `bar-item chances` },
+  ie = { class: `bar-item timer` },
+  ae = [`disabled`],
+  oe = { class: `round-tip` },
+  se = { key: 0 },
+  ce = { key: 1 },
+  le = { key: 0, class: `viewed-panel` },
+  ue = { class: `viewed-list` },
+  de = { class: `v-num` },
+  fe = { class: `v-role` },
+  pe = { class: `v-content` },
+  me = { class: `grid-wrapper` },
+  he = { class: `grid-head` },
+  ge = { class: `gr-num` },
+  _e = [`onClick`],
+  ve = { class: `cc-role` },
+  ye = { class: `cc-level` },
+  be = { class: `cc-status` },
+  xe = { key: 0, class: `cc-badge` },
+  Se = { key: 1, class: `empty-slot` },
+  Ce = { class: `modal-card` },
+  k = { class: `modal-title` },
+  A = { class: `modal-num` },
+  we = { class: `modal-body` },
+  Te = { key: 0, class: `modal-deep` },
+  Ee = { class: `deep-text` },
+  j = { key: 0, class: `deep-remark` },
+  De = { class: `modal-actions` },
+  Oe = [`disabled`],
+  ke = { key: 2, class: `game-over-overlay` },
+  M = 2,
+  N = s(
+    x({
+      __name: `ClueViewTheDeathOfCartoonist`,
+      setup(e) {
+        let n = [
+            `漫画家公寓`,
+            `尸体信息`,
+            `弟弟阿海`,
+            `老板娘阿莎`,
+            `编辑老刘`,
+            `助手小杜`,
+            `林教授`,
+          ],
+          s = {
+            漫画家公寓: `#e67e22`,
+            尸体信息: `#e74c3c`,
+            弟弟阿海: `#3498db`,
+            老板娘阿莎: `#e91e63`,
+            编辑老刘: `#e67e22`,
+            助手小杜: `#9b59b6`,
+            林教授: `#2ecc71`,
+          },
+          h = {
+            1: {
+              漫画家公寓: `电脑浏览器的历史记录显示他常去一个音乐交流网站Q4sing，隐蔽处有一个链接，点开后需要输入密码。(可深入调查A)`,
+              尸体信息: `尸体腹部有被锐器多次捅刺的痕迹，除此以外没有其他伤痕。`,
+              弟弟阿海: `当天早上有人听到阿海和他哥哥激烈争吵后，摔门而出。这样的争吵最近越来越频繁了。`,
+              老板娘阿莎: `咖啡馆当班的女仆说，老板娘下午3：10左右离开了店里，4：30的时候才回来，一副忧心忡忡的样子。`,
+              编辑老刘: `电脑里有白饶和编辑老刘的聊天记录，他们似乎对《银狐》未来的剧情发展有了不小的分歧。`,
+              助手小杜: `今天下午，小杜的课是排满的，一直到5点，而且都有签到记录。(可深入调查D)`,
+              林教授: `电脑浏览器的历史记录显示林教授常去一个音乐交流网站Q4sing，隐蔽处有一个链接，点开后需要输入密码。(可深入调查E)`,
+            },
+            2: {
+              漫画家公寓: `在卧室书桌的抽屉发现一小瓶安眠药，只剩没几片了。`,
+              尸体信息: `死者的尸检报告显示：死亡时间是在下午4：00至4：30之间。`,
+              弟弟阿海: `阿海的书桌抽屉里有一封未寄出的情书，是写给小杜的。`,
+              老板娘阿莎: `最近有人听到老板娘和男友吵架，似乎是因为老板娘的男朋友不愿意帮她还债。`,
+              编辑老刘: `据杂志社同事说，老刘喝醉酒曾大骂白饶就是个白眼狼。`,
+              助手小杜: `抽屉里有小杜的失眠症诊断书和配来的一小瓶安眠药。`,
+              林教授: `林教授今天下午的课一直到5点才结束。`,
+            },
+            3: {
+              漫画家公寓: `卧室的书桌上除了电脑，还有一大叠空的原稿纸和一个马克杯，里面的咖啡没喝完，还剩半杯。`,
+              尸体信息: `死者胃里检测出有安眠药残留。`,
+              弟弟阿海: `据阿海死党说，阿海最近三个月一直闷闷不乐，心事重重，甚至还问他如果亲人是坏人他会怎么做。`,
+              老板娘阿莎: `老板娘电脑的相册里有她和林教授的合影，两人曾经是男女朋友。`,
+              编辑老刘: `老刘的工作日志上写了：下午2：30和白饶面谈，做最后的努力。`,
+              助手小杜: `据小杜的好朋友说，实际上这三个月来一直是小杜担任主要助手，阿海已经很久没帮忙了。`,
+              林教授: `林教授的银行账户里有大数目的存款和大笔的转账，其中有一半是转给白饶的。`,
+            },
+            4: {
+              漫画家公寓: `电脑上的聊天记录显示：白饶已经答应了另一家漫画杂志社，把《银狐》转到那家杂志上继续连载。`,
+              弟弟阿海: `据阿海的死党说，阿海和他哥哥是异母兄弟。`,
+              老板娘阿莎: `咖啡馆领班说，老板娘的男朋友对老板娘真的很好，连装修咖啡馆的钱都是他出的。似乎老板娘也是因为这个甩了前男友。`,
+              编辑老刘: `老刘已经和老婆打了半年的离婚官司，争夺女儿的抚养权。如果老刘失去了工作，他争夺孩子抚养权的可能性几乎为0。`,
+              助手小杜: `小杜的书架上有全部目前已出的《银狐》单行本，每本都被撕掉了几页。`,
+              林教授: `林教授的钱包里有白饶家的钥匙。`,
+            },
+            5: {
+              漫画家公寓: `在卧室的垃圾桶里发现一把尖利的水果刀，上面沾满了血迹。(可深入调查B)`,
+            },
+            6: {
+              漫画家公寓: `客厅抽屉里发现有几张存折和银行卡，加起来有近300万的存款。另外还有两本房产证，以及两张30万的支票，是林教授写给他的。`,
+            },
+          },
+          g = {
+            5: {
+              弟弟阿海: `阿海在自己的笔记本里写到：我无论如何无法相信我哥哥竟然是这样的人，但如果他真是，我绝不能坐视不管。`,
+              老板娘阿莎: `老板娘卧室的抽屉里有一份500万的人生意外险，保险人是白饶，受益人是阿莎。`,
+              编辑老刘: `有别的杂志社开出了更高的稿酬想把《银狐》挖走。如果保不住这个热门连载，老刘很可能会被开除。`,
+              助手小杜: `小杜的抽屉里有一张剪报，是著名企业家杜跃在一年多前被杀手Ghost杀死的新闻。在杜跃的名字旁，小杜写着：爸爸，我好想你。`,
+              林教授: `林教授的钱包里一直放着前女友阿莎的照片，从未更改过。照片的背面写着wishes。`,
+            },
+            6: {
+              弟弟阿海: `公寓楼下的垃圾桶里有一件沾血的雨衣。这件雨衣是阿海的，平时都挂在卧室里。(可深入调查C)`,
+              老板娘阿莎: `咖啡厅的账本显示店里的生意欠佳，而且已欠供货商、房租等合计50万元。老板娘的账本里还记着一个高利贷的借款电话。`,
+              编辑老刘: `根据进出记录，老刘下午1：30离开杂志社后就没有再回来过。`,
+              助手小杜: `在白饶的手机里发现他曾在5.14上午给小杜发过短信，叫她来帮忙画漫画，但小杜以下午有课为由拒绝了。`,
+              林教授: `林教授的书桌底下有一个暗格，里面有多个文件夹用了不同的英文单词标注。其中一个标注的是Ghost，里面有很多人的档案，其中有企业家杜跃的名字。`,
+            },
+            7: {
+              漫画家公寓: `卧室的垃圾桶里发现一个纸团，展开来是一张画了一半的漫画原稿，有一行字潦草地覆盖在上面，是白饶的笔迹：我必须离开那里！回头是岸！`,
+              弟弟阿海: `阿海今天早上10点半有一堂课，下午有一堂课到3：30，都有签到记录。`,
+              老板娘阿莎: `老板娘办公室的抽屉里有一小瓶安眠药，用掉的药片不多。`,
+              编辑老刘: `在老刘电脑的网购记录里发现一把水果刀，老刘还问卖家"刀够锋利吗？"`,
+              助手小杜: `小杜的笔记本里记录了杀手Ghost的历次犯案，每次犯案都对应有几张漫画。这几张漫画是从《银狐》单行本里撕下来的。`,
+              林教授: `林教授的手机里有一条前天的短信，是白饶发来的，很简短：你们的秘密是我的武器。`,
+            },
+            8: {
+              漫画家公寓: `书架上有一本厚厚的字典，看起来有点不寻常。拉动这本字典后，书架整个向右移动了，露出了一条暗格，里面藏有一把造型特殊的匕首。暗格里还有一份文件夹，里面是很多人的档案，其中有企业家杜跃的名字。`,
+            },
+            9: {
+              漫画家公寓: `厨房的水槽里有少量的咖啡渍。厨房的垃圾桶里发现了女仆咖啡厅的外带纸杯和速溶咖啡包装袋。`,
+            },
+            10: {
+              漫画家公寓: `客厅的杂志堆里夹着一份ems快递，是10天前寄来的。里面有一本童话书，其中一页被撕了下来，却依旧夹在里面。这页上画着一只小鸟被关在巨大的鸟笼里，配有文字：鸟儿再飞一次，就可以自由了。`,
+            },
+            11: {
+              漫画家公寓: `床头柜上有一本便签，最上面一页有浅浅的笔画痕迹，仔细辨认后写的是"IOEZBL"。`,
+            },
+          },
+          _ = {
+            A: {
+              content: `你以"Ghost"的用户名登录了一个邮箱。里面有很多Ghost和"双木"的往来邮件，多是关于暗杀任务的通知，最近一个月Ghost似乎频繁地表达了想要结束杀手生涯，从组织里退役的愿望。`,
+              remark: `782301`,
+            },
+            B: {
+              content: `水果刀的刀柄上有老刘和白饶两人的指纹。指纹上有被覆盖过的痕迹。`,
+            },
+            C: {
+              content: `垃圾桶里还有一些漫画原稿的碎片，看上去似乎快画完了。`,
+            },
+            D: { content: `小杜下午的课是她拜托朋友代替她签到的。` },
+            E: {
+              content: `你以"双木"的用户名登陆了一个邮箱，管理员昨天刚给他发了一条信息：鸟儿不能飞了。`,
+              remark: `947437`,
+            },
+          };
+        function v(e) {
+          let t = e.match(/\(可深入调查([A-E])\)/);
+          if (t && t[1]) {
+            let n = t[1];
+            return {
+              cleanContent: e.replace(/\(可深入调查[A-E]\)/, ``).trim(),
+              deepLink: n,
+            };
+          }
+          return { cleanContent: e, deepLink: null };
+        }
+        let x = [];
+        for (let [e, t] of Object.entries(h)) {
+          let r = parseInt(e);
+          for (let e of n) {
+            let n = t[e];
+            if (n && n.trim() !== ``) {
+              let { cleanContent: t, deepLink: i } = v(n);
+              x.push({
+                id: `primary-${r}-${e}`,
+                number: r,
+                role: e,
+                content: t,
+                level: `primary`,
+                deepLink: i,
+              });
+            }
+          }
+        }
+        for (let [e, t] of Object.entries(g)) {
+          let r = parseInt(e);
+          for (let e of n) {
+            let n = t[e];
+            if (n && n.trim() !== ``) {
+              let { cleanContent: t, deepLink: i } = v(n);
+              x.push({
+                id: `secondary-${r}-${e}`,
+                number: r,
+                role: e,
+                content: t,
+                level: `secondary`,
+                deepLink: i,
+              });
+            }
+          }
+        }
+        function S(e) {
+          return x.filter((t) => t.level === e);
+        }
+        function N(e, t) {
+          let n = L.value === 1 ? `primary` : void 0;
+          return n
+            ? x.find((r) => r.number === e && r.role === t && r.level === n)
+            : x.find((n) => n.number === e && n.role === t);
+        }
+        function P(e) {
+          return x.find((t) => t.id === e);
+        }
+        let F = a(1),
+          I = a(!1),
+          L = a(1),
+          R = a(0),
+          z = a(4),
+          B = a(new Set()),
+          V = a(new Set()),
+          H = a({}),
+          U = a(300),
+          W = null,
+          G = a(!1),
+          K = a(!1),
+          q = a(null),
+          J = a(null),
+          Ae = c(() => `玩家 ${R.value + 1}`),
+          je = c(() => {
+            let e = Math.floor(U.value / 60),
+              t = U.value % 60;
+            return `${e.toString().padStart(2, `0`)}:${t.toString().padStart(2, `0`)}`;
+          }),
+          Me = c(() => {
+            let e = L.value === 1 ? `primary` : void 0,
+              t = e ? S(e) : x,
+              n = new Set();
+            return (
+              t.forEach((e) => n.add(e.number)),
+              Array.from(n).sort((e, t) => e - t)
+            );
+          });
+        function Y(e) {
+          return V.value.has(e);
+        }
+        function Ne() {
+          F.value < 1 ||
+            ((I.value = !0),
+            (L.value = 1),
+            (R.value = 0),
+            (V.value = new Set()),
+            X(),
+            Z());
+        }
+        function X() {
+          ((z.value = 4),
+            (B.value = new Set()),
+            (H.value = {}),
+            (U.value = 300),
+            $());
+        }
+        function Z() {
+          (W && clearInterval(W),
+            (W = window.setInterval(() => {
+              (U.value--, U.value <= 0 && (clearInterval(W), (W = null), Q()));
+            }, 1e3)));
+        }
+        function Q() {
+          G.value ||
+            ((W &&= (clearInterval(W), null)),
+            R.value >= F.value - 1
+              ? L.value < M
+                ? (L.value++, (R.value = 0), X(), Z())
+                : (G.value = !0)
+              : (R.value++, X(), Z()));
+        }
+        function Pe(e) {
+          if (!G.value) {
+            if (L.value === 1 && e.level !== `primary`) {
+              alert(`第一轮只能查看一级线索！`);
+              return;
+            }
+            if (z.value <= 0) {
+              alert(`机会已用完！`);
+              return;
+            }
+            if (V.value.has(e.id)) {
+              alert(`这张线索卡已经查看过了。`);
+              return;
+            }
+            if ((H.value[e.role] || 0) >= 2) {
+              alert(
+                `你已查看过"${e.role}"的线索 2 次，不能再查看该角色的线索。`,
+              );
+              return;
+            }
+            (z.value--,
+              B.value.add(e.id),
+              V.value.add(e.id),
+              (H.value[e.role] = (H.value[e.role] || 0) + 1),
+              (q.value = e),
+              (J.value = null),
+              (K.value = !0));
+          }
+        }
+        function Fe() {
+          if (!q.value || !q.value.deepLink) return;
+          if (z.value < 2) {
+            alert(`剩余机会不足（需要2次），无法深入调查！`);
+            return;
+          }
+          z.value -= 2;
+          let e = _[q.value.deepLink];
+          (x.push({
+            id: q.value.deepLink + ``,
+            number: -1,
+            role: `深入调查`,
+            content: e?.content,
+            level: `deepLink`,
+            deepLink: null,
+          }),
+            B.value.add(q.value.deepLink),
+            V.value.add(q.value.deepLink),
+            e ? (J.value = e) : alert(`深入调查数据缺失！`));
+        }
+        function $() {
+          ((K.value = !1), (q.value = null), (J.value = null));
+        }
+        function Ie() {
+          ((I.value = !1),
+            (G.value = !1),
+            (W &&= (clearInterval(W), null)),
+            (L.value = 1),
+            (R.value = 0),
+            (V.value = new Set()),
+            X());
+        }
+        return (
+          ee(() => {
+            W && clearInterval(W);
+          }),
+          (e, a) => (
+            b(),
+            d(`div`, C, [
+              I.value
+                ? (b(),
+                  d(`div`, T, [
+                    l(`header`, E, [
+                      l(`div`, D, [
+                        (a[4] ||= l(`span`, { class: `bar-icon` }, `🔄`, -1)),
+                        (a[5] ||= l(
+                          `span`,
+                          { class: `bar-label` },
+                          `轮次`,
+                          -1,
+                        )),
+                        l(`span`, O, f(L.value) + ` / ` + f(M), 1),
+                      ]),
+                      l(`div`, te, [
+                        (a[6] ||= l(`span`, { class: `bar-icon` }, `👤`, -1)),
+                        (a[7] ||= l(
+                          `span`,
+                          { class: `bar-label` },
+                          `玩家`,
+                          -1,
+                        )),
+                        l(`span`, ne, f(Ae.value), 1),
+                      ]),
+                      l(`div`, re, [
+                        (a[8] ||= l(`span`, { class: `bar-icon` }, `🎫`, -1)),
+                        (a[9] ||= l(
+                          `span`,
+                          { class: `bar-label` },
+                          `机会`,
+                          -1,
+                        )),
+                        l(
+                          `span`,
+                          { class: t([`bar-value`, { low: z.value <= 1 }]) },
+                          f(z.value),
+                          3,
+                        ),
+                      ]),
+                      l(`div`, ie, [
+                        (a[10] ||= l(`span`, { class: `bar-icon` }, `⏱️`, -1)),
+                        (a[11] ||= l(
+                          `span`,
+                          { class: `bar-label` },
+                          `时间`,
+                          -1,
+                        )),
+                        l(
+                          `span`,
+                          {
+                            class: t([
+                              `bar-value timer-val`,
+                              { warning: U.value <= 10 },
+                            ]),
+                          },
+                          f(je.value),
+                          3,
+                        ),
+                      ]),
+                      l(
+                        `button`,
+                        { class: `end-btn`, onClick: Q, disabled: G.value },
+                        `结束轮次`,
+                        8,
+                        ae,
+                      ),
+                    ]),
+                    l(`div`, oe, [
+                      L.value === 1
+                        ? (b(),
+                          d(`span`, se, [
+                            ...(a[12] ||= [
+                              o(`🔵 第1轮：仅可查看`, -1),
+                              l(
+                                `span`,
+                                { class: `tag primary` },
+                                `一级线索`,
+                                -1,
+                              ),
+                              o(`（编号 1-6）`, -1),
+                            ]),
+                          ]))
+                        : (b(),
+                          d(`span`, ce, [
+                            ...(a[13] ||= [
+                              o(`🟢 第2轮：可查看`, -1),
+                              l(`span`, { class: `tag primary` }, `一级`, -1),
+                              o(` + `, -1),
+                              l(
+                                `span`,
+                                { class: `tag secondary` },
+                                `二级线索`,
+                                -1,
+                              ),
+                              o(`（全部编号）`, -1),
+                            ]),
+                          ])),
+                    ]),
+                    V.value.size
+                      ? (b(),
+                        d(`div`, le, [
+                          (a[14] ||= l(
+                            `h3`,
+                            { class: `viewed-title` },
+                            `📋 已查看线索`,
+                            -1,
+                          )),
+                          l(`ul`, ue, [
+                            (b(!0),
+                            d(
+                              y,
+                              null,
+                              i(
+                                V.value,
+                                (e) => (
+                                  b(),
+                                  d(`li`, { key: e, class: `viewed-item` }, [
+                                    l(`span`, de, f(P(e)?.number), 1),
+                                    l(
+                                      `span`,
+                                      { class: t([`v-tag`, P(e)?.level]) },
+                                      f(
+                                        P(e)?.level === `primary`
+                                          ? `一级`
+                                          : `二级`,
+                                      ),
+                                      3,
+                                    ),
+                                    l(`span`, fe, f(P(e)?.role), 1),
+                                    l(`span`, pe, f(P(e)?.content), 1),
+                                  ])
+                                ),
+                              ),
+                              128,
+                            )),
+                          ]),
+                        ]))
+                      : m(``, !0),
+                    l(`div`, me, [
+                      l(`div`, he, [
+                        (a[15] ||= l(
+                          `div`,
+                          { class: `gh-cell gh-num` },
+                          `编号`,
+                          -1,
+                        )),
+                        (b(),
+                        d(
+                          y,
+                          null,
+                          i(n, (e) =>
+                            l(`div`, { class: `gh-cell`, key: e }, f(e), 1),
+                          ),
+                          64,
+                        )),
+                      ]),
+                      (b(!0),
+                      d(
+                        y,
+                        null,
+                        i(
+                          Me.value,
+                          (e) => (
+                            b(),
+                            d(`div`, { key: e, class: `grid-row` }, [
+                              l(`div`, ge, f(e), 1),
+                              (b(),
+                              d(
+                                y,
+                                null,
+                                i(n, (n) =>
+                                  l(
+                                    `div`,
+                                    { class: `gr-cell`, key: `${e}-${n}` },
+                                    [
+                                      N(e, n)
+                                        ? (b(),
+                                          d(
+                                            `div`,
+                                            {
+                                              key: 0,
+                                              class: t([
+                                                `clue-card`,
+                                                {
+                                                  viewed: Y(N(e, n).id),
+                                                  "can-deep": N(e, n).deepLink,
+                                                  secondary:
+                                                    N(e, n).level ===
+                                                    `secondary`,
+                                                },
+                                              ]),
+                                              style: r({
+                                                "--card-accent":
+                                                  s[n] || `#4a9eff`,
+                                              }),
+                                              onClick: (t) => Pe(N(e, n)),
+                                            },
+                                            [
+                                              l(`div`, ve, f(n), 1),
+                                              l(
+                                                `div`,
+                                                ye,
+                                                f(
+                                                  N(e, n).level === `primary`
+                                                    ? `一级`
+                                                    : `二级`,
+                                                ),
+                                                1,
+                                              ),
+                                              l(
+                                                `div`,
+                                                be,
+                                                f(
+                                                  Y(N(e, n).id)
+                                                    ? `✓ 已查看`
+                                                    : `点击查看`,
+                                                ),
+                                                1,
+                                              ),
+                                              N(e, n).deepLink
+                                                ? (b(), d(`div`, xe, `🔍`))
+                                                : m(``, !0),
+                                            ],
+                                            14,
+                                            _e,
+                                          ))
+                                        : (b(), d(`div`, Se)),
+                                    ],
+                                  ),
+                                ),
+                                64,
+                              )),
+                            ])
+                          ),
+                        ),
+                        128,
+                      )),
+                    ]),
+                    (a[23] ||= u(
+                      `<div class="legend" data-v-ae2b1359><span class="legend-item" data-v-ae2b1359><span class="dot primary" data-v-ae2b1359></span> 一级线索</span><span class="legend-item" data-v-ae2b1359><span class="dot secondary" data-v-ae2b1359></span> 二级线索</span><span class="legend-item" data-v-ae2b1359><span class="dot deep" data-v-ae2b1359></span> 可深入调查</span><span class="legend-item" data-v-ae2b1359><span class="dot seen" data-v-ae2b1359></span> 已查看</span></div>`,
+                      1,
+                    )),
+                    K.value
+                      ? (b(),
+                        d(
+                          `div`,
+                          {
+                            key: 1,
+                            class: `modal-overlay`,
+                            onClick: p($, [`self`]),
+                          },
+                          [
+                            l(`div`, Ce, [
+                              (a[19] ||= l(
+                                `div`,
+                                { class: `modal-stripe` },
+                                null,
+                                -1,
+                              )),
+                              l(`h2`, k, [
+                                l(`span`, A, f(q.value?.number), 1),
+                                o(` ` + f(q.value?.role) + ` `, 1),
+                                l(
+                                  `span`,
+                                  { class: t([`modal-tag`, q.value?.level]) },
+                                  f(
+                                    q.value?.level === `primary`
+                                      ? `一级线索`
+                                      : `二级线索`,
+                                  ),
+                                  3,
+                                ),
+                              ]),
+                              l(`div`, we, f(q.value?.content), 1),
+                              J.value
+                                ? (b(),
+                                  d(`div`, Te, [
+                                    (a[17] ||= l(
+                                      `div`,
+                                      { class: `deep-divider` },
+                                      null,
+                                      -1,
+                                    )),
+                                    (a[18] ||= l(
+                                      `h3`,
+                                      { class: `deep-title` },
+                                      `🔍 深入调查结果`,
+                                      -1,
+                                    )),
+                                    l(`p`, Ee, f(J.value.content), 1),
+                                    J.value.remark
+                                      ? (b(),
+                                        d(`p`, j, [
+                                          (a[16] ||= l(
+                                            `strong`,
+                                            null,
+                                            `备注：`,
+                                            -1,
+                                          )),
+                                          o(f(J.value.remark), 1),
+                                        ]))
+                                      : m(``, !0),
+                                  ]))
+                                : m(``, !0),
+                              l(`div`, De, [
+                                q.value?.deepLink && !J.value
+                                  ? (b(),
+                                    d(
+                                      `button`,
+                                      {
+                                        key: 0,
+                                        class: `action-deep`,
+                                        onClick: Fe,
+                                        disabled: z.value < 2,
+                                      },
+                                      ` 深入调查 (消耗2次) `,
+                                      8,
+                                      Oe,
+                                    ))
+                                  : m(``, !0),
+                                l(
+                                  `button`,
+                                  { class: `action-close`, onClick: $ },
+                                  `关闭`,
+                                ),
+                              ]),
+                            ]),
+                          ],
+                        ))
+                      : m(``, !0),
+                    G.value
+                      ? (b(),
+                        d(`div`, ke, [
+                          l(`div`, { class: `game-over-card` }, [
+                            (a[20] ||= l(
+                              `div`,
+                              { class: `go-icon` },
+                              `🎉`,
+                              -1,
+                            )),
+                            (a[21] ||= l(`h2`, null, `两轮调查全部结束！`, -1)),
+                            (a[22] ||= l(
+                              `p`,
+                              null,
+                              `现在进入讨论阶段，揭晓真相`,
+                              -1,
+                            )),
+                            l(
+                              `button`,
+                              { class: `restart-btn`, onClick: Ie },
+                              `重新开始`,
+                            ),
+                          ]),
+                        ]))
+                      : m(``, !0),
+                  ]))
+                : (b(),
+                  d(`div`, w, [
+                    l(`div`, { class: `setup-card` }, [
+                      (a[0] ||= l(`div`, { class: `setup-icon` }, `🔍`, -1)),
+                      (a[1] ||= l(
+                        `h1`,
+                        { class: `setup-title` },
+                        `线索调查游戏`,
+                        -1,
+                      )),
+                      (a[2] ||= l(
+                        `p`,
+                        { class: `setup-subtitle` },
+                        `《漫画家之死》· 双轮交互式调查`,
+                        -1,
+                      )),
+                      l(`div`, { class: `setup-form` }, [
+                        l(
+                          `button`,
+                          { class: `start-btn`, onClick: Ne },
+                          `开始游戏`,
+                        ),
+                      ]),
+                      (a[3] ||= l(
+                        `p`,
+                        { class: `setup-hint` },
+                        `🕹️ 共 2 轮 · 第1轮仅一级线索 · 第2轮揭晓全部线索`,
+                        -1,
+                      )),
+                    ]),
+                  ])),
+            ])
+          )
+        );
+      },
+    }),
+    [[`__scopeId`, `data-v-ae2b1359`]],
+  ),
+  P = { key: 1, class: `clue-turn-page` },
+  F = { class: `clue-turn-header` },
+  I = { class: `clue-turn-subtitle` },
+  L = { class: `clue-turn-list` },
+  R = { class: `turn-head` },
+  z = { class: `turn-badge` },
+  B = { class: `turn-count` },
+  V = { class: `turn-body` },
+  H = { key: 0, class: `turn-line-icon` },
+  U = { key: 0, class: `turn-actions` },
+  W = { key: 1, class: `turn-all-done` },
+  G = s(
+    x({
+      __name: `ClueViewCommon`,
+      setup(ee) {
+        let s = h().params?.dramaKey,
+          u = c(() => {
+            let e = _(s);
+            return (
+              e || console.warn(`未找到剧本数据，dramaKey: ${s}`),
+              e?.name
+            );
+          }),
+          p = a([]),
+          x = a(1);
+        e(async () => {
+          ((p.value = (
+            await S(
+              Object.assign({
+                "../content/ScarePremiere/ClueTurn.ts": () =>
+                  v(
+                    () => import(`./ClueTurn-BuElZikM.js`),
+                    [],
+                    import.meta.url,
+                  ),
+              }),
+              `../content/${s}/ClueTurn.ts`,
+              4,
+            )
+          ).ClueTurn),
+            (x.value = 1));
+        });
+        let C = c(() => p.value.slice(0, x.value)),
+          w = c(() => x.value < p.value.length);
+        function T() {
+          w.value && x.value++;
+        }
+        function E(e) {
+          return e
+            .trim()
+            .split(
+              `
+`,
+            )
+            .filter((e) => e.trim() !== ``);
+        }
+        let D = [`#f5a623`, `#4a9eff`, `#7ed321`, `#e056a0`];
+        function O(e) {
+          return /^[^：:]+[：:]/.test(e.trim());
+        }
+        return (e, a) => (
+          b(),
+          d(`div`, null, [
+            n(s) === `TheDeathOfCartoonist`
+              ? (b(), g(N, { key: 0 }))
+              : (b(),
+                d(`div`, P, [
+                  l(`header`, F, [
+                    (a[0] ||= l(
+                      `h1`,
+                      { class: `clue-turn-title` },
+                      `🔍 线索轮次`,
+                      -1,
+                    )),
+                    l(`p`, I, `《` + f(u.value) + `》· 按调查轮次发放线索`, 1),
+                  ]),
+                  l(`main`, L, [
+                    (b(!0),
+                    d(
+                      y,
+                      null,
+                      i(
+                        C.value,
+                        (e, n) => (
+                          b(),
+                          d(
+                            `section`,
+                            {
+                              key: n,
+                              class: `turn-card`,
+                              style: r({ "--turn-color": D[n % D.length] }),
+                            },
+                            [
+                              (a[1] ||= l(
+                                `div`,
+                                { class: `turn-stripe` },
+                                null,
+                                -1,
+                              )),
+                              l(`div`, R, [
+                                l(`span`, z, `第 ` + f(n + 1) + ` 轮`, 1),
+                                l(`span`, B, f(E(e).length) + ` 条线索`, 1),
+                              ]),
+                              l(`div`, V, [
+                                (b(!0),
+                                d(
+                                  y,
+                                  null,
+                                  i(
+                                    E(e),
+                                    (e, n) => (
+                                      b(),
+                                      d(
+                                        `p`,
+                                        {
+                                          key: n,
+                                          class: t([
+                                            `turn-line`,
+                                            { "is-heading": O(e) },
+                                          ]),
+                                        },
+                                        [
+                                          O(e)
+                                            ? (b(), d(`span`, H, `📍`))
+                                            : m(``, !0),
+                                          o(` ` + f(e), 1),
+                                        ],
+                                        2,
+                                      )
+                                    ),
+                                  ),
+                                  128,
+                                )),
+                              ]),
+                            ],
+                            4,
+                          )
+                        ),
+                      ),
+                      128,
+                    )),
+                  ]),
+                  w.value
+                    ? (b(),
+                      d(`div`, U, [
+                        l(`button`, { class: `turn-next-btn`, onClick: T }, [
+                          ...(a[2] ||= [
+                            l(
+                              `span`,
+                              { class: `turn-next-text` },
+                              `进入下一轮次`,
+                              -1,
+                            ),
+                            l(`span`, { class: `turn-next-arrow` }, `→`, -1),
+                          ]),
+                        ]),
+                      ]))
+                    : p.value.length > 0
+                      ? (b(),
+                        d(`div`, W, [
+                          ...(a[3] ||= [
+                            l(`span`, null, `✅ 全部轮次已展示`, -1),
+                          ]),
+                        ]))
+                      : m(``, !0),
+                  (a[4] ||= l(
+                    `aside`,
+                    { class: `clue-turn-disclaimer` },
+                    `⚠️ 请按轮次顺序依次发放线索，不要一次性全部公开`,
+                    -1,
+                  )),
+                ])),
+          ])
+        );
+      },
+    }),
+    [[`__scopeId`, `data-v-a9de694f`]],
+  );
+export { G as default };
