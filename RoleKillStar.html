@@ -42,6 +42,8 @@
         margin-bottom: 20px;
         border-bottom: 2px solid #eee;
         padding-bottom: 12px;
+        flex-wrap: wrap;
+        gap: 8px;
       }
       .header h1 {
         font-size: 20px;
@@ -56,6 +58,19 @@
         font-size: 14px;
         font-weight: 600;
         color: #4a3f37;
+      }
+      .header .history-btn {
+        background: #d4c9c0;
+        border: none;
+        border-radius: 30px;
+        padding: 4px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #2c2c2c;
+        cursor: pointer;
+      }
+      .header .history-btn:active {
+        background: #bfb3a8;
       }
       .content {
         min-height: 400px;
@@ -100,11 +115,20 @@
         padding: 14px 16px;
         margin: 10px 0;
         border-left: 4px solid #b8a99b;
+        font-family: "Georgia", "Times New Roman", serif;
+        color: #2c2c2c;
       }
       .script-text .public-clue strong {
         display: block;
         font-size: 16px;
         margin-bottom: 6px;
+      }
+      .script-text .public-clue .clue-end {
+        text-align: right;
+        font-style: italic;
+        color: #888;
+        margin-top: 8px;
+        font-size: 14px;
       }
       .hidden-word-box {
         background: #f0ebe6;
@@ -125,6 +149,10 @@
         padding: 2px 12px;
         border-radius: 30px;
         border: 1px dashed #b8a99b;
+      }
+      .hidden-word-box .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
       .btn {
         background: #e8e0d8;
@@ -186,6 +214,10 @@
         background: #1e1e1e;
         color: white;
       }
+      .clue-item.disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
       .clue-item:active {
         transform: scale(0.96);
       }
@@ -203,6 +235,22 @@
         display: block;
         margin-bottom: 6px;
         font-size: 16px;
+      }
+      .clue-detail table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        margin: 8px 0;
+      }
+      .clue-detail th,
+      .clue-detail td {
+        border: 1px solid #ccc;
+        padding: 4px 6px;
+        text-align: left;
+      }
+      .clue-detail th {
+        background: #e8e0d8;
+        font-weight: 600;
       }
       .action-bar {
         margin-top: 16px;
@@ -336,6 +384,70 @@
         color: #555;
         border-left: 4px solid #b8a99b;
       }
+      .rules-box {
+        background: #fcf9f7;
+        border-radius: 12px;
+        padding: 16px;
+        border: 1px solid #e0d8d0;
+        margin: 10px 0;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+      .rules-box h4 {
+        margin-top: 12px;
+        margin-bottom: 4px;
+        color: #1e1e1e;
+      }
+      .rules-box ul {
+        padding-left: 20px;
+        margin: 6px 0;
+      }
+      .rules-box li {
+        margin-bottom: 4px;
+      }
+      .history-modal {
+        background: white;
+        border-radius: 16px;
+        padding: 16px;
+        margin: 12px 0;
+        border: 1px solid #ddd;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .history-modal .item {
+        padding: 8px 12px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+      }
+      .history-modal .item:active {
+        background: #f0ebe6;
+      }
+      .history-modal .item .tag {
+        font-size: 12px;
+        color: #888;
+        background: #eee;
+        padding: 2px 8px;
+        border-radius: 12px;
+      }
+      .review-banner {
+        background: #f0ebe6;
+        padding: 8px 12px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .review-banner span {
+        font-weight: 600;
+        color: #4a3f37;
+      }
+      .clue-item.highlight {
+        border-color: #2d6a4f;
+        background: #e6f0ea;
+      }
       @media (max-width: 400px) {
         #app {
           padding: 16px;
@@ -350,17 +462,29 @@
     <div id="app">
       <div class="header">
         <h1>🎭 剧本助手</h1>
-        <span class="role-badge" id="roleBadge">选择角色</span>
+        <div style="display: flex; gap: 8px; align-items: center">
+          <button class="history-btn" onclick="toggleHistory()">📜 历史</button>
+          <span class="role-badge" id="roleBadge">选择角色</span>
+        </div>
       </div>
       <div class="content" id="content"></div>
       <div class="footnote">面对面 · 各自手机 · 合作推理</div>
     </div>
     <script>
+      // ========== 辅助函数：格式化持续时间 ==========
+      function formatDuration(dur) {
+        const m = dur.match(/(\d+)M/);
+        const s = dur.match(/(\d+)S/);
+        const min = m ? parseInt(m[1]) : 0;
+        const sec = s ? parseInt(s[1]) : 0;
+        return min + "分" + sec + "秒";
+      }
+
       // ========== 线索数据 ==========
       const CLUES = {
         A: {
           name: "李天船的酒店套房",
-          desc: `线索A 李天船的酒店套房\n\n李天船的酒店套房很符合他的身份，那是整个酒店最大，风景最好的套房。你一边感叹世事难料一边走了进去。套房的正中央放了一张豪华大床，床上的被褥都很整齐，看起来应该没有人睡过。\n\n你拉开窗帘让光线照进来，开始调查。窗边的小茶几上放着两杯红酒，应该是昨天李天船和王纱两人在那边品酒聊天吧，还挺有情调的。你走到衣柜旁边打开柜门，调查里面的东西。几件男士的衣服叠放在架子上一一你一眼就认出来那是李天船的，衣架上挂着几件女士的洋装。衣柜的一角放着两个旅行箱，黑色的那个你知道是李天船的，那么粉红色的那个应该就是王纱的了。看来昨晚王纱走的很匆忙或很突然，连行李都来不及带上。\n\n你走到床边调查床头柜的抽屉。第一个抽屉里有一本酒店的宣传杂志，其它抽屉里什么都没有。床头柜上面放了一部电话，听筒的线纠缠在一起，看来它被使用的频率很高。你很好奇李天船或者王纱之前都用这部电话打给了谁，也许你能拿到酒店套房的通话记录，从那里找到答案。\n\n一本酒店的留言簿放在电话旁边，面上的一张纸被撕掉了，下面都是空白的。你仔细地在附近找了找，但没能找到撕下来的那张纸，看来是有人拿走了。你很沮丧的坐到床上，拿起留言簿无意识的把玩。突然，留言簿上酒店附送的铅笔掉了出来。捡铅笔的时候一道灵感击中了你的脑袋，貌似很多侦探题材的电影里有过这样的桥段：用一支铅笔涂满写字那张纸下面的一张纸，凭借显露出来的压痕，就能得知上面一张纸上写了什么内容。你兴奋地用铅笔涂满了整张纸，上面的压痕清晰可见。你没见过这个笔迹，因此这肯定不是李天船写的。上面只有几个字：`,
+          desc: `线索A 李天船的酒店套房\n\n李天船的酒店套房很符合他的身份，那是整个酒店最大，风景最好的套房。你一边感叹世事难料一边走了进去。套房的正中央放了一张豪华大床，床上的被褥都很整齐，看起来应该没有人睡过。\n\n你拉开窗帘让光线照进来，开始调查。窗边的小茶几上放着两杯红酒，应该是昨天李天船和王纱两人在那边品酒聊天吧，还挺有情调的。你走到衣柜旁边打开柜门，调查里面的东西。几件男士的衣服叠放在架子上一一你一眼就认出来那是李天船的，衣架上挂着几件女士的洋装。衣柜的一角放着两个旅行箱，黑色的那个你知道是李天船的，那么粉红色的那个应该就是王纱的了。看来昨晚王纱走的很匆忙或很突然，连行李都来不及带上。\n\n你走到床边调查床头柜的抽屉。第一个抽屉里有一本酒店的宣传杂志，其它抽屉里什么都没有。床头柜上面放了一部电话，听筒的线纠缠在一起，看来它被使用的频率很高。你很好奇李天船或者王纱之前都用这部电话打给了谁，也许你能拿到酒店套房的通话记录，从那里找到答案。\n\n一本酒店的留言簿放在电话旁边，面上的一张纸被撕掉了，下面都是空白的。你仔细地在附近找了找，但没能找到撕下来的那张纸，看来是有人拿走了。你很沮丧的坐到床上，拿起留言簿无意识的把玩。突然，留言簿上酒店附送的铅笔掉了出来。捡铅笔的时候一道灵感击中了你的脑袋，貌似很多侦探题材的电影里有过这样的桥段：用一支铅笔涂满写字那张纸下面的一张纸，凭借显露出来的压痕，就能得知上面一张纸上写了什么内容。你兴奋地用铅笔涂满了整张纸，上面的压痕清晰可见。你没见过这个笔迹，因此这肯定不是李天船写的。上面只有几个字：费雪酒吧 黄迪`,
         },
         B: {
           name: "酒店夜班保安",
@@ -372,7 +496,28 @@
         },
         D: {
           name: "李天船酒店套房的电话记录",
-          desc: `线索D 李天船酒店套房的电话记录\n\n费雪酒店 FISHER HOTEL\n客房电话使用详细记录\n房号508 分机号码0508 账单编号38020120141022508 账单人李天船\n\n日期 时间 号码 持续时间 状态\n2014.10.22 15:33 0511 0M0S 呼入\n2014.10.22 15:47 0511 0M3S 呼入\n2014.10.22 16:07 2276XX88李天船家 5M44S 呼出\n2014.10.22 16:15 0511 0M2S 呼入\n2014.10.22 16:28 0511 0M0S 呼入\n2014.10.22 16:40 0511 0M5S 呼入\n2014.10.22 16:41 0000酒店前台 4M23S 呼出\n2014.10.22 17:06 0511 0M0S 呼入\n2014.10.22 17:12 0507 8M13S 呼入\n2014.10.22 17:16 0509 3M7S 呼出\n2014.10.22 17:25 0511 0M0S 呼入\n2014.10.22 23:34 13922XXXX31黄迪 6M51S 呼入\n2014.10.23 00:12 0000酒店前台 2M35S 呼出`,
+          desc: `线索D 李天船酒店套房的电话记录
+
+费雪酒店 FISHER HOTEL
+客房电话使用详细记录
+房号508 分机号码0508 账单编号38020120141022508 账单人李天船
+
+<table>
+<tr><th>日期</th><th>时间</th><th>号码</th><th>持续时间</th><th>状态</th></tr>
+<tr><td>2014.10.22</td><td>15:33</td><td>0511</td><td>0分0秒</td><td>呼入</td></tr>
+<tr><td>2014.10.22</td><td>15:47</td><td>0511</td><td>0分3秒</td><td>呼入</td></tr>
+<tr><td>2014.10.22</td><td>16:07</td><td>2276XX88李天船家</td><td>5分44秒</td><td>呼出</td></tr>
+<tr><td>2014.10.22</td><td>16:15</td><td>0511</td><td>0分2秒</td><td>呼入</td></tr>
+<tr><td>2014.10.22</td><td>16:28</td><td>0511</td><td>0分0秒</td><td>呼入</td></tr>
+<tr><td>2014.10.22</td><td>16:40</td><td>0511</td><td>0分5秒</td><td>呼入</td></tr>
+<tr><td>2014.10.22</td><td>16:41</td><td>0000酒店前台</td><td>4分23秒</td><td>呼出</td></tr>
+<tr><td>2014.10.22</td><td>17:06</td><td>0511</td><td>0分0秒</td><td>呼入</td></tr>
+<tr><td>2014.10.22</td><td>17:12</td><td>0507</td><td>8分13秒</td><td>呼入</td></tr>
+<tr><td>2014.10.22</td><td>17:16</td><td>0509</td><td>3分7秒</td><td>呼出</td></tr>
+<tr><td>2014.10.22</td><td>17:25</td><td>0511</td><td>0分0秒</td><td>呼入</td></tr>
+<tr><td>2014.10.22</td><td>23:34</td><td>13922XXXX31黄迪</td><td>6分51秒</td><td>呼入</td></tr>
+<tr><td>2014.10.23</td><td>00:12</td><td>0000酒店前台</td><td>2分35秒</td><td>呼出</td></tr>
+</table>`,
         },
         E: {
           name: "山峰",
@@ -418,66 +563,52 @@
 
       // ========== 公开线索内容 ==========
       const PUBLIC_CLUES = {
-        clue1: `📰 公开线索一：东州晚报（10月18日）
+        clue1: `<div class="public-clue">
+📰 <strong>公开线索一：东州晚报（10月18日）</strong><br><br>
+《隋唐大运河》男主角即将敲定！？<br><br>
+本报最新消息，国内一线男星山峰于今日下午3点召开发布会，公开对外宣布退出本次大制作电影《隋唐大运河》男主角的选角，拒绝回答更多的问题。他的经纪人称山峰做出这一艰难决定是因为档期不合，他很遗憾不能与江安导演合作。但据了解，山峰在接下来的时间里并没有任何影视作品的拍摄工作。<br><br>
+万众期待的史诗级巨制电影《大运河》计划于12月开拍。该电影计划投资近2亿美金，请来了国际知名的大导演江安执导。江安导演过去执导的每部电影都叫好又叫座，屡获国际大奖，而与江安合作的男主角更是极有可能获得影帝的殊荣。扮演《大运河》男主角的演员绝对能将自己的演艺事业推向难以逾越的巅峰，因此竞争也异常激烈。担任男主角人选有李天船、山峰和吕智这三个国内一线的实力派明星。之前业内人士一直看好山峰和李天船两人，认为他们最有希望获得江导的青睐，成为男主角。现在山峰突然宣布退出，李天船将最有希望出演男主角。据悉，《大运河》剧组将于近日敲定男主角人选，现在就要看看最不被看好的吕智能否爆出冷门了。<br><br>
+【财经版】李天船投身慈善事业<br><br>
+近日，大明星李天船投资500万于本地的小型慈善组织——博爱基金会，一跃成为该基金会的最大投资人。他对媒体宣称自己将持续的对慈善事业进行投资，并积极参与到慈善活动当中。<br><br>
+“是我的弟弟李察德让我了解到慈善事业的重要性。我之前从未深刻认识到国内还有这么多人吃不饱饭，得不到教育。了解这些后我就下定决心，一定要尽自己最大的努力来做慈善。虽然我的力量很小，但我希望自己能对那些需要帮助的人尽一份绵薄之力。”<br><br>
+李天船这一行为得到许多人的赞扬，他的粉丝更是纷纷在他的官网和微博上留言，表达对偶像的敬佩与支持。<br><br>
+博爱基金会的发言人强尼对媒体说道：“我们整个基金会的工作人员都非常感谢李天船先生。他作为一个大明星，能关注到贫困、孤儿等问题，并以身作则的支持慈善事业这点实属不易。他不仅投入了资金，还介绍了专业的投资公司负责我们基金会的资金运作。这大大解放了我们这些‘外行人’，我们今后可以专注于义工、扶贫等事情上了。”
+<div class="clue-end">— 公开线索一结束 —</div>
+</div>`,
 
-《隋唐大运河》男主角即将敲定！？
+        clue2: `<div class="public-clue">
+🚨 <strong>公开线索二：案发之后</strong><br><br>
+2014年10月23日，星期四早上7:00<br><br>
+一阵急促的电话铃声把你从睡梦中吵醒。半睡半醒间你接起电话，里面传来一个男人急躁的声音：“这里是酒店前台，麻烦你现在马上下来大厅好吗？出大事了！警察已经来了！”<br><br>
+听到“警察”这两个字让你瞬间清醒了不少，揉了揉刺痛的太阳穴，你的大脑终于开始运转：你现在身在费雪酒店的套房里。昨晚你们一起在酒店的宴会厅举办酒会庆祝大明星李天船胜出选角竞争，确定扮演最近筹划开拍的史诗级巨制电影《隋唐大运河》的男主角。昨天下午李天船正式与该电影的片方签订了合约。庆祝酒会上你们都很兴奋，你都记不清你究竟喝了多少酒，至今你的头还是昏昏沉沉的。<br><br>
+匆匆洗漱了一下，你快速来到酒店大厅。大厅里都是警察，宴会厅门口拉着警戒线。正当你想找位警察同志询问究竟发生了什么事的时候，一位国字脸、表情严肃的警察向你走过来。<br><br>
+“我是市局的黄强警督，今天凌晨在酒店里发生了谋杀案，很遗憾的告诉你，李天船先生被人杀害了。本案由我负责。”那人说道，并向你展示了他的警察证。“现在需要你配合我们警方的调查，能回答我几个问题吗？”<br><br>
+得知李天船被杀的消息，你还处于震惊当中，下意识的点点头。<br><br>
+“我们知道你为他工作，今天凌晨1:00到5:30之间你在哪里？”<br><br>
+你告诉他你在床上睡觉。在他做记录的同时你问他：“到底发生了什么事？”<br><br>
+“李先生今天凌晨在宴会厅里被人枪杀了。我们需要你帮忙辨认一下尸体。”<br><br>
+“好的。”<br><br>
+在黄警官的带领下，你们一起走到宴会厅的门口。一名守卫的警员拉起警戒线，让你们从下面钻过去，进入宴会厅。<br><br>
+你一眼就看到了李天船。“没错，那就是李天船。”虽然与你平时见到的李天船相差很大，但那确实就是大明星李天船。他被绑在宴会厅的一把椅子上，全身赤裸，只有一条貌似是他昨晚戴的领带遮住他的私处。一旁地板上散乱的放着一堆衣物，就是他昨天在宴会上穿的那些。他胸口有一处很小的红色伤口，凶手应该就是用枪打在了那里。血从伤口处一直延伸到他腿上，连地毯上都沾染了暗红色的血迹。<br><br>
+“尸体是今天早上大约5:30的时候被酒店的清洁工发现的，身上只有一处枪伤，没有其它外伤痕迹。”黄警官解释道。“我们现在正在审问这段时间里每个待在酒店里的人。”他深深的看了你一眼。“现在，具体说说你和死者的关系吧。”
+<div class="clue-end">— 公开线索二结束 —</div>
+</div>`,
 
-本报最新消息，国内一线男星山峰于今日下午3点召开发布会，公开对外宣布退出本次大制作电影《隋唐大运河》男主角的选角，拒绝回答更多的问题。他的经纪人称山峰做出这一艰难决定是因为档期不合，他很遗憾不能与江安导演合作。但据了解，山峰在接下来的时间里并没有任何影视作品的拍摄工作。
-
-万众期待的史诗级巨制电影《大运河》计划于12月开拍。该电影计划投资近2亿美金，请来了国际知名的大导演江安执导。江安导演过去执导的每部电影都叫好又叫座，屡获国际大奖，而与江安合作的男主角更是极有可能获得影帝的殊荣。扮演《大运河》男主角的演员绝对能将自己的演艺事业推向难以逾越的巅峰，因此竞争也异常激烈。担任男主角人选有李天船、山峰和吕智这三个国内一线的实力派明星。之前业内人士一直看好山峰和李天船两人，认为他们最有希望获得江导的青睐，成为男主角。现在山峰突然宣布退出，李天船将最有希望出演男主角。据悉，《大运河》剧组将于近日敲定男主角人选，现在就要看看最不被看好的吕智能否爆出冷门了。
-
-【财经版】李天船投身慈善事业
-
-近日，大明星李天船投资500万于本地的小型慈善组织——博爱基金会，一跃成为该基金会的最大投资人。他对媒体宣称自己将持续的对慈善事业进行投资，并积极参与到慈善活动当中。
-
-“是我的弟弟李察德让我了解到慈善事业的重要性。我之前从未深刻认识到国内还有这么多人吃不饱饭，得不到教育。了解这些后我就下定决心，一定要尽自己最大的努力来做慈善。虽然我的力量很小，但我希望自己能对那些需要帮助的人尽一份绵薄之力。”
-
-李天船这一行为得到许多人的赞扬，他的粉丝更是纷纷在他的官网和微博上留言，表达对偶像的敬佩与支持。
-
-博爱基金会的发言人强尼对媒体说道：“我们整个基金会的工作人员都非常感谢李天船先生。他作为一个大明星，能关注到贫困、孤儿等问题，并以身作则的支持慈善事业这点实属不易。他不仅投入了资金，还介绍了专业的投资公司负责我们基金会的资金运作。这大大解放了我们这些‘外行人’，我们今后可以专注于义工、扶贫等事情上了。”`,
-
-        clue2: `🚨 公开线索二：案发之后
-
-2014年10月23日，星期四早上7:00
-
-一阵急促的电话铃声把你从睡梦中吵醒。半睡半醒间你接起电话，里面传来一个男人急躁的声音：“这里是酒店前台，麻烦你现在马上下来大厅好吗？出大事了！警察已经来了！”
-
-听到“警察”这两个字让你瞬间清醒了不少，揉了揉刺痛的太阳穴，你的大脑终于开始运转：你现在身在费雪酒店的套房里。昨晚你们一起在酒店的宴会厅举办酒会庆祝大明星李天船胜出选角竞争，确定扮演最近筹划开拍的史诗级巨制电影《隋唐大运河》的男主角。昨天下午李天船正式与该电影的片方签订了合约。庆祝酒会上你们都很兴奋，你都记不清你究竟喝了多少酒，至今你的头还是昏昏沉沉的。
-
-匆匆洗漱了一下，你快速来到酒店大厅。大厅里都是警察，宴会厅门口拉着警戒线。正当你想找位警察同志询问究竟发生了什么事的时候，一位国字脸、表情严肃的警察向你走过来。
-
-“我是市局的黄强警督，今天凌晨在酒店里发生了谋杀案，很遗憾的告诉你，李天船先生被人杀害了。本案由我负责。”那人说道，并向你展示了他的警察证。“现在需要你配合我们警方的调查，能回答我几个问题吗？”
-
-得知李天船被杀的消息，你还处于震惊当中，下意识的点点头。
-
-“我们知道你为他工作，今天凌晨1:00到5:30之间你在哪里？”
-
-你告诉他你在床上睡觉。在他做记录的同时你问他：“到底发生了什么事？”
-
-“李先生今天凌晨在宴会厅里被人枪杀了。我们需要你帮忙辨认一下尸体。”
-
-“好的。”
-
-在黄警官的带领下，你们一起走到宴会厅的门口。一名守卫的警员拉起警戒线，让你们从下面钻过去，进入宴会厅。
-
-你一眼就看到了李天船。“没错，那就是李天船。”虽然与你平时见到的李天船相差很大，但那确实就是大明星李天船。他被绑在宴会厅的一把椅子上，全身赤裸，只有一条貌似是他昨晚戴的领带遮住他的私处。一旁地板上散乱的放着一堆衣物，就是他昨天在宴会上穿的那些。他胸口有一处很小的红色伤口，凶手应该就是用枪打在了那里。血从伤口处一直延伸到他腿上，连地毯上都沾染了暗红色的血迹。
-
-“尸体是今天早上大约5:30的时候被酒店的清洁工发现的，身上只有一处枪伤，没有其它外伤痕迹。”黄警官解释道。“我们现在正在审问这段时间里每个待在酒店里的人。”他深深的看了你一眼。“现在，具体说说你和死者的关系吧。”`,
-
-        clue3: `📹 公开线索三：酒店监控录像
-
-你来到酒店的监控室，保安主任帮你把监控录像调到了昨天酒店门口摄像头拍摄到的画面。昨天酒会的时候你还和李天船在一起，这说明他是在酒会之后的某个时间遇害的，因此你跳过了昨晚一部分无关的录像。从午夜0点后开始，你看到了以下这些事情：
-
-0:10 一个身材高大健壮的男人出现在画面里，快步走进酒店。
-0:37 一个看样子像是醉酒的客人被朋友扶着出来，坐上车走了。
-1:11 酒店夜班的保安走到门口抽烟。
-1:16 夜班保安把抽完的烟头丢到地上，用脚踩熄，并回去继续值班。
-1:44 一个年轻的男人离开了酒店。
-02:32 王纱出现在酒店门口，她跟夜班保安聊了几句，之后她独自在酒店门口站着，貌似在等人。
-02:40 一辆的士停在了酒店门口，王纱开门坐进了后座，的士马上开走了。
-03:08 一个穿黑色衣服的人走进酒店。他（她）戴着帽子，一路低着头，看不清他（她）的脸，甚至连他（她）的性别都分辨不出来。
-03:31 之前那个黑衣服的人快步走出了酒店。
-03:55 那个身材高大健壮的男人离开了酒店。`,
+        clue3: `<div class="public-clue">
+📹 <strong>公开线索三：酒店监控录像</strong><br><br>
+你来到酒店的监控室，保安主任帮你把监控录像调到了昨天酒店门口摄像头拍摄到的画面。昨天酒会的时候你还和李天船在一起，这说明他是在酒会之后的某个时间遇害的，因此你跳过了昨晚一部分无关的录像。从午夜0点后开始，你看到了以下这些事情：<br><br>
+0:10 一个身材高大健壮的男人出现在画面里，快步走进酒店。<br>
+0:37 一个看样子像是醉酒的客人被朋友扶着出来，坐上车走了。<br>
+1:11 酒店夜班的保安走到门口抽烟。<br>
+1:16 夜班保安把抽完的烟头丢到地上，用脚踩熄，并回去继续值班。<br>
+1:44 一个年轻的男人离开了酒店。<br>
+02:32 王纱出现在酒店门口，她跟夜班保安聊了几句，之后她独自在酒店门口站着，貌似在等人。<br>
+02:40 一辆的士停在了酒店门口，王纱开门坐进了后座，的士马上开走了。<br>
+03:08 一个穿黑色衣服的人走进酒店。他（她）戴着帽子，一路低着头，看不清他（她）的脸，甚至连他（她）的性别都分辨不出来。<br>
+03:31 之前那个黑衣服的人快步走出了酒店。<br>
+03:55 那个身材高大健壮的男人离开了酒店。
+<div class="clue-end">— 公开线索三结束 —</div>
+</div>`,
       };
 
       // ========== 角色简介 ==========
@@ -498,11 +629,11 @@
 
       const COMMON_BG = `背景简介：红遍亚洲的大明星李天船完成签约，确定出演史诗级巨制电影《隋唐大运河》的男主角。当晚，大明星与他的团队、朋友在费雪酒店举办庆祝酒会，大家都沉浸在欢乐的气氛中，喝酒、聊天、跳舞，一夜尽欢。`;
 
-      // ========== 邀请函 ==========
+      // ========== 邀请函（补充房间号） ==========
       const INVITATIONS = {
         han: `亲爱的
 
-非常感谢您能参与本次游戏，您将扮演李天船的经纪人（韩伟文）这一角色。
+非常感谢您能参与本次游戏，您将扮演李天船的经纪人（韩伟文）这一角色。今晚您将入住的是费雪酒店507号房间。
 
 你是白手起家的典范，自从4年前资历尚浅的你幸运接下大明星李天船的经纪工作之后，你就一直全身心的投入到工作当中。你没有让李天船失望，李天船这几年来一直保持大红大紫，而你也收获了自已事业上的成功。你个性正直，做事正派，不像圈内其他经纪人那样，使用各种各样卑鄙的手段来达成目标。
 
@@ -522,7 +653,7 @@
 
         shen: `亲爱的
 
-非常感谢您能参与本次游戏，您将扮演李天船的助理（沈曼离）这一角色。
+非常感谢您能参与本次游戏，您将扮演李天船的助理（沈曼离）这一角色。今晚您将入住的是费雪酒店509号房间。
 
 你已经从学校毕业满两年了。6个月前你应聘成为了大明星李天船的助理。从那以后你就一直都处于忙碌之中，你工作上非常努力，把李天船的生活打点的井井有条。虽然工作很拼命，但你在享乐的时候也“绝不手软”。你认为人在该努力时要竭尽全力，该享受时要尽情享乐。
 
@@ -541,7 +672,8 @@
 朋友们都叫他“韩哥”。`,
       };
 
-      // ========== 角色剧本数据（第4轮嵌入公开线索三） ==========
+      // ========== 角色剧本数据 ==========
+      // 韩伟文第三轮已替换为用户上传的内容
       const SCRIPTS = {
         han: [
           {
@@ -555,7 +687,7 @@
           },
           {
             round: 2,
-            script: `隐藏的词：保安（你自己绝不能说出这个词）\n线索：只有当同伴正确说出本轮游戏你隐藏的词时，才可以在隐藏线索册中查看本轮的隐藏线索！！\n\n你本来都忘记了，但刚刚李天船被杀的消息让你想起了当你今天凌晨大约2点到3点之间醒来的时候朦胧中听到了小沈房间开门关门的声音。貌似有人半夜从小沈的房间出去了一趟，是小沈吗？她出去干什么？看来你应该问问小沈，她昨晚是不是一个人在房间里，她在房间里都干了些什么。\n\n山峰退出这次选角的决定是个非常震惊的消息。除了官方的解释，你还听说了很多传言，例如：山峰刚刚发现自己已经身患绝症了；山峰最近决定脱离肮脏的娱乐圈，出家当和尚等（自行发挥，但不要太夸张）。\n\n李天船本身就是个很骄傲的人，走红之后他更是变得有点自负，做事不留余地。圈内很多人都不喜欢他，甚至连他的亲弟弟都不太喜欢他。`,
+            script: `你本来都忘记了，但刚刚李天船被杀的消息让你想起了当你今天凌晨大约2点到3点之间醒来的时候朦胧中听到了小沈房间开门关门的声音。貌似有人半夜从小沈的房间出去了一趟，是小沈吗？她出去干什么？看来你应该问问小沈，她昨晚是不是一个人在房间里，她在房间里都干了些什么。\n\n山峰退出这次选角的决定是个非常震惊的消息。除了官方的解释，你还听说了很多传言，例如：山峰刚刚发现自己已经身患绝症了；山峰最近决定脱离肮脏的娱乐圈，出家当和尚等（自行发挥，但不要太夸张）。\n\n李天船本身就是个很骄傲的人，走红之后他更是变得有点自负，做事不留余地。圈内很多人都不喜欢他，甚至连他的亲弟弟都不太喜欢他。`,
             hiddenWord: "保安",
             hiddenClue:
               "酒店是个公共场合，任何人都能自由的进出，因此凶手不一定是在酒店里的人。",
@@ -564,7 +696,15 @@
           },
           {
             round: 3,
-            script: `（本轮剧本内容补充：你回忆起昨晚酒会后的一些细节，并思考李天船的人际关系）\n\n你仔细回想了昨晚酒会后的情况，确定自己直接回房睡觉了。但你对李天船的私生活有了更多猜测。也许你应该多关注一下他身边那些看似无关的人。\n\n另外，你似乎察觉到李天船在私下里有些不可告人的秘密，可能与某些违禁品有关。`,
+            script: `也许你应该问问小沈对天船的看法，你清楚李天船的为人，为他工作并不是件轻松的事情。小沈会不会对天船有所积怨呢？
+
+如果小沈用一些冠冕堂皇的答案来敷衍你，继续追问她。你知道在这个圈子里生存，为了保护自己有时需要说些自己也不相信的话，但现在你们应该坦诚相待了。你突然想到之前听说的一个传闻，据说李天船大约一个星期前曾经想骚扰小沈，但被小沈打了一巴掌。依你对李天船的了解，他绝对不会善罢甘休，肯定会威胁小沈。会不会是李天船把小沈逼急了，结果小沈选择了杀人呢？你得好好问问她，不论有什么理由，杀人都是死罪呀。
+
+对了，也许你应该顺便问问小沈有没有枪。
+
+如果小沈反问你对于天船的看法。告诉她有些时候你会觉得为李天船工作很辛苦，你总要负责收拾他留下的烂摊子。举些例子详细的说说，例如你非常不认同天船的某些肮脏手段，虽然你知道这是圈子里的现状，等等……但尽量不要说得太过火，因为这样仿佛是在暗示你自己就是凶手。
+
+最近有间国际性的大娱乐公司看中了你的能力，想要招揽你。他们给出的条件非常诱人，但你拒绝了，因为你不太喜欢大公司，那里有太多“潜规则”。天船不知怎么得知了这个消息，跑来质问你。他不分青红皂白的责问让你很不爽，当时你们大吵了一架。但事后李天船了解到了实情，这件事也就过去了。`,
             hiddenWord: "吸毒",
             hiddenClue:
               "李天船很注重自己的隐私，对私人生活保护的滴水不漏。他这么做肯定有原因的，也许你应该去调查一下。",
@@ -591,7 +731,7 @@
           },
           {
             round: 6,
-            script: `隐藏的词：私生女（你自己绝不能说出这个词）\n线索：只有当同伴正确说出本轮游戏你隐藏的词时，才可以在隐藏线索册中查看本轮的隐藏线索！\n\n请从下列线索中选择两条在下一轮开始前进行调查（此处两人选项相同，共同选择两条）\n\n发现李天船尸体的时候他全身赤裸，被绑在椅子上。要不就是凶手把他扒光了绑在那里之后杀害了他，要不就是凶手走进去的时候他已经处在裸体被绑在椅子上的窘境里。但这很不科学啊，凶手既然是用枪杀人，为什么还要大费周章的把李天船绑在椅子上？如果凶手进去的时候李天船已经被绑住了，那为什么不选择更安静，更低调的方式杀害他呢？问问小沈，看她有没有什么合理的解释。\n\n告诉小沈你认为是谁杀了李天船，以及他（她）是怎么做到的。你还没有调查到足够的线索，因此推理错误也没有关系。`,
+            script: `发现李天船尸体的时候他全身赤裸，被绑在椅子上。要不就是凶手把他扒光了绑在那里之后杀害了他，要不就是凶手走进去的时候他已经处在裸体被绑在椅子上的窘境里。但这很不科学啊，凶手既然是用枪杀人，为什么还要大费周章的把李天船绑在椅子上？如果凶手进去的时候李天船已经被绑住了，那为什么不选择更安静，更低调的方式杀害他呢？问问小沈，看她有没有什么合理的解释。\n\n告诉小沈你认为是谁杀了李天船，以及他（她）是怎么做到的。你还没有调查到足够的线索，因此推理错误也没有关系。`,
             hiddenWord: "私生女",
             hiddenClue:
               "在侦探学里，当线索又多又杂的时候，要抓住重点。而破案的关键因素一般包括作案动机，时机和手法，凶手必然会同时满足这三点。",
@@ -619,7 +759,7 @@
           },
           {
             round: 2,
-            script: `隐藏的词：套房（你自己绝不能说出这个词）\n线索：只有当同伴正确说出本轮游戏你隐藏的词时，才可以在隐藏线索册中查看本轮的隐藏线索！\n\n昨晚你一整晚都一个人待在自己的房间里。由于没有人能帮你证明这点，为了让韩哥相信你，你可以说些你具体做了的事情。比如说你看了会儿电视，或者你直接上床睡觉了等等（自行发挥，但不要太夸张）。\n\n昨晚你被吵醒了，仔细分辨了一下，噪音是从外面传来的。于是你开门到走廊上去看了看，但什么都没发现。\n\n你知道名人是非多，作为大明星，有多少人喜欢就会有多少人讨厌。但是拜性格所赐，李天船的敌人貌似太多了些，这次选角的事情他又得罪了不少人……对了，这次选角如果不是山峰这个最大竞争对手突然退出，李天船也不一定能顺利签约。也许你应该问问韩哥，对于山峰的意外表现他有没有听到说什么可能的原因。还有一点，他是否知道有哪些人不喜欢李天船。`,
+            script: `昨晚你一整晚都一个人待在自己的房间里。由于没有人能帮你证明这点，为了让韩哥相信你，你可以说些你具体做了的事情。比如说你看了会儿电视，或者你直接上床睡觉了等等（自行发挥，但不要太夸张）。\n\n昨晚你被吵醒了，仔细分辨了一下，噪音是从外面传来的。于是你开门到走廊上去看了看，但什么都没发现。\n\n你知道名人是非多，作为大明星，有多少人喜欢就会有多少人讨厌。但是拜性格所赐，李天船的敌人貌似太多了些，这次选角的事情他又得罪了不少人……对了，这次选角如果不是山峰这个最大竞争对手突然退出，李天船也不一定能顺利签约。也许你应该问问韩哥，对于山峰的意外表现他有没有听到说什么可能的原因。还有一点，他是否知道有哪些人不喜欢李天船。`,
             hiddenWord: "套房",
             hiddenClue:
               "很多推理作品里发生了谋杀案时，主角会从案发时开始往回追溯，你可以尝试一下这个方法。",
@@ -628,7 +768,7 @@
           },
           {
             round: 3,
-            script: `隐藏的词：娱乐圈（你自己绝不能说出这个词）\n线索：只有当同伴正确说出本轮游戏你隐藏的词时，才可以在隐藏线索册中查看本轮的隐藏线索！\n\n担任李天船助理几个月来总有人问你对于他的看法，你的官方回答是李天船是个非常敬业的演员，他很善良，而且乐于助人，你很荣幸能成为他的助理。\n\n但其实你很憎恨李天船，他就是个自恋、好色而且无耻的人！最让你难以忍受的是一个星期前他试图性骚扰你，还想“潜规则”了你。他说只要你从了他，他会给你很大的好处，但你严厉的拒绝了他，还甩了他一巴掌。你喜欢钱但不拜金，不会为了钱去出卖自己的感情和肉体。你的拒绝貌似打击了他变态的自尊，他威胁说如果你不从的话就要毁掉你的前程，还给了你一个月的时间考虑。你非常愤怒，你是绝不会屈服于这种烂人的，大不了去其他行业工作。你决定等一个月的时限到了就辞职，用实际行动向他表明你的决定。\n\n作为一个普通的女孩，你根本连真枪长什么样子都没见过，更别说拥有一把了。\n\n你突然想到之前听到的一个传闻，据说有间国际性的大娱乐公司看中了韩哥优秀的经纪能力，想要招揽他，但李天船不放韩哥走，两人为这事闹得很不愉快。韩哥会不会因为这个原因杀人呢？也许你应该问问韩哥对李天船的看法，看他是否喜欢为李天船工作。`,
+            script: `担任李天船助理几个月来总有人问你对于他的看法，你的官方回答是李天船是个非常敬业的演员，他很善良，而且乐于助人，你很荣幸能成为他的助理。\n\n但其实你很憎恨李天船，他就是个自恋、好色而且无耻的人！最让你难以忍受的是一个星期前他试图性骚扰你，还想“潜规则”了你。他说只要你从了他，他会给你很大的好处，但你严厉的拒绝了他，还甩了他一巴掌。你喜欢钱但不拜金，不会为了钱去出卖自己的感情和肉体。你的拒绝貌似打击了他变态的自尊，他威胁说如果你不从的话就要毁掉你的前程，还给了你一个月的时间考虑。你非常愤怒，你是绝不会屈服于这种烂人的，大不了去其他行业工作。你决定等一个月的时限到了就辞职，用实际行动向他表明你的决定。\n\n作为一个普通的女孩，你根本连真枪长什么样子都没见过，更别说拥有一把了。\n\n你突然想到之前听到的一个传闻，据说有间国际性的大娱乐公司看中了韩哥优秀的经纪能力，想要招揽他，但李天船不放韩哥走，两人为这事闹得很不愉快。韩哥会不会因为这个原因杀人呢？也许你应该问问韩哥对李天船的看法，看他是否喜欢为李天船工作。`,
             hiddenWord: "娱乐圈",
             hiddenClue:
               "昨晚李天船给他的弟弟李察德也订了一间房，但在酒会上没有人见过李察德，貌似他没有来。",
@@ -646,7 +786,7 @@
           },
           {
             round: 5,
-            script: `隐藏的词：竞争（你自己绝不能说出这个词）\n线索：只有当同伴正确说出本轮游戏你隐藏的词时，才可以在隐藏线索册中查看本轮的隐藏线索！\n\n之前的推理你都一直在假设李天船是被关系亲近的人杀害的，但杀他的可能仅仅只是一个陌生人。例如他得罪过的人，或是一个讨厌他的影迷……去问问韩哥，李天船有没有得罪过什么人，或是有什么人与李天船结怨很深。另外再问问关于这次大片选角中的另一个候选人——吕智，他了解些什么。\n\n就你所知道的，李天船对慈善事业从来就兴趣缺缺，他也从来没有参与过任何慈善活动。但他最近却开始关心慈善事业，对于这点的原因你只能猜测。也许是他的弟弟李察德拜托他帮忙的，你知道李察德一直醉心于慈善事业。也许是他发现支持慈善事业更能塑造他的正面形象，提升他的知名度。\n\n你一点都不了解那个博爱基金会的代表——强尼。他所在的基金会得到了李天船的极大支持，在媒体面前他表示了对李天船的感谢和高度赞扬。也许现在是时候深入了解一下他了。`,
+            script: `之前的推理你都一直在假设李天船是被关系亲近的人杀害的，但杀他的可能仅仅只是一个陌生人。例如他得罪过的人，或是一个讨厌他的影迷……去问问韩哥，李天船有没有得罪过什么人，或是有什么人与李天船结怨很深。另外再问问关于这次大片选角中的另一个候选人——吕智，他了解些什么。\n\n就你所知道的，李天船对慈善事业从来就兴趣缺缺，他也从来没有参与过任何慈善活动。但他最近却开始关心慈善事业，对于这点的原因你只能猜测。也许是他的弟弟李察德拜托他帮忙的，你知道李察德一直醉心于慈善事业。也许是他发现支持慈善事业更能塑造他的正面形象，提升他的知名度。\n\n你一点都不了解那个博爱基金会的代表——强尼。他所在的基金会得到了李天船的极大支持，在媒体面前他表示了对李天船的感谢和高度赞扬。也许现在是时候深入了解一下他了。`,
             hiddenWord: "竞争",
             hiddenClue:
               "如果谋杀的动机与演艺事业中的结怨有关，那么李天船在公司的办公室里肯定有一些线索。",
@@ -655,7 +795,7 @@
           },
           {
             round: 6,
-            script: `隐藏的词：照片（你自己绝不能说出这个词）\n线索：只有当同伴正确说出本轮游戏你隐藏的词时，才可以在隐藏线索册中查看本轮的隐藏线索！\n\n在第七轮开始前请从下列线索中选择两条进行调查（此处两人选项相同，共同选择两条）\n\n李天船被绑在椅子上遭到枪杀的方式确实很奇怪。你想到了几个可能的原因：可能是凶手非常恨他，想先羞辱他一番再杀他。也可能是凶手不想在用刀杀他的时候被流出来的血弄脏自己的手（自行发挥，但不要太夸张）。\n\n对于这个案子的真相你已经有些头绪了，但你想先了解下韩哥的推理。问问他认为是谁杀了李天船，那人的动机是什么，他是怎么做到的。`,
+            script: `李天船被绑在椅子上遭到枪杀的方式确实很奇怪。你想到了几个可能的原因：可能是凶手非常恨他，想先羞辱他一番再杀他。也可能是凶手不想在用刀杀他的时候被流出来的血弄脏自己的手（自行发挥，但不要太夸张）。\n\n对于这个案子的真相你已经有些头绪了，但你想先了解下韩哥的推理。问问他认为是谁杀了李天船，那人的动机是什么，他是怎么做到的。`,
             hiddenWord: "照片",
             hiddenClue:
               "线索要联系在一起分析，发现新的线索时需要回顾一下关联的旧线索，很可能会有新的发现呢。",
@@ -673,9 +813,39 @@
         ],
       };
 
+      // ========== 游戏规则内容 ==========
+      const GAME_RULES = `
+📖 游戏准备
+
+欢迎来到《大明星的最后演出》！在正式开始之前，请与同伴一起阅读以下游戏规则，确保你们理解流程。
+
+🎯 游戏目标
+你们将分别扮演经纪人“韩伟文”或助理“沈曼离”，通过合作调查、共享线索，共同指认真凶、动机和手法。
+
+🔄 游戏流程
+游戏共进行7轮，每轮包含以下步骤：
+1. 阅读本轮剧本（包含角色专属信息和公开线索）。
+2. 与同伴交流讨论，利用剧本中的信息进行角色扮演式的问答。
+3. 每轮结束时，两人共同从当前可用的线索列表中选择指定数量（通常1条，部分轮次2条）的线索，在下一轮开始前阅读。
+4. 下一轮会首先展示上一轮选择的线索内容，然后继续新的剧本和选择。
+
+🔍 隐藏词机制
+- 每位玩家在每轮剧本中都有一个“隐藏词”（标注在剧本中）。
+- 你的任务是：在对话中引导同伴说出这个词（不能直接描述猜词）。
+- 一旦同伴正确说出你的隐藏词，你即可解锁该轮的“隐藏线索”，这将为破案提供关键帮助。
+- 隐藏线索每轮独立，解锁后会在当前轮次显示。
+
+💡 角色扮演要点
+- 始终沉浸在自己的角色中，用对话、提问的方式交流信息，切勿直接念剧本。
+- 当对方问及你剧本中已有的信息时，必须如实回答；未提及的部分可自由发挥（但不得与剧本矛盾）。
+- 不要使用“我剧本里没写”或“我不是凶手”等出戏的回应。
+
+✅ 准备就绪后，点击下方按钮开始游戏。祝你们推理愉快！
+`;
+
       // ========== 游戏状态 ==========
       let state = {
-        phase: "select",
+        phase: "select", // 'select' | 'invitation' | 'rules' | 'playing' | 'final'
         role: null,
         round: 0,
         selectedClues: [],
@@ -683,13 +853,26 @@
         unlockedMap: {},
         gameOver: false,
         finalAnswer: { killer: "", motive: "", method: "" },
+        // 历史记录
+        history: [], // 每轮记录 { round, role, unlocked: boolean, selectedClues: [] }
+        // 回顾模式
+        viewMode: "game", // 'game' | 'review'
+        reviewTarget: null, // 'invitation' | 'rules' | 轮次数字(1-7)
+        showHistoryModal: false,
       };
 
       const contentEl = document.getElementById("content");
       const badgeEl = document.getElementById("roleBadge");
 
-      // ========== 渲染函数 ==========
+      // ========== 核心渲染函数 ==========
       function render() {
+        // 如果是回顾模式，渲染回顾内容
+        if (state.viewMode === "review") {
+          renderReview();
+          return;
+        }
+
+        // 正常游戏模式
         if (state.phase === "select") {
           renderSelect();
           badgeEl.textContent = "选择角色";
@@ -697,6 +880,12 @@
         }
         if (state.phase === "invitation") {
           renderInvitation();
+          badgeEl.textContent =
+            state.role === "han" ? "韩伟文 (经纪人)" : "沈曼离 (助理)";
+          return;
+        }
+        if (state.phase === "rules") {
+          renderRules();
           badgeEl.textContent =
             state.role === "han" ? "韩伟文 (经纪人)" : "沈曼离 (助理)";
           return;
@@ -710,6 +899,7 @@
           badgeEl.textContent = state.role === "han" ? "经纪人" : "助理";
           return;
         }
+        // playing
         const roleData = SCRIPTS[state.role];
         if (!roleData) return;
         const roundIndex = state.round;
@@ -726,7 +916,7 @@
 
         let html = `<div class="card"><div class="card-title">第${roundInfo.round}轮 <span class="badge">${roleName}</span></div>`;
 
-        // 显示上一轮线索（不再清空，持续显示）
+        // 显示上一轮线索（持续显示）
         if (state.prevSelected && state.prevSelected.length > 0) {
           html += `<div class="clue-detail"><strong>📌 上一轮调查的线索</strong>`;
           state.prevSelected.forEach((id) => {
@@ -736,7 +926,6 @@
             }
           });
           html += `</div>`;
-          // 注意：不再清空 prevSelected，下一轮会被新的覆盖
         }
 
         html += `<div class="script-text">${roundInfo.script}</div>`;
@@ -773,6 +962,198 @@
 
         html += `</div>`;
         contentEl.innerHTML = html;
+      }
+
+      // ========== 回顾模式渲染 ==========
+      function renderReview() {
+        const rawTarget = state.reviewTarget;
+        // 将字符串数字（如"1"）转为真正的数字，确保轮次回顾能正确匹配
+        let target = rawTarget;
+        let roundNum = null;
+        if (typeof rawTarget === "string" && /^\d+$/.test(rawTarget)) {
+          roundNum = parseInt(rawTarget, 10);
+          target = roundNum;
+        } else if (typeof rawTarget === "number") {
+          roundNum = rawTarget;
+        }
+
+        let title = "历史回顾";
+        let content = "";
+
+        if (rawTarget === "invitation") {
+          title = "📨 邀请函";
+          const inv = INVITATIONS[state.role];
+          content = `<div class="invitation-box">${inv.replace(/\n/g, "<br>")}</div>`;
+        } else if (rawTarget === "rules") {
+          title = "📋 游戏规则";
+          content = `<div class="rules-box">${GAME_RULES.replace(/\n/g, "<br>")}</div>`;
+        } else if (roundNum !== null && roundNum >= 1 && roundNum <= 7) {
+          // 查找历史记录中对应轮次的数据
+          const historyEntry = state.history.find((h) => h.round === roundNum);
+          const roleData = SCRIPTS[state.role];
+          const roundInfo = roleData
+            ? roleData.find((r) => r.round === roundNum)
+            : null;
+          if (!roundInfo) {
+            content = `<p>未找到第${roundNum}轮数据，请先完成该轮次</p>`;
+          } else {
+            title = `第${roundNum}轮 回顾`;
+            let html = `<div class="script-text">${roundInfo.script}</div>`;
+            // 显示该轮是否解锁隐藏词
+            const isUnlocked = historyEntry ? historyEntry.unlocked : false;
+            if (roundInfo.hiddenWord) {
+              html += `<div class="hidden-word-box">🔒 隐藏词：<span class="word">${roundInfo.hiddenWord}</span>`;
+              if (isUnlocked) {
+                html += `<span class="badge-unlocked">已解锁</span>`;
+              } else {
+                html += `<span style="color:#888;">未解锁</span>`;
+              }
+              html += `</div>`;
+              if (isUnlocked && roundInfo.hiddenClue) {
+                html += `<div class="hidden-clue-reveal"><strong>🔎 隐藏线索：</strong><br>${roundInfo.hiddenClue}</div>`;
+              }
+            }
+            // 显示该轮选择的线索
+            const selectedIds = historyEntry ? historyEntry.selectedClues : [];
+            if (selectedIds.length > 0) {
+              html += `<div class="clue-detail"><strong>📌 该轮选择的线索</strong>`;
+              selectedIds.forEach((id) => {
+                const clue = CLUES[id];
+                if (clue) {
+                  html += `<div style="margin-top:10px;"><strong>${clue.name}</strong><br>${clue.desc}</div>`;
+                }
+              });
+              html += `</div>`;
+            } else {
+              html += `<p style="color:#888;">该轮未选择任何线索</p>`;
+            }
+            content = html;
+          }
+        } else {
+          content = `<p>无效的回顾目标</p>`;
+        }
+
+        // 构建回顾页面
+        let html = `
+            <div class="review-banner">
+                <span>📜 ${title}</span>
+                <button class="btn btn-secondary" onclick="exitReview()">返回游戏</button>
+            </div>
+            <div class="card">
+                ${content}
+            </div>
+        `;
+        contentEl.innerHTML = html;
+        badgeEl.textContent = "回顾模式";
+      }
+
+      // ========== 切换历史模态框 ==========
+      function toggleHistory() {
+        if (state.viewMode === "review") {
+          exitReview();
+          return;
+        }
+        // 构建历史列表
+        let items = [
+          { label: "📨 邀请函", key: "invitation" },
+          { label: "📋 游戏规则", key: "rules" },
+        ];
+        // 添加已完成的轮次（从history中获取）
+        const historyRounds = state.history.map((h) => h.round);
+        // 还要包括当前正在进行的轮次（如果不在history中）
+        const currentRound = state.round;
+        if (currentRound > 0 && !historyRounds.includes(currentRound)) {
+          // 当前轮次还未存入history，但可以查看（只读）
+          // 我们允许查看当前轮之前的所有轮次，包括当前轮（但当前轮未完成，可能没有选择线索记录，但仍可查看剧本）
+        }
+        // 从1到currentRound（含）都加入
+        for (let r = 1; r <= currentRound; r++) {
+          if (!items.some((item) => item.key === r)) {
+            const historyEntry = state.history.find((h) => h.round === r);
+            const unlocked = historyEntry ? historyEntry.unlocked : false;
+            const label = `第${r}轮${unlocked ? " 🔓" : ""}`;
+            items.push({ label, key: r });
+          }
+        }
+
+        // 显示模态框
+        let html = `
+            <div class="card" style="background:#fcf9f7;">
+                <div class="card-title">📜 历史回顾</div>
+                <div class="history-modal">
+                    ${items
+                      .map(
+                        (item) => `
+                        <div class="item" onclick="goToReview('${item.key}')">
+                            <span>${item.label}</span>
+                            <span class="tag">查看</span>
+                        </div>
+                    `,
+                      )
+                      .join("")}
+                </div>
+                <div class="action-bar">
+                    <button class="btn btn-secondary" onclick="closeHistory()">关闭</button>
+                </div>
+            </div>
+        `;
+        // 在当前内容区域之上叠加显示，或替换内容？为了简单，我们直接替换content，并保留一个关闭按钮。
+        // 但为了不丢失当前游戏状态，我们保存当前内容并在关闭时恢复。
+        // 由于我们的render是整体的，我们可以用临时显示。
+        // 简单方法：直接将模态框插入到content中，但会覆盖原有内容。
+        // 我们可以在content中插入模态框，但保留原有内容？由于是单页，我们直接替换并提供一个关闭按钮。
+        // 但关闭后需要恢复游戏界面，我们用变量记录是否显示模态框。
+        if (state.showHistoryModal) {
+          // 已经在显示，则关闭
+          state.showHistoryModal = false;
+          render();
+          return;
+        }
+        state.showHistoryModal = true;
+        // 临时保存当前内容
+        const currentHtml = contentEl.innerHTML;
+        // 显示模态框，并在关闭时恢复
+        let modalHtml = `
+            <div class="card" style="background:#fcf9f7;">
+                <div class="card-title">📜 历史回顾</div>
+                <div class="history-modal">
+                    ${items
+                      .map(
+                        (item) => `
+                        <div class="item" onclick="goToReview('${item.key}')">
+                            <span>${item.label}</span>
+                            <span class="tag">查看</span>
+                        </div>
+                    `,
+                      )
+                      .join("")}
+                </div>
+                <div class="action-bar">
+                    <button class="btn btn-secondary" onclick="closeHistory()">关闭</button>
+                </div>
+            </div>
+        `;
+        contentEl.innerHTML = modalHtml;
+        // 隐藏历史按钮，避免冲突
+        // 但保留关闭功能
+      }
+
+      function closeHistory() {
+        state.showHistoryModal = false;
+        render();
+      }
+
+      function goToReview(key) {
+        state.showHistoryModal = false;
+        state.viewMode = "review";
+        state.reviewTarget = key;
+        render();
+      }
+
+      function exitReview() {
+        state.viewMode = "game";
+        state.reviewTarget = null;
+        render();
       }
 
       // ========== 角色选择页面 ==========
@@ -814,7 +1195,7 @@
                 <div class="card-title">📨 邀请函 <span class="badge">${roleName}</span></div>
                 <div class="invitation-box">${content.replace(/\n/g, "<br>")}</div>
                 <div class="action-bar">
-                    <button class="btn btn-primary" onclick="startGame()">我已阅读，开始游戏</button>
+                    <button class="btn btn-primary" onclick="goToRules()">我已阅读，下一步</button>
                 </div>
             </div>
         `;
@@ -822,18 +1203,42 @@
         badgeEl.textContent = roleName;
       }
 
-      function startGame() {
+      function goToRules() {
+        state.phase = "rules";
+        render();
+      }
+
+      // ========== 游戏规则页面 ==========
+      function renderRules() {
+        const roleName = state.role === "han" ? "韩伟文" : "沈曼离";
+        let html = `
+            <div class="card">
+                <div class="card-title">📋 游戏准备 <span class="badge">${roleName}</span></div>
+                <div class="rules-box">${GAME_RULES.replace(/\n/g, "<br>")}</div>
+                <div class="action-bar">
+                    <button class="btn btn-success" onclick="confirmRules()">我已了解，开始游戏</button>
+                </div>
+            </div>
+        `;
+        contentEl.innerHTML = html;
+        badgeEl.textContent = roleName;
+      }
+
+      function confirmRules() {
         state.phase = "playing";
         state.round = 0;
         state.selectedClues = [];
         state.prevSelected = [];
         state.unlockedMap = {};
         state.gameOver = false;
+        state.finalAnswer = { killer: "", motive: "", method: "" };
+        state.history = [];
         render();
       }
 
       // ========== 游戏操作函数 ==========
       function toggleClue(id) {
+        if (state.viewMode === "review") return; // 回顾模式禁用
         const roundInfo = getCurrentRoundInfo();
         if (!roundInfo) return;
         const idx = state.selectedClues.indexOf(id);
@@ -850,17 +1255,36 @@
       }
 
       function confirmClues() {
+        if (state.viewMode === "review") return;
         const roundInfo = getCurrentRoundInfo();
         if (!roundInfo) return;
         if (state.selectedClues.length !== roundInfo.selectCount) {
           alert(`请选择 ${roundInfo.selectCount} 条线索`);
           return;
         }
+        // 保存本轮历史（在进入下一轮之前）
+        saveHistory(roundInfo.round);
         nextRound();
       }
 
+      function saveHistory(roundNumber) {
+        // 检查是否已存在记录
+        const existing = state.history.find((h) => h.round === roundNumber);
+        if (!existing) {
+          state.history.push({
+            round: roundNumber,
+            role: state.role,
+            unlocked: state.unlockedMap.hasOwnProperty(roundNumber),
+            selectedClues: state.selectedClues.slice(), // 保存选择的线索
+          });
+        } else {
+          // 更新
+          existing.unlocked = state.unlockedMap.hasOwnProperty(roundNumber);
+          existing.selectedClues = state.selectedClues.slice();
+        }
+      }
+
       function nextRound() {
-        // 将当前选中的线索保存为上一轮线索，不清除 prevSelected（下次会被覆盖）
         state.prevSelected = state.selectedClues.slice();
         state.selectedClues = [];
         state.round++;
@@ -880,6 +1304,7 @@
       }
 
       function triggerHidden(roundNumber) {
+        if (state.viewMode === "review") return;
         const roleData = SCRIPTS[state.role];
         if (!roleData) return;
         const roundInfo = roleData.find((r) => r.round === roundNumber);
@@ -904,7 +1329,7 @@
         }
       }
 
-      // ========== 最终指证与真相（移除placeholder） ==========
+      // ========== 最终指证与真相 ==========
       function renderFinal() {
         let extraHtml = "";
         if (state.prevSelected && state.prevSelected.length > 0) {
@@ -987,9 +1412,14 @@
         state.unlockedMap = {};
         state.gameOver = false;
         state.finalAnswer = { killer: "", motive: "", method: "" };
+        state.history = [];
+        state.viewMode = "game";
+        state.reviewTarget = null;
+        state.showHistoryModal = false;
         render();
       }
 
+      // ========== 启动 ==========
       render();
     </script>
   </body>
