@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>中国象棋翻棋 · 动态阵营</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+      }
+      body {
+        background: linear-gradient(145deg, #2b5a3a 0%, #1d3e2a 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Segoe UI", Roboto, system-ui, sans-serif;
+        padding: 12px;
+        margin: 0;
+      }
+      .game-container {
+        background: #c8a87c;
+        background-image: radial-gradient(circle at 20% 30%, #dbbc91, #b58b5a);
+        padding: 18px 20px 24px;
+        border-radius: 48px 48px 32px 32px;
+        box-shadow:
+          0 20px 40px rgba(0, 0, 0, 0.7),
+          inset 0 2px 4px rgba(255, 255, 200, 0.3);
+        max-width: 820px;
+        width: 100%;
+        border: 6px solid #6b4f32;
+      }
+      .status-bar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(60, 40, 20, 0.7);
+        backdrop-filter: blur(4px);
+        padding: 6px 14px;
+        border-radius: 40px;
+        margin-bottom: 14px;
+        color: #f5eedc;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border: 1px solid #b4956a;
+        gap: 4px 10px;
+      }
+      .status-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .status-item .badge {
+        background: #2c1f12;
+        padding: 0 10px;
+        border-radius: 30px;
+        line-height: 1.8;
+        font-size: 0.85rem;
+        border: 1px solid #b4956a;
+        min-width: 24px;
+        text-align: center;
+      }
+      .turn-indicator {
+        background: #d4b48c;
+        color: #1d2e1a;
+        padding: 2px 14px;
+        border-radius: 40px;
+        font-weight: 700;
+        font-size: 1rem;
+        box-shadow: inset 0 -2px 0 #6b4f32;
+        white-space: nowrap;
+      }
+      .token-remaining {
+        display: flex;
+        gap: 2px;
+        align-items: center;
+      }
+      .token-icon {
+        font-size: 1.1rem;
+      }
+      .board-wrapper {
+        background: #b58b5a;
+        padding: 10px;
+        border-radius: 28px;
+        box-shadow:
+          inset 0 0 0 2px #6b4f32,
+          0 8px 16px rgba(0, 0, 0, 0.5);
+      }
+      .board {
+        display: grid;
+        gap: 5px;
+        background: #c8a87c;
+        border-radius: 20px;
+        padding: 5px;
+        aspect-ratio: auto;
+        transition: grid-template-columns 0.2s ease;
+      }
+      .cell {
+        background: #d8b88a;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.1s ease;
+        box-shadow:
+          inset 0 -3px 0 #7a5f3a,
+          0 2px 4px rgba(0, 0, 0, 0.2);
+        aspect-ratio: 1 / 1;
+        color: #1f1a12;
+        text-shadow: 0 1px 2px rgba(255, 255, 200, 0.3);
+        position: relative;
+        min-height: 40px;
+        min-width: 40px;
+      }
+      .cell.face-down {
+        background: #6b8f6b;
+        background-image: radial-gradient(circle at 30% 35%, #8fb08f, #4a6a4a);
+        box-shadow:
+          inset 0 -3px 0 #2d452d,
+          0 2px 4px rgba(0, 0, 0, 0.3);
+        color: #d4d4b0;
+        font-size: 1.6rem;
+      }
+      .cell.face-down::after {
+        content: "?";
+        opacity: 0.7;
+      }
+      .cell .piece-text {
+        line-height: 1;
+        pointer-events: none;
+      }
+      .cell.selected {
+        outline: 4px solid #ffdd77;
+        outline-offset: -2px;
+        box-shadow: 0 0 16px #ffdd77;
+        transform: scale(1.02);
+        z-index: 2;
+      }
+      .cell.can-move {
+        background: rgba(255, 255, 200, 0.25);
+        box-shadow: inset 0 0 0 3px #ffdd77;
+      }
+      .cell.red {
+        background: #e05555;
+        color: #fff;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        box-shadow:
+          inset 0 -3px 0 #8f2a2a,
+          0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .cell.black {
+        background: #2a2a2a;
+        color: #ddd;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        box-shadow:
+          inset 0 -3px 0 #111,
+          0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .cell.red.face-down,
+      .cell.black.face-down {
+        background: #6b8f6b;
+        background-image: radial-gradient(circle at 30% 35%, #8fb08f, #4a6a4a);
+        color: #d4d4b0;
+        box-shadow:
+          inset 0 -3px 0 #2d452d,
+          0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .cell.red.face-down::after,
+      .cell.black.face-down::after {
+        content: "?";
+        opacity: 0.7;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .controls button {
+        background: #3d2c1b;
+        border: none;
+        color: #f5eedc;
+        padding: 8px 22px;
+        border-radius: 60px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        box-shadow:
+          0 6px 0 #1f140c,
+          0 4px 12px rgba(0, 0, 0, 0.4);
+        transition: 0.07s linear;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid #b4956a;
+        flex: 0 1 auto;
+      }
+      .controls button:active {
+        transform: translateY(4px);
+        box-shadow: 0 2px 0 #1f140c;
+      }
+      .controls button:disabled {
+        opacity: 0.4;
+        transform: translateY(2px);
+        box-shadow: 0 4px 0 #1f140c;
+        pointer-events: none;
+      }
+      .controls .btn-undo {
+        background: #3a5f7a;
+        border-color: #8ab3d0;
+      }
+      .controls .btn-reset {
+        background: #6b4f32;
+        border-color: #b4956a;
+      }
+      .message {
+        margin-top: 12px;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #f5eedc;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 6px 12px;
+        border-radius: 40px;
+        min-height: 2.6rem;
+        backdrop-filter: blur(2px);
+        border: 1px solid #b4956a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      @media (max-width: 600px) {
+        .game-container {
+          padding: 12px;
+          border-radius: 30px;
+        }
+        .board {
+          gap: 4px;
+          padding: 4px;
+        }
+        .cell {
+          font-size: 1rem;
+          border-radius: 8px;
+          min-height: 32px;
+          min-width: 32px;
+        }
+        .status-bar {
+          font-size: 0.75rem;
+          padding: 4px 10px;
+        }
+        .controls button {
+          padding: 6px 14px;
+          font-size: 0.85rem;
+        }
+        .turn-indicator {
+          font-size: 0.85rem;
+          padding: 2px 10px;
+        }
+      }
+      @media (max-width: 400px) {
+        .cell {
+          font-size: 0.8rem;
+          min-height: 26px;
+          min-width: 26px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-container" id="app">
+      <!-- 状态栏 -->
+      <div class="status-bar">
+        <div class="status-item">
+          <span id="player1Label">👤 玩家1</span>
+          <span class="badge" id="player1Count">16</span>
+        </div>
+        <div class="status-item">
+          <span id="player2Label">👤 玩家2</span>
+          <span class="badge" id="player2Count">16</span>
+        </div>
+        <div class="status-item turn-indicator" id="turnIndicator">
+          🟡 等待开始
+        </div>
+        <div class="status-item token-remaining">
+          <span>🔄 撤回</span>
+          <span class="badge" id="p1Tokens">3</span>
+          <span style="margin: 0 2px">/</span>
+          <span class="badge" id="p2Tokens">3</span>
+        </div>
+      </div>
+
+      <!-- 棋盘 -->
+      <div class="board-wrapper">
+        <div class="board" id="board"></div>
+      </div>
+
+      <!-- 控制按钮 -->
+      <div class="controls">
+        <button class="btn-undo" id="undoBtn">↩ 撤回</button>
+        <button class="btn-reset" id="resetBtn">🔄 重新开局</button>
+      </div>
+
+      <!-- 消息 -->
+      <div class="message" id="message">点击暗棋翻开，或选中己方棋子移动</div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        // ============================================================
+        //  常量 & 配置
+        // ============================================================
+        const TOTAL_PIECES = 32;
+        const RED_TYPES = [
+          "帅",
+          "车",
+          "车",
+          "马",
+          "马",
+          "炮",
+          "炮",
+          "仕",
+          "仕",
+          "相",
+          "相",
+          "兵",
+          "兵",
+          "兵",
+          "兵",
+          "兵",
+        ];
+        const BLACK_TYPES = [
+          "将",
+          "车",
+          "车",
+          "马",
+          "马",
+          "炮",
+          "炮",
+          "士",
+          "士",
+          "象",
+          "象",
+          "卒",
+          "卒",
+          "卒",
+          "卒",
+          "卒",
+        ];
+
+        // 等级映射
+        function getRank(type) {
+          if (type === "帅" || type === "将") return 7;
+          if (type === "车") return 6;
+          if (type === "马") return 5;
+          if (type === "炮") return 4;
+          if (type === "仕" || type === "士") return 3;
+          if (type === "相" || type === "象") return 2;
+          if (type === "兵" || type === "卒") return 1;
+          return 0;
+        }
+
+        // ============================================================
+        //  状态变量
+        // ============================================================
+        let rows = 4;
+        let cols = 8;
+        let board = []; // 二维数组
+        let currentPlayer = "p1"; // 'p1' 或 'p2' (玩家标识)
+        let player1Color = null; // 'red' 或 'black' 或 null
+        let player2Color = null;
+        let p1Tokens = 3;
+        let p2Tokens = 3;
+        let p1Count = 0;
+        let p2Count = 0;
+        let selectedPos = null; // { row, col }
+        let history = []; // 存储 { board, currentPlayer, player1Color, player2Color, p1Count, p2Count }
+        let gameOver = false;
+        let winner = null; // 'p1' 或 'p2'
+
+        // DOM 引用
+        const boardEl = document.getElementById("board");
+        const messageEl = document.getElementById("message");
+        const player1Label = document.getElementById("player1Label");
+        const player2Label = document.getElementById("player2Label");
+        const player1CountEl = document.getElementById("player1Count");
+        const player2CountEl = document.getElementById("player2Count");
+        const turnIndicator = document.getElementById("turnIndicator");
+        const p1TokensEl = document.getElementById("p1Tokens");
+        const p2TokensEl = document.getElementById("p2Tokens");
+        const undoBtn = document.getElementById("undoBtn");
+        const resetBtn = document.getElementById("resetBtn");
+
+        // ============================================================
+        //  工具函数
+        // ============================================================
+        function isPortrait() {
+          return window.innerWidth < window.innerHeight;
+        }
+
+        // 根据方向设置行列数
+        function getLayout() {
+          return isPortrait() ? { rows: 8, cols: 4 } : { rows: 4, cols: 8 };
+        }
+
+        // 转置棋盘 (rows/cols互换)
+        function transposeBoard(b) {
+          if (!b || b.length === 0) return b;
+          const r = b.length;
+          const c = b[0].length;
+          const newBoard = [];
+          for (let col = 0; col < c; col++) {
+            const row = [];
+            for (let rowIdx = 0; rowIdx < r; rowIdx++) {
+              row.push(b[rowIdx][col]);
+            }
+            newBoard.push(row);
+          }
+          return newBoard;
+        }
+
+        // 深拷贝棋盘
+        function deepCloneBoard(b) {
+          return b.map((row) => row.map((cell) => (cell ? { ...cell } : null)));
+        }
+
+        // 保存状态到历史 (深拷贝)
+        function pushHistory() {
+          history.push({
+            board: deepCloneBoard(board),
+            currentPlayer: currentPlayer,
+            player1Color: player1Color,
+            player2Color: player2Color,
+            p1Count: p1Count,
+            p2Count: p2Count,
+            p1Tokens: p1Tokens,
+            p2Tokens: p2Tokens,
+          });
+          if (history.length > 200) history.shift();
+        }
+
+        // 从历史恢复状态
+        function popHistory() {
+          if (history.length === 0) return null;
+          const state = history.pop();
+          board = state.board;
+          currentPlayer = state.currentPlayer;
+          player1Color = state.player1Color;
+          player2Color = state.player2Color;
+          p1Count = state.p1Count;
+          p2Count = state.p2Count;
+          p1Tokens = state.p1Tokens;
+          p2Tokens = state.p2Tokens;
+          return state;
+        }
+
+        // 统计双方棋子数 (按玩家)
+        function countPieces() {
+          let c1 = 0,
+            c2 = 0;
+          for (let r = 0; r < board.length; r++) {
+            for (let c = 0; c < board[r].length; c++) {
+              const cell = board[r][c];
+              if (cell) {
+                const color = cell.color;
+                if (player1Color && color === player1Color) c1++;
+                else if (player2Color && color === player2Color) c2++;
+                // 如果颜色未分配，暂不计入玩家，但显示在总棋子数？需要根据玩家颜色来统计
+              }
+            }
+          }
+          // 如果颜色未分配，则全部算作未分配
+          if (!player1Color && !player2Color) {
+            // 全部未分配，不统计玩家数量
+            p1Count = 0;
+            p2Count = 0;
+          } else if (player1Color && !player2Color) {
+            // 只有玩家1有颜色
+            p1Count = c1;
+            p2Count = 0;
+          } else if (!player1Color && player2Color) {
+            p1Count = 0;
+            p2Count = c2;
+          } else {
+            p1Count = c1;
+            p2Count = c2;
+          }
+          return { p1Count, p2Count };
+        }
+
+        // 更新UI计数
+        function updateCounts() {
+          countPieces();
+          player1CountEl.textContent = p1Count;
+          player2CountEl.textContent = p2Count;
+          // 检查胜利条件
+          if (!gameOver) {
+            if (p1Count === 0 && player1Color !== null) {
+              gameOver = true;
+              winner = "p2";
+              setMessage("🏆 玩家2 获胜！玩家1 棋子被全部消灭！");
+            } else if (p2Count === 0 && player2Color !== null) {
+              gameOver = true;
+              winner = "p1";
+              setMessage("🏆 玩家1 获胜！玩家2 棋子被全部消灭！");
+            }
+          }
+        }
+
+        // 更新回合显示
+        function updateTurn() {
+          if (gameOver) {
+            turnIndicator.textContent =
+              winner === "p1" ? "🔴 玩家1 胜" : "⚫ 玩家2 胜";
+            return;
+          }
+          const p1ColorDisplay =
+            player1Color === "red"
+              ? "🔴"
+              : player1Color === "black"
+                ? "⚫"
+                : "❓";
+          const p2ColorDisplay =
+            player2Color === "red"
+              ? "🔴"
+              : player2Color === "black"
+                ? "⚫"
+                : "❓";
+          const turnPlayer = currentPlayer === "p1" ? "玩家1" : "玩家2";
+          const colorDisplay =
+            currentPlayer === "p1" ? p1ColorDisplay : p2ColorDisplay;
+          turnIndicator.textContent = `${colorDisplay} ${turnPlayer} 回合`;
+          // 更新玩家标签颜色
+          player1Label.textContent = `👤 玩家1 ${p1ColorDisplay}`;
+          player2Label.textContent = `👤 玩家2 ${p2ColorDisplay}`;
+        }
+
+        // 更新令牌显示
+        function updateTokens() {
+          p1TokensEl.textContent = p1Tokens;
+          p2TokensEl.textContent = p2Tokens;
+        }
+
+        // 设置消息
+        function setMessage(msg, isError = false) {
+          messageEl.textContent = msg;
+          messageEl.style.color = isError ? "#ffb07c" : "#f5eedc";
+        }
+
+        // 清除选中
+        function clearSelected() {
+          selectedPos = null;
+        }
+
+        // 检查相邻
+        function isAdjacent(r1, c1, r2, c2) {
+          const dr = Math.abs(r1 - r2);
+          const dc = Math.abs(c1 - c2);
+          return (dr === 1 && dc === 0) || (dr === 0 && dc === 1);
+        }
+
+        // ============================================================
+        //  核心规则
+        // ============================================================
+        function canAttack(attackerType, defenderType) {
+          const isPawn = attackerType === "兵" || attackerType === "卒";
+          const isGeneral = defenderType === "帅" || defenderType === "将";
+          if (isPawn && isGeneral) return true;
+          const isAttackerGeneral =
+            attackerType === "帅" || attackerType === "将";
+          const isDefenderPawn = defenderType === "兵" || defenderType === "卒";
+          if (isAttackerGeneral && isDefenderPawn) return false;
+          return getRank(attackerType) >= getRank(defenderType);
+        }
+
+        // 获取玩家颜色
+        function getPlayerColor(player) {
+          return player === "p1" ? player1Color : player2Color;
+        }
+
+        // 获取对方玩家
+        function getOpponent(player) {
+          return player === "p1" ? "p2" : "p1";
+        }
+
+        // ============================================================
+        //  操作函数
+        // ============================================================
+
+        // 翻开棋子
+        function flipPiece(row, col) {
+          if (gameOver) {
+            setMessage("游戏已结束，请重新开局", true);
+            return false;
+          }
+          const cell = board[row][col];
+          if (!cell) {
+            setMessage("此处没有棋子", true);
+            return false;
+          }
+          if (cell.faceUp) {
+            setMessage("该棋子已翻开", true);
+            return false;
+          }
+
+          // 翻开
+          cell.faceUp = true;
+          // 如果当前玩家颜色未定，则根据翻开棋子颜色设定
+          const player = currentPlayer;
+          const color = cell.color;
+          if (player === "p1" && player1Color === null) {
+            player1Color = color;
+            player2Color = color === "red" ? "black" : "red";
+            // 重新统计
+          } else if (player === "p2" && player2Color === null) {
+            player2Color = color;
+            player1Color = color === "red" ? "black" : "red";
+          }
+
+          // 记录历史 (在修改之后)
+          pushHistory();
+
+          // 切换玩家
+          currentPlayer = getOpponent(currentPlayer);
+          clearSelected();
+          updateUI();
+          setMessage(`翻开了 ${color === "red" ? "红" : "黑"}${cell.type}`);
+          return true;
+        }
+
+        // 尝试移动或吃子
+        function attemptMove(fromRow, fromCol, toRow, toCol) {
+          if (gameOver) {
+            setMessage("游戏已结束，请重新开局", true);
+            return false;
+          }
+          const fromCell = board[fromRow][fromCol];
+          if (!fromCell || !fromCell.faceUp) {
+            setMessage("请选择一个己方已翻开的棋子", true);
+            return false;
+          }
+
+          // 检查该棋子颜色是否属于当前玩家
+          const player = currentPlayer;
+          const playerColor = getPlayerColor(player);
+          if (!playerColor) {
+            setMessage("您的阵营尚未确定，请先翻开一个棋子", true);
+            return false;
+          }
+          if (fromCell.color !== playerColor) {
+            setMessage("这不是您的棋子", true);
+            return false;
+          }
+
+          const toCell = board[toRow][toCol];
+          // 目标为空：移动
+          if (!toCell) {
+            pushHistory();
+            board[toRow][toCol] = { ...fromCell };
+            board[fromRow][fromCol] = null;
+            currentPlayer = getOpponent(currentPlayer);
+            clearSelected();
+            updateUI();
+            setMessage(
+              `移动 ${fromCell.color === "red" ? "红" : "黑"}${fromCell.type}`,
+            );
+            return true;
+          }
+          // 目标有棋子
+          if (!toCell.faceUp) {
+            setMessage("目标棋子未翻开，请先翻开", true);
+            return false;
+          }
+          if (toCell.color === playerColor) {
+            setMessage("不能吃己方棋子", true);
+            return false;
+          }
+          // 目标为对方棋子：尝试吃子
+          if (!canAttack(fromCell.type, toCell.type)) {
+            setMessage(
+              `等级不足，${fromCell.type} 不能吃 ${toCell.type}`,
+              true,
+            );
+            return false;
+          }
+          // 可以吃子
+          pushHistory();
+          board[toRow][toCol] = { ...fromCell };
+          board[fromRow][fromCol] = null;
+          currentPlayer = getOpponent(currentPlayer);
+          clearSelected();
+          updateUI();
+          setMessage(
+            `吃掉了 ${toCell.color === "red" ? "红" : "黑"}${toCell.type}`,
+          );
+          return true;
+        }
+
+        // 撤回
+        function undo() {
+          if (gameOver) {
+            setMessage("游戏已结束，不能撤回", true);
+            return;
+          }
+          if (history.length === 0) {
+            setMessage("没有可以撤回的操作", true);
+            return;
+          }
+          // 检查当前玩家令牌
+          const tokens = currentPlayer === "p1" ? p1Tokens : p2Tokens;
+          if (tokens <= 0) {
+            setMessage(
+              `${currentPlayer === "p1" ? "玩家1" : "玩家2"} 撤回令牌已用完`,
+              true,
+            );
+            return;
+          }
+          // 消耗令牌
+          if (currentPlayer === "p1") p1Tokens--;
+          else p2Tokens--;
+
+          // 恢复历史
+          const state = popHistory();
+          if (!state) return;
+          // 更新所有状态
+          board = state.board;
+          currentPlayer = state.currentPlayer;
+          player1Color = state.player1Color;
+          player2Color = state.player2Color;
+          p1Count = state.p1Count;
+          p2Count = state.p2Count;
+          p1Tokens = state.p1Tokens;
+          p2Tokens = state.p2Tokens;
+          gameOver = false;
+          winner = null;
+          clearSelected();
+          updateUI();
+          setMessage(
+            `已撤回上一步，${currentPlayer === "p1" ? "玩家1" : "玩家2"} 剩余令牌 ${currentPlayer === "p1" ? p1Tokens : p2Tokens}`,
+          );
+        }
+
+        // ============================================================
+        //  棋盘方向自适应 (转置)
+        // ============================================================
+        function applyTranspose() {
+          // 转置棋盘
+          board = transposeBoard(board);
+          // 转置选中的位置
+          if (selectedPos) {
+            const { row, col } = selectedPos;
+            selectedPos = { row: col, col: row };
+          }
+          // 转置历史中的每个棋盘
+          for (let i = 0; i < history.length; i++) {
+            const state = history[i];
+            state.board = transposeBoard(state.board);
+          }
+          // 交换 rows 和 cols
+          const temp = rows;
+          rows = cols;
+          cols = temp;
+        }
+
+        function handleOrientationChange() {
+          const portrait = isPortrait();
+          const desiredRows = portrait ? 8 : 4;
+          const desiredCols = portrait ? 4 : 8;
+          if (rows !== desiredRows || cols !== desiredCols) {
+            // 需要转置
+            applyTranspose();
+            // 重新渲染
+            renderBoard();
+            // 更新消息
+            setMessage(`棋盘已旋转为 ${rows}×${cols}`);
+          }
+        }
+
+        // ============================================================
+        //  渲染
+        // ============================================================
+        function renderBoard() {
+          boardEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+          boardEl.innerHTML = "";
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              const cell = board[r]?.[c] || null;
+              const div = document.createElement("div");
+              div.className = "cell";
+              div.dataset.row = r;
+              div.dataset.col = c;
+              if (cell) {
+                if (cell.faceUp) {
+                  div.classList.add(cell.color);
+                  const displayName = cell.type;
+                  div.innerHTML = `<span class="piece-text">${displayName}</span>`;
+                } else {
+                  div.classList.add("face-down");
+                }
+              } else {
+                div.style.background = "#c8a87c";
+                div.style.boxShadow = "inset 0 -2px 0 #7a5f3a";
+              }
+              // 选中高亮
+              if (
+                selectedPos &&
+                selectedPos.row === r &&
+                selectedPos.col === c
+              ) {
+                div.classList.add("selected");
+              }
+              // 可移动提示
+              if (selectedPos) {
+                const sr = selectedPos.row,
+                  sc = selectedPos.col;
+                if (isAdjacent(sr, sc, r, c)) {
+                  const target = board[r]?.[c];
+                  const playerColor = getPlayerColor(currentPlayer);
+                  if (
+                    !target ||
+                    (target.faceUp && target.color !== playerColor)
+                  ) {
+                    div.classList.add("can-move");
+                  }
+                }
+              }
+              boardEl.appendChild(div);
+            }
+          }
+          // 更新计数等
+          updateCounts();
+          updateTurn();
+          updateTokens();
+          // 更新撤回按钮
+          const tokens = currentPlayer === "p1" ? p1Tokens : p2Tokens;
+          undoBtn.disabled = gameOver || history.length === 0 || tokens <= 0;
+        }
+
+        function updateUI() {
+          renderBoard();
+        }
+
+        // ============================================================
+        //  事件处理
+        // ============================================================
+        function handleBoardClick(e) {
+          const cell = e.target.closest(".cell");
+          if (!cell) return;
+          const row = parseInt(cell.dataset.row);
+          const col = parseInt(cell.dataset.col);
+          if (isNaN(row) || isNaN(col)) return;
+          if (gameOver) {
+            setMessage("游戏已结束，请重新开局", true);
+            return;
+          }
+
+          const target = board[row]?.[col];
+
+          // 点击暗棋
+          if (target && !target.faceUp) {
+            flipPiece(row, col);
+            return;
+          }
+
+          // 点击己方已翻开的棋子 (根据当前玩家的颜色)
+          const player = currentPlayer;
+          const playerColor = getPlayerColor(player);
+          if (
+            target &&
+            target.faceUp &&
+            playerColor &&
+            target.color === playerColor
+          ) {
+            // 如果已选中该棋子，取消选中
+            if (
+              selectedPos &&
+              selectedPos.row === row &&
+              selectedPos.col === col
+            ) {
+              clearSelected();
+              renderBoard();
+              setMessage("取消选中");
+              return;
+            }
+            // 否则选中
+            selectedPos = { row, col };
+            renderBoard();
+            setMessage(
+              `选中 ${target.color === "red" ? "红" : "黑"}${target.type}，点击相邻格子移动或吃子`,
+            );
+            return;
+          }
+
+          // 点击其他格子（空或对方棋子）且有选中
+          if (selectedPos) {
+            const fromRow = selectedPos.row,
+              fromCol = selectedPos.col;
+            if (!isAdjacent(fromRow, fromCol, row, col)) {
+              setMessage("只能移动相邻格子", true);
+              return;
+            }
+            if (target && !target.faceUp) {
+              setMessage("目标棋子未翻开，无法移动", true);
+              return;
+            }
+            if (target && target.color === playerColor) {
+              setMessage("不能移到己方棋子位置", true);
+              return;
+            }
+            attemptMove(fromRow, fromCol, row, col);
+            return;
+          }
+
+          // 其他情况
+          if (target && target.faceUp && target.color !== playerColor) {
+            setMessage("请先选中己方棋子再攻击", true);
+            return;
+          }
+          setMessage("无效操作", true);
+        }
+
+        // ============================================================
+        //  重置游戏
+        // ============================================================
+        function resetGame() {
+          // 根据方向决定布局
+          const layout = getLayout();
+          rows = layout.rows;
+          cols = layout.cols;
+
+          // 生成棋子
+          const pieces = [];
+          for (const type of RED_TYPES) {
+            pieces.push({ type, color: "red", faceUp: false });
+          }
+          for (const type of BLACK_TYPES) {
+            pieces.push({ type, color: "black", faceUp: false });
+          }
+          // 洗牌
+          for (let i = pieces.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+          }
+
+          // 填充棋盘
+          board = [];
+          let idx = 0;
+          for (let r = 0; r < rows; r++) {
+            const row = [];
+            for (let c = 0; c < cols; c++) {
+              row.push(pieces[idx++]);
+            }
+            board.push(row);
+          }
+
+          // 重置状态
+          currentPlayer = "p1";
+          player1Color = null;
+          player2Color = null;
+          p1Tokens = 3;
+          p2Tokens = 3;
+          history = [];
+          gameOver = false;
+          winner = null;
+          clearSelected();
+          updateUI();
+          setMessage("新游戏开始！玩家1 先手，翻开棋子确定阵营");
+        }
+
+        // ============================================================
+        //  初始化
+        // ============================================================
+        boardEl.addEventListener("click", handleBoardClick);
+        undoBtn.addEventListener("click", undo);
+        resetBtn.addEventListener("click", resetGame);
+
+        // 监听窗口变化 (方向改变)
+        let resizeTimer = null;
+        window.addEventListener("resize", function () {
+          if (resizeTimer) clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            handleOrientationChange();
+            resizeTimer = null;
+          }, 300);
+        });
+
+        // 键盘快捷键
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "r" || e.key === "R") {
+            resetGame();
+            e.preventDefault();
+          }
+          if (e.key === "u" || e.key === "U") {
+            undo();
+            e.preventDefault();
+          }
+        });
+
+        // 启动
+        resetGame();
+      })();
+    </script>
+  </body>
+</html>

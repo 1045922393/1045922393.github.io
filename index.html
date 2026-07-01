@@ -516,6 +516,14 @@
           href: "/RoleKillStar.html",
         },
         {
+          name: "中国象棋",
+          href: "/chinaChess.html",
+        },
+        {
+          name: "猜数字",
+          href: "/guessNumber.html",
+        },
+        {
           name: "抽牌游戏",
           href: "/pokerGame.html",
         },
@@ -631,7 +639,7 @@
         links.className = "fade-up card";
         links.dataset.category = (index % 3) + "";
         links.innerHTML = `
-            <img referrerpolicy="no-referrer" src="/assets/placeholder/0${(index % 6) + 1}.png" class="place-holder" />
+            <img referrerpolicy="no-referrer" src="/assets/placeholder/0${((index + 3) % 6) + 1}.png" class="place-holder" />
             <div class="card-info">
               <div class="card-title">${item.name}</div>
               <div class="card-tag">${filterMap[index % 3]}</div>
